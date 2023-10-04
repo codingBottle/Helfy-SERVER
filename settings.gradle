@@ -1,0 +1,4 @@
+rootProject.name = 'Helfy-SERVER'
+include 'module-core'
+include 'module-api'
+
