@@ -19,7 +19,7 @@ jib {
     }
 }
 
-group = 'com.wearweather'
+group = 'com.codingbottle'
 version = '0.0.1-SNAPSHOT'
 
 repositories {
