@@ -1,10 +1,9 @@
-package com.codingbottle.api;
+package com.codingbottle;
 
-import com.codingbottle.core.HelfyCoreApplication;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication(scanBasePackageClasses = {HelfyCoreApplication.class})
+@SpringBootApplication(scanBasePackages = "com.codingbottle")
 public class HelfyApiApplication {
     public static void main(String[] args) {
         SpringApplication.run(HelfyApiApplication.class, args);

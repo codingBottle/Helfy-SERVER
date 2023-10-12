@@ -1,7 +1,7 @@
-package com.codingbottle.api.config;
+package com.codingbottle.config;
 
-import com.codingbottle.api.filter.FirebaseTokenFilter;
-import com.codingbottle.api.service.UserService;
+import com.codingbottle.filter.FirebaseTokenFilter;
+import com.codingbottle.service.UserService;
 import com.google.firebase.auth.FirebaseAuth;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -16,15 +16,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final FirebaseAuth firebaseAuth;
     private final UserService userService;
+    private final FirebaseAuth firebaseAuth;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(authorize -> authorize
-                        .anyRequest()
-                        .permitAll()
                         .anyRequest()
                         .authenticated())
                 .addFilterBefore(firebaseTokenFilter(), UsernamePasswordAuthenticationFilter.class)
@@ -33,7 +31,6 @@ public class SecurityConfig {
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .build();
-
     }
 
     @Bean

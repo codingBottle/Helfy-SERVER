@@ -1,4 +1,4 @@
-package com.codingbottle.core.domain.category.entity;
+package com.codingbottle.domain.category.entity;
 
 import lombok.Getter;
 

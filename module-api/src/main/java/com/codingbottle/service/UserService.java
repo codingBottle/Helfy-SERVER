@@ -1,9 +1,9 @@
-package com.codingbottle.api.service;
+package com.codingbottle.service;
 
-import com.codingbottle.core.auth.domain.entity.Role;
-import com.codingbottle.core.auth.domain.entity.User;
-import com.codingbottle.core.auth.domain.repository.UserRepository;
-import com.codingbottle.api.exception.UserNotFoundException;
+import com.codingbottle.auth.domain.entity.Role;
+import com.codingbottle.auth.domain.entity.User;
+import com.codingbottle.auth.domain.repository.UserRepository;
+import com.codingbottle.exception.UserNotFoundException;
 import com.google.firebase.auth.FirebaseToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
