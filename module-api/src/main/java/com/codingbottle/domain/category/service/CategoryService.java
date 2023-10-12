@@ -1,6 +1,6 @@
-package com.codingbottle.api.domain.category.service;
+package com.codingbottle.domain.category.service;
 
-import com.codingbottle.core.domain.category.entity.Category;
+import com.codingbottle.domain.category.entity.Category;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;

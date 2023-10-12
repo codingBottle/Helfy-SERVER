@@ -1,4 +1,4 @@
-package com.codingbottle.api.exception;
+package com.codingbottle.exception;
 
 public class UserNotFoundException extends IllegalArgumentException {
     public UserNotFoundException(String message) {
