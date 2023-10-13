@@ -1,8 +1,8 @@
-package com.codingbottle.service;
+package com.codingbottle.auth.service;
 
-import com.codingbottle.auth.domain.entity.Role;
-import com.codingbottle.auth.domain.entity.User;
-import com.codingbottle.auth.domain.repository.UserRepository;
+import com.codingbottle.auth.entity.Role;
+import com.codingbottle.auth.entity.User;
+import com.codingbottle.auth.repository.UserRepository;
 import com.codingbottle.exception.UserNotFoundException;
 import com.google.firebase.auth.FirebaseToken;
 import lombok.RequiredArgsConstructor;

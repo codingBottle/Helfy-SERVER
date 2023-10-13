@@ -1,4 +1,4 @@
-package com.codingbottle.auth.domain.entity;
+package com.codingbottle.auth.entity;
 
 import com.google.firebase.auth.FirebaseToken;
 import jakarta.persistence.*;

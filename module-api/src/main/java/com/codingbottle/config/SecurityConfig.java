@@ -1,7 +1,7 @@
 package com.codingbottle.config;
 
-import com.codingbottle.filter.FirebaseTokenFilter;
-import com.codingbottle.service.UserService;
+import com.codingbottle.auth.filter.FirebaseTokenFilter;
+import com.codingbottle.auth.service.UserService;
 import com.google.firebase.auth.FirebaseAuth;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
