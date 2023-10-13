@@ -1,6 +1,6 @@
-package com.codingbottle.auth.domain.repository;
+package com.codingbottle.auth.repository;
 
-import com.codingbottle.auth.domain.entity.User;
+import com.codingbottle.auth.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

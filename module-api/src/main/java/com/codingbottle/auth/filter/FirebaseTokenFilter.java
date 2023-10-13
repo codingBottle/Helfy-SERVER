@@ -1,8 +1,8 @@
-package com.codingbottle.filter;
+package com.codingbottle.auth.filter;
 
-import com.codingbottle.service.UserService;
-import com.codingbottle.auth.domain.entity.Role;
-import com.codingbottle.auth.domain.entity.User;
+import com.codingbottle.auth.service.UserService;
+import com.codingbottle.auth.entity.Role;
+import com.codingbottle.auth.entity.User;
 import com.codingbottle.exception.UserNotFoundException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
