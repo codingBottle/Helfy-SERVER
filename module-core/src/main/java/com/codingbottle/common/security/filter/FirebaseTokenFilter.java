@@ -1,4 +1,4 @@
-package com.codingbottle.auth.filter;
+package com.codingbottle.common.security.filter;
 
 import com.codingbottle.auth.service.UserService;
 import com.codingbottle.auth.entity.Role;
@@ -21,7 +21,7 @@ import java.io.IOException;
 
 @RequiredArgsConstructor
 public class FirebaseTokenFilter extends OncePerRequestFilter {
-    private final UserService userService;
+    private final UserDetailService userService;
     private final FirebaseAuth firebaseAuth;
 
     @Override
