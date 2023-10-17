@@ -1,22 +1,21 @@
-package com.codingbottle.config;
+package com.codingbottle.common.config;
 
-import com.codingbottle.auth.filter.FirebaseTokenFilter;
-import com.codingbottle.auth.service.UserService;
+import com.codingbottle.auth.service.UserDetailService;
+import com.codingbottle.common.security.CustomAuthenticationEntryPoint;
+import com.codingbottle.common.security.filter.FirebaseTokenFilter;
 import com.google.firebase.auth.FirebaseAuth;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final UserService userService;
+    private final UserDetailService userDetailService;
     private final FirebaseAuth firebaseAuth;
 
     @Bean
@@ -29,12 +28,12 @@ public class SecurityConfig {
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exceptionHandling -> exceptionHandling
-                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
                 .build();
     }
 
     @Bean
     public FirebaseTokenFilter firebaseTokenFilter() {
-        return new FirebaseTokenFilter(userService, firebaseAuth);
+        return new FirebaseTokenFilter(userDetailService, firebaseAuth);
     }
 }
