@@ -1,0 +1,14 @@
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 3
+
+
+== 카테고리 목록
+=== Request
+include::{snippets}/categories/http-request.adoc[]
+
+
+=== Response
+include::{snippets}/categories/http-response.adoc[]
