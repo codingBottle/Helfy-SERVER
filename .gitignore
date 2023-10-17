@@ -15,6 +15,7 @@ build/
 *.ipr
 out/
 !**/src/main/**/out/
+!**/src/docs
 !**/src/test/**/out/
 
 ### Eclipse ###
