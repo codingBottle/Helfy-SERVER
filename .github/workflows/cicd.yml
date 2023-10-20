@@ -44,10 +44,13 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
+    # Rest docs를 이용해 문서화
+    - name: Build Rest Docs
+      run: ./gradlew :module-api:copyDocument
+
     # gradle Jib를 이용해 이미지를 만들고 원격 저장소에 Push
     - name: Setup Jib with Gradle
       run: ./gradlew :module-api:jib
-
 
     # ssh로 접속해 재배포
     - name: Deploy
