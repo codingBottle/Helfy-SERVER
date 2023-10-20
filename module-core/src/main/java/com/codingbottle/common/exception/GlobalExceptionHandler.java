@@ -2,7 +2,6 @@ package com.codingbottle.common.exception;
 
 import com.codingbottle.common.model.ErrorResponseDto;
 import com.google.api.pathtemplate.ValidationException;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.context.annotation.Primary;
@@ -10,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+
+import java.io.IOException;
 
 @Slf4j
 @Primary
@@ -27,6 +28,13 @@ public class GlobalExceptionHandler {
         log.error("ValidationException {}", e.getMessage());
         ErrorResponseDto errorResponseDto = new ErrorResponseDto(ApplicationErrorType.VALIDATION_ERROR.name(), e.getMessage());
         return new ResponseEntity<>(errorResponseDto, ApplicationErrorType.VALIDATION_ERROR.getHttpStatus());
+    }
+
+    @ExceptionHandler(value = IOException.class)
+    public ResponseEntity<ErrorResponseDto> handleIOException(WebRequest request, IOException e) {
+        log.error("IOException {}", e.getMessage());
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto(ApplicationErrorType.INTERNAL_ERROR.name(), e.getMessage());
+        return new ResponseEntity<>(errorResponseDto, ApplicationErrorType.INTERNAL_ERROR.getHttpStatus());
     }
 
     @ExceptionHandler(value = ConstraintViolationException.class)
