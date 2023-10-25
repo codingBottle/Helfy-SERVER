@@ -1,19 +1,20 @@
 package com.codingbottle.auth.entity;
 
+import com.codingbottle.domain.region.entity.Region;
 import com.google.firebase.auth.FirebaseToken;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
 
 @Getter
 @Entity
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User implements UserDetails {
     @Id
@@ -35,6 +36,10 @@ public class User implements UserDetails {
 
     @Column(name = "picture")
     private String picture;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "region", nullable = false)
+    private Region region = Region.NONE;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -78,12 +83,9 @@ public class User implements UserDetails {
         this.picture = token.getPicture();
     }
 
-    @Builder
-    public User(String username, Role role, String email, String name, String picture) {
-        this.username = username;
-        this.role = role;
-        this.email = email;
-        this.name = name;
-        this.picture = picture;
+    public User updateRegion(Region region) {
+        this.region = region;
+
+        return this;
     }
 }
