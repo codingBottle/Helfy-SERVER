@@ -29,7 +29,24 @@ spring:
     user:
       name: user
       password: 1234
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: helfy-bucket
+    stack:
+      auto: false
+
+cloudfront-domain-name: https://d2zp5u7z0buhfu.cloudfront.net
 springdoc:
   packages-to-scan: com.codingbottle
   default-consumes-media-type: application/json;charset=UTF-8

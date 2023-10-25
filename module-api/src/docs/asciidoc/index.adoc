@@ -4,11 +4,25 @@
 :toc: left
 :toclevels: 3
 
+= API 문서
 
-== 카테고리 목록
-=== Request
-include::{snippets}/categories/http-request.adoc[]
+[[API-개요]]
 
+[[오류-응답]]
+== 오류 응답
+operation::error-response[snippets='response-body,response-fields']
 
-=== Response
-include::{snippets}/categories/http-response.adoc[]
+[[카테고리-API]]
+== 카테고리 API
+
+[[카테고리-목록]]
+=== 카테고리 목록
+operation::categories-list[snippets='http-request,http-response']
+
+[[이미지-API]]
+== 이미지 API
+
+[[이미지-업로드]]
+=== 이미지 업로드
+operation::images-upload[snippets='http-request,request-parts,query-parameters,http-response,response-fields']
+
