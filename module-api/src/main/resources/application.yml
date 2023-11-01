@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: prod
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${JDBC_URL}
@@ -47,6 +49,7 @@ cloud:
       auto: false
 
 cloudfront-domain-name: https://d2zp5u7z0buhfu.cloudfront.net
+
 springdoc:
   packages-to-scan: com.codingbottle
   default-consumes-media-type: application/json;charset=UTF-8
@@ -60,4 +63,9 @@ springdoc:
       enabled: true
   cache:
     disabled: true
+
+logging:
+  slack:
+    webhook-url: ${SLACK_WEBHOOK_URL}
+  config: classpath:logback-spring.xml
 
