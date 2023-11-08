@@ -1,6 +1,5 @@
 package com.codingbottle.auth.entity;
 
-import com.codingbottle.domain.Post.entity.Post;
 import com.codingbottle.domain.region.entity.Region;
 import com.google.firebase.auth.FirebaseToken;
 import jakarta.persistence.*;
@@ -9,10 +8,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 @Getter
 @Entity
@@ -43,9 +40,6 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(name = "region", nullable = false)
     private Region region = Region.NONE;
-
-    @OneToMany(mappedBy = "user")
-    private List<Post> posts = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
