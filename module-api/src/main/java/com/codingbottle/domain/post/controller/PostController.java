@@ -7,6 +7,7 @@ import com.codingbottle.domain.post.dto.AddPostResponse;
 import com.codingbottle.domain.post.dto.PostResponse;
 import com.codingbottle.domain.post.dto.UpdatePostRequest;
 import com.codingbottle.domain.post.service.PostService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,36 +17,40 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "게시판", description = "게시판 API")
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/post")
+@RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
 
     @PostMapping
-    public Object createPost(@RequestBody @Validated AddPostRequest addPostRequest,@AuthenticationPrincipal User user) {
-        return new ResponseEntity<>(AddPostResponse.createInstance(postService.savePost(addPostRequest,user)), HttpStatus.CREATED);
+    public ResponseEntity<AddPostResponse> createPost(@RequestBody @Validated AddPostRequest addPostRequest,@AuthenticationPrincipal User user) {
+        Post createPost = postService.savePost(addPostRequest,user);
+        return ResponseEntity.ok(AddPostResponse.createInstance(createPost));
     }
 
     @GetMapping("/{postId}")
-    public PostResponse findByIdLeftJoin(@PathVariable Long postId) {
-        return PostResponse.createInstance(postService.findById(postId));
+    public ResponseEntity<PostResponse> findById(@PathVariable Long postId) {
+        Post findPost = postService.findById(postId);
+        return ResponseEntity.ok(PostResponse.createInstance(findPost));
     }
 
     @GetMapping
-    public Page<Post> findByIdPage(Pageable pageable) {
-        return postService.findAll(pageable);
+    public ResponseEntity<?> page(Pageable pageable) {
+        Page<PostResponse> map = postService.findAll(pageable).map(PostResponse::createInstance);
+        return ResponseEntity.ok(map);
     }
 
     @PatchMapping("/{postId}")
-    public Object postUpdate(@PathVariable(name = "postId") Long postId, @RequestBody @Validated UpdatePostRequest updatePostRequest,@AuthenticationPrincipal User user) {
-        postService.updatePost(updatePostRequest,postId,user);
-        return PostResponse.createInstance(postService.findById(postId));
+    public ResponseEntity<PostResponse> postUpdate(@PathVariable(name = "postId") Long postId, @RequestBody @Validated UpdatePostRequest updatePostRequest,@AuthenticationPrincipal User user) {
+        Post updatedPost = postService.updatePost(updatePostRequest,postId,user);
+        return ResponseEntity.ok(PostResponse.createInstance(updatedPost));
     }
 
     @DeleteMapping("/{postId}")
-    public Object postDelete(@PathVariable(name = "postId") Long postId, @AuthenticationPrincipal User user) {
+    public ResponseEntity<?> postDelete(@PathVariable(name = "postId") Long postId, @AuthenticationPrincipal User user) {
         postService.delete(postId,user);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
 }
