@@ -26,7 +26,8 @@ public class Post extends ObjectTime {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "post_image")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "image_id")
     private Image image;
 
     @Builder
