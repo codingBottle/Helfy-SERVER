@@ -10,7 +10,6 @@ import com.codingbottle.domain.Post.repo.PostRepository;
 import com.codingbottle.domain.post.dto.AddPostRequest;
 import com.codingbottle.domain.post.dto.UpdatePostRequest;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,7 +26,7 @@ public class PostService {
 
     @Transactional
     public Post savePost(AddPostRequest addPostRequest, User user) {
-        Image image = imageService.findById(addPostRequest.getImageId());
+        Image image = imageService.findById(addPostRequest.imageId());
         return postRepository.save(addPostRequest.toEntity(user, image));
     }
 
@@ -40,34 +39,29 @@ public class PostService {
     }
 
     @Transactional
-    public void updatePost(UpdatePostRequest upPost, Long postId, User user) {
+    public Post updatePost(UpdatePostRequest upPost, Long postId, User user) {
         Post findPost = findById(postId);
-        Image image = imageService.findById(upPost.getImageId());
+        Image image = imageService.findById(upPost.imageId());
 
         if (postUserValidation(findPost, user)) {
-            findPost.updatePost(upPost, image);}
-        else{
-                throw new ApplicationErrorException(ApplicationErrorType.NO_AUTHENTICATION, String.format("해당 게시글(%s)에 접근 권한이 없습니다.", postId));
+            findPost.updatePost(upPost.content(), image);
+            return findPost;
         }
-
+        throw new ApplicationErrorException(ApplicationErrorType.NO_AUTHENTICATION, String.format("해당 게시글(%s)에 접근 권한이 없습니다.", postId));
     }
 
     @Transactional
     public void delete (Long postId, User user){
         Post findPost = findById(postId);
 
-        if (postUserValidation(findPost, user)) {
+        if (postUserValidation(findPost, user)){
             postRepository.delete(findPost);
-        } else {
-            throw new ApplicationErrorException(ApplicationErrorType.NO_AUTHENTICATION, String.format("해당 게시글(%s)에 접근 권한이 없습니다.", postId));
+            return;
         }
-
+        throw new ApplicationErrorException(ApplicationErrorType.NO_AUTHENTICATION, String.format("해당 게시글(%s)에 접근 권한이 없습니다.", postId));
     }
 
     private boolean postUserValidation(Post post, User user) {
-        if (user == post.getUser()) {
-            return true;
-        }
-        return false;
+        return user == post.getUser();
     }
 }
