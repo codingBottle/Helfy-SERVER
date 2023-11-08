@@ -7,16 +7,14 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-@Getter
-@AllArgsConstructor
-public class PostResponse {
-    private Long PostId;
-    private String content;
-    private String username;
-    private Image image;
-    private LocalDateTime createTime;
-    private LocalDateTime updateTime;
-
+public record PostResponse (
+        Long postId,
+        String content,
+        String username,
+        Image image,
+        LocalDateTime createTime,
+        LocalDateTime updateTime
+){
     public static PostResponse createInstance(Post post) {
         return new PostResponse(post.getId(), post.getContent(), post.getUser().getUsername(),post.getImage(), post.getCreateTime(), post.getUpdateTime()
         );
