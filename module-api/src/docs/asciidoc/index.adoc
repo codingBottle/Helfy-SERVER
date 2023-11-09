@@ -37,3 +37,9 @@ operation::regions-list[snippets='http-request,http-response']
 === 사용자 지역 변경
 operation::update-user-region[snippets='http-request,query-parameters,http-response,response-fields']
 
+[[날씨-API]]
+== 날씨 API
+
+[[날씨-조회]]
+=== 현재 날씨 조회
+operation::current-weather[snippets='http-request,http-response,response-fields']
