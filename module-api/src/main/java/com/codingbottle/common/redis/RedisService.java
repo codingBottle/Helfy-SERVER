@@ -20,7 +20,7 @@ public class RedisService {
         String mapperK = writeKeyAsString(key);
         var mapperV = objectMapper.writeValueAsString(value);
 
-        redisTemplate.opsForValue().set(mapperK, mapperV, 3600000, TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set(mapperK, mapperV);
     }
 
     public WeatherResponse getObjectValues(Region key) throws JsonProcessingException {
