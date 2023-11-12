@@ -1,4 +1,4 @@
-package com.codingbottle.domain.user.dto;
+package com.codingbottle.domain.user.model;
 
 import com.codingbottle.auth.entity.User;
 import com.codingbottle.domain.region.entity.Region;
