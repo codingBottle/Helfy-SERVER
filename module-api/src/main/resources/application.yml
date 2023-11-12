@@ -39,6 +39,9 @@ spring:
     redis:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}
+      lettuce:
+        pool:
+          max-active: 8
 
 cloud:
   aws:
