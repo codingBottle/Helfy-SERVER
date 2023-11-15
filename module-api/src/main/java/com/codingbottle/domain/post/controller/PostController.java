@@ -3,10 +3,10 @@ package com.codingbottle.domain.post.controller;
 import com.codingbottle.auth.entity.User;
 import com.codingbottle.domain.Post.entity.Post;
 import com.codingbottle.domain.post.dto.AddPostRequest;
-import com.codingbottle.domain.post.dto.AddPostResponse;
 import com.codingbottle.domain.post.dto.PostResponse;
 import com.codingbottle.domain.post.dto.UpdatePostRequest;
 import com.codingbottle.domain.post.service.PostService;
+import com.codingbottle.domain.region.entity.Region;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,32 +25,32 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping
-    public ResponseEntity<AddPostResponse> createPost(@RequestBody @Validated AddPostRequest addPostRequest,@AuthenticationPrincipal User user) {
+    public ResponseEntity<PostResponse> createPost(@RequestBody @Validated AddPostRequest addPostRequest,@AuthenticationPrincipal User user) {
         Post createPost = postService.savePost(addPostRequest,user);
-        return ResponseEntity.ok(AddPostResponse.createInstance(createPost));
+        return ResponseEntity.ok(PostResponse.createInstance(createPost));
     }
 
-    @GetMapping("/{postId}")
-    public ResponseEntity<PostResponse> findById(@PathVariable Long postId) {
+    @GetMapping
+    public ResponseEntity<PostResponse> findById(@RequestParam(value = "postId") Long postId) {
         Post findPost = postService.findById(postId);
         return ResponseEntity.ok(PostResponse.createInstance(findPost));
     }
 
-    @GetMapping
-    public ResponseEntity<?> page(Pageable pageable) {
+    @GetMapping("/list")
+    public ResponseEntity<Page> page(Pageable pageable) {
         Page<PostResponse> map = postService.findAll(pageable).map(PostResponse::createInstance);
         return ResponseEntity.ok(map);
     }
 
-    @PatchMapping("/{postId}")
-    public ResponseEntity<PostResponse> postUpdate(@PathVariable(name = "postId") Long postId, @RequestBody @Validated UpdatePostRequest updatePostRequest,@AuthenticationPrincipal User user) {
+    @PatchMapping
+    public ResponseEntity<PostResponse> postUpdate(@RequestParam(value = "postId") Long postId, @RequestBody @Validated UpdatePostRequest updatePostRequest,@AuthenticationPrincipal User user) {
         Post updatedPost = postService.updatePost(updatePostRequest,postId,user);
         return ResponseEntity.ok(PostResponse.createInstance(updatedPost));
     }
 
-    @DeleteMapping("/{postId}")
-    public ResponseEntity<?> postDelete(@PathVariable(name = "postId") Long postId, @AuthenticationPrincipal User user) {
+    @DeleteMapping
+    public ResponseEntity<?> postDelete(@RequestParam(value = "postId") Long postId, @AuthenticationPrincipal User user) {
         postService.delete(postId,user);
-        return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 }
