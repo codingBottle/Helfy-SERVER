@@ -43,11 +43,12 @@ public class PostService {
         Post findPost = findById(postId);
         Image image = imageService.findById(upPost.imageId());
 
-        if (postUserValidation(findPost, user)) {
-            findPost.updatePost(upPost.content(), image);
-            return findPost;
+        if (!postUserValidation(findPost, user)) {
+            throw new ApplicationErrorException(ApplicationErrorType.NO_AUTHENTICATION, String.format("해당 게시글(%s)에 접근 권한이 없습니다.", postId));
         }
-        throw new ApplicationErrorException(ApplicationErrorType.NO_AUTHENTICATION, String.format("해당 게시글(%s)에 접근 권한이 없습니다.", postId));
+
+        findPost.updatePost(upPost.content(), image);
+        return findPost;
     }
 
     @Transactional
@@ -55,10 +56,9 @@ public class PostService {
         Post findPost = findById(postId);
 
         if (postUserValidation(findPost, user)){
-            postRepository.delete(findPost);
-            return;
+            throw new ApplicationErrorException(ApplicationErrorType.NO_AUTHENTICATION, String.format("해당 게시글(%s)에 접근 권한이 없습니다.", postId));
         }
-        throw new ApplicationErrorException(ApplicationErrorType.NO_AUTHENTICATION, String.format("해당 게시글(%s)에 접근 권한이 없습니다.", postId));
+        postRepository.delete(findPost);
     }
 
     private boolean postUserValidation(Post post, User user) {
