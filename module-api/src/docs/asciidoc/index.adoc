@@ -46,7 +46,7 @@ operation::posts-list[snippets='http-request,query-parameters,http-response,resp
 
 [[게시물-조회]]
 === 게시물 개별 조회
-operation::get-post[snippets='http-request,query-parameters,http-response,response-fields']
+operation::get-post[snippets='http-request,path-parameters,http-response,response-fields']
 
 [[게시물-생성]]
 === 게시물 생성
@@ -54,9 +54,9 @@ operation::create-post[snippets='http-request,request-fields,http-response,respo
 
 [[게시물-수정]]
 === 게시물 수정
-operation::update-post[snippets='http-request,query-parameters,http-response,response-fields']
+operation::update-post[snippets='http-request,path-parameters,http-response,response-fields']
 
 [[게시물-삭제]]
 === 게시물 삭제
-operation::delete-post[snippets='http-request,query-parameters,http-response']
+operation::delete-post[snippets='http-request,path-parameters,http-response']
 

@@ -1,7 +1,7 @@
 package com.codingbottle.domain.Post.entity;
 
 import com.codingbottle.auth.entity.User;
-import com.codingbottle.domain.Image.entity.Image;
+import com.codingbottle.domain.image.entity.Image;
 import com.codingbottle.common.entity.ObjectTime;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -37,7 +37,7 @@ public class Post extends ObjectTime {
         this.image = image;
     }
 
-    public void updatePost(String content, Image image) {
+    public void update(String content, Image image) {
         this.content = content;
         this.image = image;
     }
