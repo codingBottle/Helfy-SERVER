@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @Import(RestDocsConfig.class)
 public class RestDocsTest {
     protected MockMvc mvc;
-    protected ObjectMapper objectMapper;
+    protected ObjectMapper objectMapper = new ObjectMapper();
     @BeforeEach
     void setUp(WebApplicationContext context,
                RestDocumentationContextProvider provider) {
