@@ -14,10 +14,9 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class ObjectTime {
-
     @CreatedDate
-    private LocalDateTime createTime;
+    private LocalDateTime createdTime;
 
     @LastModifiedDate
-    private LocalDateTime updateTime;
+    private LocalDateTime modifiedTime;
 }
