@@ -60,3 +60,9 @@ operation::update-post[snippets='http-request,path-parameters,http-response,resp
 === 게시물 삭제
 operation::delete-post[snippets='http-request,path-parameters,http-response']
 
+[[날씨-API]]
+== 날씨 API
+
+[[날씨-조회]]
+=== 현재 날씨 조회
+operation::current-weather[snippets='http-request,http-response,response-fields']

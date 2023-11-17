@@ -1,7 +1,8 @@
 package com.codingbottle.common.config;
 
 import com.codingbottle.auth.service.UserDetailService;
-import com.codingbottle.common.security.CustomAuthenticationEntryPoint;
+import com.codingbottle.common.security.entry.CustomAccessDeniedHandler;
+import com.codingbottle.common.security.entry.CustomAuthenticationEntryPoint;
 import com.codingbottle.common.security.filter.FirebaseTokenFilter;
 import com.google.firebase.auth.FirebaseAuth;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,8 @@ public class SecurityConfig {
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exceptionHandling ->
-                        exceptionHandling.authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
+                        exceptionHandling.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                                .accessDeniedHandler(new CustomAccessDeniedHandler()))
                 .build();
     }
 

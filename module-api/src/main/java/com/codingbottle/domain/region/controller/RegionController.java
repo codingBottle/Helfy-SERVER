@@ -3,7 +3,7 @@ package com.codingbottle.domain.region.controller;
 import com.codingbottle.auth.entity.User;
 import com.codingbottle.domain.region.entity.Region;
 import com.codingbottle.domain.region.service.RegionService;
-import com.codingbottle.domain.user.dto.UserResponse;
+import com.codingbottle.domain.user.model.UserResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
