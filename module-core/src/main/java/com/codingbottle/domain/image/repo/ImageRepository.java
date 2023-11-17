@@ -1,6 +1,6 @@
-package com.codingbottle.domain.Image.repo;
+package com.codingbottle.domain.image.repo;
 
-import com.codingbottle.domain.Image.entity.Image;
+import com.codingbottle.domain.image.entity.Image;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
