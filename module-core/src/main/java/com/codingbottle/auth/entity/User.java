@@ -1,6 +1,7 @@
 package com.codingbottle.auth.entity;
 
 import com.codingbottle.domain.region.entity.Region;
+import com.google.common.base.Objects;
 import com.google.firebase.auth.FirebaseToken;
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,7 +16,7 @@ import java.util.Collections;
 @Entity
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -87,5 +88,24 @@ public class User implements UserDetails {
         this.region = region;
 
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equal(id, user.id)
+                && Objects.equal(username, user.username)
+                && role == user.role
+                && Objects.equal(email, user.email)
+                && Objects.equal(name, user.name)
+                && Objects.equal(picture, user.picture)
+                && region == user.region;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id, username, role, email, name, picture, region);
     }
 }
