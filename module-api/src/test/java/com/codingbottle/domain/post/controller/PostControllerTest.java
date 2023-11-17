@@ -129,8 +129,8 @@ class PostControllerTest extends RestDocsTest {
                         getDocumentResponse(),
                         getAuthorizationHeader(),
                         requestFields(
-                                fieldWithPath("content").description("게시물 내용"),
-                                fieldWithPath("imageId").description("게시물 이미지 id")
+                                fieldWithPath("content").description("게시물 내용 (필수)"),
+                                fieldWithPath("imageId").description("게시물 이미지 id (필수)")
                         ),
                         getPostResponseFields()));
     }

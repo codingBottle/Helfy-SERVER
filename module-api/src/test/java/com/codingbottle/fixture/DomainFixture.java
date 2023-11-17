@@ -4,7 +4,7 @@ import com.codingbottle.auth.entity.Role;
 import com.codingbottle.auth.entity.User;
 import com.codingbottle.domain.image.entity.Directory;
 import com.codingbottle.domain.image.entity.Image;
-import com.codingbottle.domain.Post.entity.Post;
+import com.codingbottle.domain.post.entity.Post;
 import com.codingbottle.domain.post.dto.PostRequest;
 import com.codingbottle.domain.region.entity.Region;
 

@@ -2,8 +2,8 @@ package com.codingbottle.domain.post.service;
 
 import com.codingbottle.common.exception.ApplicationErrorException;
 import com.codingbottle.domain.image.service.ImageService;
-import com.codingbottle.domain.Post.entity.Post;
-import com.codingbottle.domain.Post.repo.PostRepository;
+import com.codingbottle.domain.post.entity.Post;
+import com.codingbottle.domain.post.repo.PostRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

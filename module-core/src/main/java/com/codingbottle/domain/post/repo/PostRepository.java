@@ -1,6 +1,6 @@
-package com.codingbottle.domain.Post.repo;
+package com.codingbottle.domain.post.repo;
 
-import com.codingbottle.domain.Post.entity.Post;
+import com.codingbottle.domain.post.entity.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

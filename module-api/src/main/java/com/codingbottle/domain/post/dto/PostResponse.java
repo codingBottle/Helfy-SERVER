@@ -1,7 +1,7 @@
 package com.codingbottle.domain.post.dto;
 
 import com.codingbottle.domain.image.entity.Image;
-import com.codingbottle.domain.Post.entity.Post;
+import com.codingbottle.domain.post.entity.Post;
 
 import java.time.LocalDateTime;
 

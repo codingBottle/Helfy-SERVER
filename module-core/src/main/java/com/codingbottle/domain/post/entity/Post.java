@@ -1,4 +1,4 @@
-package com.codingbottle.domain.Post.entity;
+package com.codingbottle.domain.post.entity;
 
 import com.codingbottle.auth.entity.User;
 import com.codingbottle.domain.image.entity.Image;
