@@ -35,7 +35,6 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
         String header = request.getHeader("Authorization");
 
         if (isInvalidHeader(header)) {
-            log.error("requestURL: {}, Invalid header: {}", request.getRequestURI(), header);
             handleFirebaseError(response, ApplicationErrorType.INVALID_HEADER);
             return;
         }
@@ -50,7 +49,6 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
             authenticateUser(user);
 
         } catch (FirebaseAuthException e) {
-            log.error("requestURL: {}, Invalid FirebaseToken: {}", request.getRequestURI(), header);
             handleFirebaseError(response, ApplicationErrorType.INVALID_FIREBASE_TOKEN);
             return;
         }
@@ -67,6 +65,7 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
             user = userService.updateByUsername(firebaseToken);
         } catch (ApplicationErrorException e) {
             user = userService.create(firebaseToken, Role.ROLE_USER);
+            log.debug("Create User: {}", user);
         }
         return user;
     }
