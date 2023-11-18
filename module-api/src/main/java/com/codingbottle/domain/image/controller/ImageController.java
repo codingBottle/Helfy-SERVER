@@ -1,9 +1,9 @@
-package com.codingbottle.domain.Image.controller;
+package com.codingbottle.domain.image.controller;
 
-import com.codingbottle.domain.Image.entity.Directory;
-import com.codingbottle.domain.Image.entity.Image;
-import com.codingbottle.domain.Image.model.ImageResponse;
-import com.codingbottle.domain.Image.service.ImageService;
+import com.codingbottle.domain.image.entity.Directory;
+import com.codingbottle.domain.image.entity.Image;
+import com.codingbottle.domain.image.model.ImageResponse;
+import com.codingbottle.domain.image.service.ImageService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -1,8 +1,7 @@
-package com.codingbottle.domain.Image.model;
+package com.codingbottle.domain.image.model;
 
-import com.codingbottle.domain.Image.entity.Image;
+import com.codingbottle.domain.image.entity.Image;
 import lombok.Builder;
-import lombok.Getter;
 
 @Builder
 public record ImageResponse(

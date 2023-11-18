@@ -1,9 +1,9 @@
-package com.codingbottle.domain.Image.controller;
+package com.codingbottle.domain.image.controller;
 
 import com.codingbottle.docs.util.RestDocsTest;
-import com.codingbottle.domain.Image.entity.Directory;
-import com.codingbottle.domain.Image.entity.Image;
-import com.codingbottle.domain.Image.service.ImageService;
+import com.codingbottle.domain.image.entity.Directory;
+import com.codingbottle.domain.image.entity.Image;
+import com.codingbottle.domain.image.service.ImageService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;

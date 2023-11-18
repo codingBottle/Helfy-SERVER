@@ -1,4 +1,4 @@
-package com.codingbottle.domain.Image.entity;
+package com.codingbottle.domain.image.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
