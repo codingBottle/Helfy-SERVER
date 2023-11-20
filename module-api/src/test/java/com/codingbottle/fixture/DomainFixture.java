@@ -5,7 +5,9 @@ import com.codingbottle.auth.entity.User;
 import com.codingbottle.domain.image.entity.Directory;
 import com.codingbottle.domain.image.entity.Image;
 import com.codingbottle.domain.post.entity.Post;
-import com.codingbottle.domain.post.dto.PostRequest;
+import com.codingbottle.domain.post.model.PostRequest;
+import com.codingbottle.domain.quiz.entity.Quiz;
+import com.codingbottle.domain.quiz.entity.QuizType;
 import com.codingbottle.domain.region.entity.Region;
 
 

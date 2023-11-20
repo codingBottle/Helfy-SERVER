@@ -2,8 +2,8 @@ package com.codingbottle.domain.post.controller;
 
 import com.codingbottle.auth.entity.User;
 import com.codingbottle.domain.post.entity.Post;
-import com.codingbottle.domain.post.dto.PostRequest;
-import com.codingbottle.domain.post.dto.PostResponse;
+import com.codingbottle.domain.post.model.PostRequest;
+import com.codingbottle.domain.post.model.PostResponse;
 import com.codingbottle.domain.post.service.PostService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
