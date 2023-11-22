@@ -14,9 +14,8 @@ import java.util.Collections;
 
 @Getter
 @Entity
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@Table(name = "users")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,9 +25,6 @@ public class User implements UserDetails {
     @Column(name = "username", nullable = false, unique = true)
     private String username;
 
-    @Column(name = "role", nullable = false)
-    private Role role;
-
     @Column(name = "email", nullable = false)
     private String email;
 
@@ -37,6 +33,10 @@ public class User implements UserDetails {
 
     @Column(name = "picture")
     private String picture;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "region", nullable = false)
@@ -88,6 +88,16 @@ public class User implements UserDetails {
         this.region = region;
 
         return this;
+    }
+
+    @Builder
+    public User(String username, String email, String name, String picture, Role role, Region region) {
+        this.username = username;
+        this.email = email;
+        this.name = name;
+        this.picture = picture;
+        this.role = role;
+        this.region = region;
     }
 
     @Override

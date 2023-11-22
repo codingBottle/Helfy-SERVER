@@ -1,4 +1,4 @@
-package com.codingbottle.domain.post.dto;
+package com.codingbottle.domain.post.model;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

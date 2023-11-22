@@ -2,7 +2,7 @@ package com.codingbottle.domain.post.controller;
 
 import com.codingbottle.auth.entity.User;
 import com.codingbottle.docs.util.RestDocsTest;
-import com.codingbottle.domain.post.dto.PostRequest;
+import com.codingbottle.domain.post.model.PostRequest;
 import com.codingbottle.domain.post.service.PostService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -72,6 +72,8 @@ class PostControllerTest extends RestDocsTest {
                                 fieldWithPath("content[].image.id").description("게시물 이미지 id"),
                                 fieldWithPath("content[].image.imageUrl").description("게시물 이미지 url"),
                                 fieldWithPath("content[].image.directory").description("게시물 이미지 디렉토리"),
+                                fieldWithPath("content[].image.createdTime").description("게시물 이미지 생성시간").type("LocalDateTime"),
+                                fieldWithPath("content[].image.modifiedTime").description("게시물 이미지 수정시간").type("LocalDateTime"),
                                 fieldWithPath("content[].image.convertImageName").description("게시물 이미지 convertImageName"),
                                 fieldWithPath("content[].createdTime").description("게시물 생성시간").type("LocalDateTime"),
                                 fieldWithPath("content[].modifiedTime").description("게시물 수정시간").type("LocalDateTime"),
@@ -183,6 +185,8 @@ class PostControllerTest extends RestDocsTest {
                 fieldWithPath("image.id").description("게시물 이미지 id").type("Number"),
                 fieldWithPath("image.imageUrl").description("게시물 이미지 url"),
                 fieldWithPath("image.directory").description("게시물 이미지 디렉토리"),
+                fieldWithPath("image.createdTime").description("게시물 이미지 생성시간").type("LocalDateTime"),
+                fieldWithPath("image.modifiedTime").description("게시물 이미지 수정시간").type("LocalDateTime"),
                 fieldWithPath("image.convertImageName").description("게시물 이미지 convertImageName"),
                 fieldWithPath("createdTime").description("게시물 생성시간").type("LocalDateTime"),
                 fieldWithPath("modifiedTime").description("게시물 수정시간").type("LocalDateTime")

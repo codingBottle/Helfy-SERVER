@@ -1,4 +1,4 @@
-package com.codingbottle.domain.post.dto;
+package com.codingbottle.domain.post.model;
 
 import com.codingbottle.domain.image.entity.Image;
 import com.codingbottle.domain.post.entity.Post;

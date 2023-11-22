@@ -5,8 +5,12 @@ import com.codingbottle.auth.entity.User;
 import com.codingbottle.domain.image.entity.Directory;
 import com.codingbottle.domain.image.entity.Image;
 import com.codingbottle.domain.post.entity.Post;
-import com.codingbottle.domain.post.dto.PostRequest;
+import com.codingbottle.domain.post.model.PostRequest;
+import com.codingbottle.domain.quiz.entity.Quiz;
+import com.codingbottle.domain.quiz.entity.QuizType;
 import com.codingbottle.domain.region.entity.Region;
+
+import java.util.HashMap;
 
 
 public class DomainFixture {
@@ -58,6 +62,42 @@ public class DomainFixture {
             .directory(Directory.POST)
             .imageUrl("https://d1csu9i9ktup9e.cloudfront.net/default.png")
             .convertImageName("default.png")
+            .build();
+
+    public static final Image 퀴즈_이미지1 = Image.builder()
+            .directory(Directory.QUIZ)
+            .imageUrl("https://d1csu9i9ktup9e.cloudfront.net/default.png")
+            .convertImageName("default.png")
+            .build();
+
+    public static final Quiz 퀴즈1 = Quiz.builder()
+            .answer("답")
+            .question("질문")
+            .choices(new HashMap<>(){
+                {
+                    put("1", "선택지1");
+                    put("2", "선택지2");
+                    put("3", "선택지3");
+                    put("4", "선택지4");
+                }
+            })
+            .quizType(QuizType.MULTIPLE_CHOICE)
+            .image(null)
+            .build();
+
+    public static final Quiz 퀴즈2 = Quiz.builder()
+            .answer("답")
+            .question("질문")
+            .choices(new HashMap<>(){
+                {
+                    put("1", "선택지1");
+                    put("2", "선택지2");
+                    put("3", "선택지3");
+                    put("4", "선택지4");
+                }
+            })
+            .quizType(QuizType.OX)
+            .image(퀴즈_이미지1)
             .build();
 }
 

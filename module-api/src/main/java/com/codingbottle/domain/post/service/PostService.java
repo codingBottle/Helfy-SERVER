@@ -7,7 +7,7 @@ import com.codingbottle.domain.image.entity.Image;
 import com.codingbottle.domain.image.service.ImageService;
 import com.codingbottle.domain.post.entity.Post;
 import com.codingbottle.domain.post.repo.PostRepository;
-import com.codingbottle.domain.post.dto.PostRequest;
+import com.codingbottle.domain.post.model.PostRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -11,6 +11,7 @@ public enum ApplicationErrorType {
     INVALID_HEADER(HttpStatus.BAD_REQUEST, "Header 값이 올바르지 않습니다."),
     INVALID_FIREBASE_TOKEN(HttpStatus.BAD_REQUEST, "Firebase 토큰이 올바르지 않습니다."),
     INVALID_FILE_TYPE(HttpStatus.BAD_REQUEST, "파일 타입이 올바르지 않습니다."),
+    NOT_EXIT_WRONG_ANSWER(HttpStatus.BAD_REQUEST, "틀린 문제가 없습니다."),
     //401
     NO_AUTHENTICATION(HttpStatus.UNAUTHORIZED, "인증되지 않은 사용자입니다."),
     //404
