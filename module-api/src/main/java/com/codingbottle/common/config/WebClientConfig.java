@@ -24,10 +24,10 @@ public class WebClientConfig {
     public WebClient webClient() {
         HttpClient httpClient = HttpClient.create()
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 10000)
-                .responseTimeout(Duration.ofMillis(10000))
+                .responseTimeout(Duration.ofSeconds(15))
                 .doOnConnected(conn -> conn
-                        .addHandlerLast(new ReadTimeoutHandler(10000, TimeUnit.MILLISECONDS))
-                        .addHandlerLast(new WriteTimeoutHandler(10000, TimeUnit.MILLISECONDS)));
+                        .addHandlerLast(new ReadTimeoutHandler(15, TimeUnit.SECONDS))
+                        .addHandlerLast(new WriteTimeoutHandler(15, TimeUnit.SECONDS)));
 
         return WebClient.builder()
                 .baseUrl(openWeatherMapUrl)

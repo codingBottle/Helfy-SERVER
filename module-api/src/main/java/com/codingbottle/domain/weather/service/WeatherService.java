@@ -14,10 +14,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
+import reactor.util.retry.Retry;
 
 import javax.annotation.PostConstruct;
+import java.time.Duration;
 import java.util.Arrays;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -49,7 +51,7 @@ public class WeatherService {
         try {
             redisService.setObjectValues(region, getWeather(region));
         } catch (JsonProcessingException e) {
-            throw new ApplicationErrorException(ApplicationErrorType.INTERNAL_ERROR, "날씨 정보를 가져오는데 실패했습니다.");
+            throw new ApplicationErrorException(ApplicationErrorType.WEATHER_NOT_FOUND, "날씨 정보를 가져오는데 실패했습니다.");
         }
     }
 
@@ -57,7 +59,7 @@ public class WeatherService {
         CurrentWeatherRequest currentWeatherRequest = getRequestCurrentWeather(region);
 
         if (currentWeatherRequest == null) {
-            throw new ApplicationErrorException(ApplicationErrorType.INTERNAL_ERROR, "날씨 정보를 가져오는데 실패했습니다.");
+            throw new ApplicationErrorException(ApplicationErrorType.WEATHER_NOT_FOUND, "날씨 정보를 가져오는데 실패했습니다.");
         }
 
         return WeatherResponse.of(currentWeatherRequest);
@@ -74,7 +76,10 @@ public class WeatherService {
                         .queryParam("lang", "kr")
                         .build())
                 .retrieve()
+                .onStatus(status -> status.is4xxClientError() || status.is5xxServerError(),
+                        clientResponse -> Mono.error(new ApplicationErrorException(ApplicationErrorType.WEB_CLIENT_ERROR)))
                 .bodyToMono(CurrentWeatherRequest.class)
+                .retryWhen(Retry.backoff(3, Duration.ofSeconds(1)))
                 .block();
     }
 
