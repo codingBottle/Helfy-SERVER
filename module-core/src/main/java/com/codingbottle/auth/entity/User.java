@@ -42,6 +42,25 @@ public class User implements UserDetails {
     @Column(name = "region", nullable = false)
     private Region region = Region.NONE;
 
+    public void update(FirebaseToken token) {
+        this.username = token.getUid();
+        this.email = token.getEmail();
+        this.name = token.getName();
+        this.picture = token.getPicture();
+    }
+
+    public User updateRegion(Region region) {
+        this.region = region;
+
+        return this;
+    }
+
+    public User updateNickname(String nickname) {
+        this.username = nickname;
+
+        return this;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority(role.name()));
@@ -75,19 +94,6 @@ public class User implements UserDetails {
     @Override
     public String getUsername(){
         return username;
-    }
-
-    public void update(FirebaseToken token) {
-        this.username = token.getUid();
-        this.email = token.getEmail();
-        this.name = token.getName();
-        this.picture = token.getPicture();
-    }
-
-    public User updateRegion(Region region) {
-        this.region = region;
-
-        return this;
     }
 
     @Builder

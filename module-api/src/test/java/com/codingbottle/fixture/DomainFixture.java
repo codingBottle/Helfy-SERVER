@@ -9,6 +9,7 @@ import com.codingbottle.domain.post.model.PostRequest;
 import com.codingbottle.domain.quiz.entity.Quiz;
 import com.codingbottle.domain.quiz.entity.QuizType;
 import com.codingbottle.domain.region.entity.Region;
+import com.codingbottle.domain.user.model.UserNicknameRequest;
 
 import java.util.HashMap;
 
@@ -99,5 +100,7 @@ public class DomainFixture {
             .quizType(QuizType.OX)
             .image(퀴즈_이미지1)
             .build();
+
+    public static final UserNicknameRequest 유저_닉네임_변경_요청1 = new UserNicknameRequest("닉네임 변경");
 }
 

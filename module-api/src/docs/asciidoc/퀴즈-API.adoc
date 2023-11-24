@@ -1,0 +1,20 @@
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 3
+:leveloffset: 1
+:secttlinks:
+
+[[퀴즈-API]]
+= 퀴즈 API
+
+[[퀴즈-조회]]
+== 퀴즈 조회(오늘의 퀴즈, 랜덤 퀴즈 풀어보기)
+operation::quiz-list[snippets='http-request,query-parameters,http-response,response-fields']
+
+[[틀린퀴즈-조회]]
+== 틀린 퀴즈 조회
+IMPORTANT:  (만약 틀린 문제가 없으면 오류 응답)
+
+operation::wrong-answer-list[snippets='http-request,http-response,response-fields']
