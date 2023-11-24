@@ -1,3 +1,11 @@
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 3
+:leveloffset: 1
+:secttlinks:
+
 [[지역-API]]
 = 지역 API
 

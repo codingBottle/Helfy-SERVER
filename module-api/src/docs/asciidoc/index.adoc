@@ -2,24 +2,40 @@
 :icons: font
 :source-highlighter: highlightjs
 :toc: left
-:toclevels: 2
+:toclevels: 3
 :leveloffset: 1
 :secttlinks:
 
 = API 문서
 
-include::API-개요.adoc[]
+== 공통 API
+=== link:오류-응답.html[*오류 응답*]
 
-include::카테고리-API.adoc[]
+'''
+== 카테고리
+=== link:카테고리-API.html[*카테고리 조회*]
 
-include::이미지-API.adoc[]
+'''
+== 이미지
+=== link:이미지-API.html[*이미지 저장*]
 
-include::지역-API.adoc[]
+'''
+== 지역
+=== link:지역-API.html[*지역 조회*]
 
-include::게시물-API.adoc[]
+'''
+== 커뮤니티
+=== link:게시물-API.html[*게시물 CRUD*]
 
-include::날씨-API.adoc[]
+'''
+== 날씨
+=== link:날씨-API.html[*날씨 조회*]
 
-include::퀴즈-API.adoc[]
+'''
+== 퀴즈
+=== link:퀴즈-API.html[*퀴즈 조회 (오늘의 퀴즈, 문제 풀어보기, 오답 풀기)*]
 
-include::사용자-API.adoc[]
+'''
+== 사용자
+=== link:사용자-정보-수정-API.html[*사용자 정보(지역, 닉네임) 수정*]
+
