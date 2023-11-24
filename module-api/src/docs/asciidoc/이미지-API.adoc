@@ -1,0 +1,6 @@
+[[이미지-API]]
+= 이미지 API
+
+[[이미지-업로드]]
+== 이미지 업로드
+operation::images-upload[snippets='http-request,request-parts,query-parameters,http-response,response-fields']

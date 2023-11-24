@@ -1,0 +1,6 @@
+[[날씨-API]]
+= 날씨 API
+
+[[날씨-조회]]
+== 현재 날씨 조회
+operation::current-weather[snippets='http-request,http-response,response-fields']

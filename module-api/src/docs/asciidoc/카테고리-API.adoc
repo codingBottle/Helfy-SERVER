@@ -1,0 +1,6 @@
+[[카테고리-API]]
+= 카테고리 API
+
+[[카테고리-목록]]
+== 카테고리 목록
+operation::categories-list[snippets='http-request,http-response']
