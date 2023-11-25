@@ -8,8 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.TimeUnit;
-
 @Service
 @RequiredArgsConstructor
 public class RedisService {
@@ -32,5 +30,23 @@ public class RedisService {
 
     private String writeKeyAsString(Region key) throws JsonProcessingException {
         return objectMapper.writeValueAsString(key);
+    }
+
+    public void setLikeStatus(Long userId, Long postId, boolean likeStatus) throws JsonProcessingException {
+        String mapperK = buildLikeKey(userId, postId);
+        var mapperV = objectMapper.writeValueAsString(likeStatus);
+
+        redisTemplate.opsForValue().set(mapperK, mapperV);
+    }
+
+    public Boolean getLikeStatus(Long userId, Long postId) throws JsonProcessingException {
+        String mapperK = buildLikeKey(userId, postId);
+        String value = redisTemplate.opsForValue().get(mapperK);
+
+        return objectMapper.readValue(value, Boolean.class);
+    }
+
+    private String buildLikeKey(Long userId, Long postId) {
+        return "user::" + userId + "::post::" + postId;
     }
 }
