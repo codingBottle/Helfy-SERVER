@@ -2,8 +2,10 @@ package com.codingbottle.fixture;
 
 import com.codingbottle.auth.entity.Role;
 import com.codingbottle.auth.entity.User;
+import com.codingbottle.domain.category.entity.Category;
 import com.codingbottle.domain.image.entity.Directory;
 import com.codingbottle.domain.image.entity.Image;
+import com.codingbottle.domain.information.entity.Information;
 import com.codingbottle.domain.post.entity.Post;
 import com.codingbottle.domain.post.model.PostRequest;
 import com.codingbottle.domain.quiz.entity.Quiz;
@@ -102,5 +104,19 @@ public class DomainFixture {
             .build();
 
     public static final UserNicknameRequest 유저_닉네임_변경_요청1 = new UserNicknameRequest("닉네임 변경");
+
+    public static final  Image 정보_이미지1 = Image.builder()
+            .directory(Directory.INFORMATION)
+            .imageUrl("https://d1csu9i9ktup9e.cloudfront.net/default.png")
+            .convertImageName("default.png")
+            .build();
+
+    public static final Information 정보1 = Information.builder()
+            .category(Category.FLOOD)
+            .content("내용")
+            .news("뉴스")
+            .youtube("유튜브")
+            .image(정보_이미지1)
+            .build();
 }
 
