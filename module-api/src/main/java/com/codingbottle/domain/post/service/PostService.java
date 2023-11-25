@@ -30,6 +30,7 @@ public class PostService {
                 .content(postRequest.content())
                 .user(user)
                 .image(image)
+                .likeCount(0L)
                 .build();
 
         return postRepository.save(post);
