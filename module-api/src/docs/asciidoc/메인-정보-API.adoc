@@ -1,0 +1,14 @@
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 3
+:leveloffset: 1
+:secttlinks:
+
+[[메인-정보-API]]
+= 메인 정보 API
+
+[[정보-조회]]
+== 메인 정보 조회 (카테고리별)
+operation::get-information[snippets='http-request,query-parameters,http-response,response-fields']
