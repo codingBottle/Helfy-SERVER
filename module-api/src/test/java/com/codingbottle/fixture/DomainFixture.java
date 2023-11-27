@@ -2,8 +2,10 @@ package com.codingbottle.fixture;
 
 import com.codingbottle.auth.entity.Role;
 import com.codingbottle.auth.entity.User;
+import com.codingbottle.domain.category.entity.Category;
 import com.codingbottle.domain.image.entity.Directory;
 import com.codingbottle.domain.image.entity.Image;
+import com.codingbottle.domain.information.entity.Information;
 import com.codingbottle.domain.post.entity.Post;
 import com.codingbottle.domain.post.model.PostRequest;
 import com.codingbottle.domain.quiz.entity.Quiz;
