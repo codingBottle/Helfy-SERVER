@@ -15,6 +15,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.codingbottle.docs.util.ApiDocumentUtils.*;
+import static com.codingbottle.fixture.DomainFixture.유저1;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -59,17 +60,10 @@ class RegionControllerTest extends RestDocsTest {
     @DisplayName("사용자 지역 수정")
     void update_user_region() throws Exception {
         //given
-        String region = Region.SEOUL.name();
-
-        User user = User.builder()
-                .username("test")
-                .region(Region.SEOUL)
-                .build();
-
-        given(regionService.updateRegions(any(Region.class), any(User.class))).willReturn(user);
+        given(regionService.updateRegions(any(Region.class), any(User.class))).willReturn(유저1);
         //when & then
         mvc.perform(patch("/api/v1/user/regions")
-                        .queryParam("region", region)
+                        .queryParam("region", "BUSAN")
                         .header("Authorization", "Bearer FirebaseToken"))
                 .andExpect(status().isOk())
                 .andDo(document("update-user-region",
@@ -82,6 +76,7 @@ class RegionControllerTest extends RestDocsTest {
                         ),
                         responseFields(
                                 fieldWithPath("username").description("사용자 이름"),
+                                fieldWithPath("picture").description("사용자 프로필 사진"),
                                 fieldWithPath("region").description("사용자 지역")
                         )));
     }
