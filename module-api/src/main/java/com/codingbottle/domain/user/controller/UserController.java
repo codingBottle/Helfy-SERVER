@@ -24,4 +24,9 @@ public class UserController {
 
         return ResponseEntity.ok(UserResponse.of(updateUser));
     }
+
+    @GetMapping("/user")
+    public ResponseEntity<UserResponse> getUser(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(UserResponse.of(user));
+    }
 }
