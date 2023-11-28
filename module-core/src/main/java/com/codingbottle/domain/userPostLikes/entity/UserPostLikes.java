@@ -1,4 +1,4 @@
-package com.codingbottle.domain.likes.entity;
+package com.codingbottle.domain.userPostLikes.entity;
 
 import com.codingbottle.auth.entity.User;
 import com.codingbottle.common.entity.BaseEntity;
@@ -12,22 +12,22 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Likes extends BaseEntity {
+public class UserPostLikes extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "likes_num")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "post_id")
     private Post post;
 
     @Builder
-    public Likes(User user, Post post) {
+    public UserPostLikes(User user, Post post) {
         this.user = user;
         this.post = post;
     }
