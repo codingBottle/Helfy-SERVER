@@ -5,6 +5,7 @@ import com.codingbottle.domain.post.entity.Post;
 import com.codingbottle.domain.post.model.PostRequest;
 import com.codingbottle.domain.post.model.PostResponse;
 import com.codingbottle.domain.post.service.PostService;
+import com.codingbottle.domain.userPostLikes.service.UserPostLikesService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,23 +22,27 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
+    private final UserPostLikesService userPostLikesService;
 
     @PostMapping
     public ResponseEntity<PostResponse> create(@RequestBody @Validated PostRequest postRequest,
                                                @AuthenticationPrincipal User user) {
         Post post = postService.save(postRequest, user);
-        return ResponseEntity.ok(PostResponse.createInstance(post));
+        Boolean likeStatus = userPostLikesService.getLikeStatus(user, post.getId());
+        return ResponseEntity.ok(PostResponse.createInstance(post, likeStatus));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PostResponse> findById(@PathVariable(value = "id") Long id) {
+    public ResponseEntity<PostResponse> findById(@PathVariable(value = "id") Long id, @AuthenticationPrincipal User user) {
         Post findPost = postService.findById(id);
-        return ResponseEntity.ok(PostResponse.createInstance(findPost));
+        Boolean likeStatus = userPostLikesService.getLikeStatus(user, id);
+        return ResponseEntity.ok(PostResponse.createInstance(findPost, likeStatus));
     }
 
     @GetMapping
-    public ResponseEntity<Page<PostResponse>> page(@PageableDefault Pageable pageable) {
-        Page<PostResponse> posts = postService.findAll(pageable).map(PostResponse::createInstance);
+    public ResponseEntity<Page<PostResponse>> page(@PageableDefault Pageable pageable, @AuthenticationPrincipal User user) {
+        Page<PostResponse> posts = postService.findAll(pageable)
+                .map(post -> PostResponse.createInstance(post, userPostLikesService.getLikeStatus(user, post.getId())));
         return ResponseEntity.ok(posts);
     }
 
@@ -46,7 +51,8 @@ public class PostController {
                                                @RequestBody @Validated PostRequest postRequest,
                                                @AuthenticationPrincipal User user) {
         Post post = postService.update(postRequest, id, user);
-        return ResponseEntity.ok(PostResponse.createInstance(post));
+        Boolean likeStatus = userPostLikesService.getLikeStatus(user, id);
+        return ResponseEntity.ok(PostResponse.createInstance(post, likeStatus));
     }
 
     @DeleteMapping("/{id}")
