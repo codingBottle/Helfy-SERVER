@@ -20,11 +20,4 @@ public class UserPostLikesController {
         userPostLikesService.likesPut(user, id);
         return ResponseEntity.ok("Likes operation completed successfully.");
     }
-
-    @GetMapping
-    public ResponseEntity<Boolean> likeStatus(@PathVariable(value = "id") Long id, @AuthenticationPrincipal User user){
-        Boolean likesStatus = likesRedisService.getLikeStatus(user.getId(), id);
-
-        return ResponseEntity.ok(likesStatus);
-    }
 }
