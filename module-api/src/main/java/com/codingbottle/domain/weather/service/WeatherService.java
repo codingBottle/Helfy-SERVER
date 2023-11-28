@@ -3,7 +3,7 @@ package com.codingbottle.domain.weather.service;
 import com.codingbottle.auth.entity.User;
 import com.codingbottle.common.exception.ApplicationErrorException;
 import com.codingbottle.common.exception.ApplicationErrorType;
-import com.codingbottle.common.redis.RedisService;
+import com.codingbottle.common.redis.WeatherRedisService;
 import com.codingbottle.domain.region.entity.Region;
 import com.codingbottle.domain.weather.model.CurrentWeatherRequest;
 import com.codingbottle.domain.weather.model.WeatherResponse;
@@ -26,14 +26,14 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public class WeatherService {
     private final WebClient webClient;
-    private final RedisService redisService;
+    private final WeatherRedisService weatherRedisService;
 
     @Value("${openweathermap.api-key}")
     private String weatherApiKey;
 
     public WeatherResponse getWeather(User user) {
         try {
-            return redisService.getObjectValues(user.getRegion());
+            return weatherRedisService.getObjectValues(user.getRegion());
         } catch (JsonProcessingException e) {
             throw new ApplicationErrorException(ApplicationErrorType.INTERNAL_ERROR, "날씨 정보를 가져오는데 실패했습니다.");
         }
@@ -49,7 +49,7 @@ public class WeatherService {
 
     private void setAllRegionWeather(Region region) {
         try {
-            redisService.setObjectValues(region, getWeather(region));
+            weatherRedisService.setObjectValues(region, getWeather(region));
         } catch (JsonProcessingException e) {
             throw new ApplicationErrorException(ApplicationErrorType.WEATHER_NOT_FOUND, "날씨 정보를 가져오는데 실패했습니다.");
         }
