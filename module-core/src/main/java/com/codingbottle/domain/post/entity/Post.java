@@ -31,14 +31,13 @@ public class Post extends BaseEntity {
     private Image image;
 
     @Column(name = "post_likeCount")
-    private Long likeCount;
+    private int likeCount;
 
     @Builder
-    public Post(String content, User user, Image image, Long likeCount) {
+    public Post(String content, User user, Image image) {
         this.content = content;
         this.user = user;
         this.image = image;
-        this.likeCount = likeCount;
     }
 
     public void update(String content, Image image) {
