@@ -1,6 +1,4 @@
 spring:
-  profiles:
-    active: prod
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${JDBC_URL}
@@ -75,9 +73,12 @@ openweathermap:
   api-key: ${WEATHER_API_KEY}
   api-url: https://api.openweathermap.org/data/2.5/weather
 
-
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
 logging:
-  slack:
-    webhook-url: ${SLACK_WEBHOOK_URL}
+  discord:
+    webhook-url: ${DISCORD_WEBHOOK_URL}
   config: classpath:logback-spring.xml
-
