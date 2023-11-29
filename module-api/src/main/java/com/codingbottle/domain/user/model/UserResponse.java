@@ -7,11 +7,13 @@ import lombok.Builder;
 @Builder
 public record UserResponse(
         String username,
+        String picture,
         Region region
 ) {
     public static UserResponse of(User user) {
         return UserResponse.builder()
                 .username(user.getUsername())
+                .picture(user.getPicture())
                 .region(user.getRegion())
                 .build();
     }

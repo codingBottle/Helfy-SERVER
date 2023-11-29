@@ -35,6 +35,7 @@ public class DomainFixture {
             .region(Region.SEOUL)
             .picture("https://d1csu9i9ktup9e.cloudfront.net/default.png")
             .role(Role.ROLE_USER)
+            .name("유저1")
             .build();
 
     public static final User 유저2 = User.builder()
