@@ -8,24 +8,22 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.TimeUnit;
-
 @Service
 @RequiredArgsConstructor
-public class RedisService {
-    private final RedisTemplate<String, String> redisTemplate;
+public class WeatherRedisService {
+    private final RedisTemplate<String, String> weatherRedisTemplate;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public void setObjectValues(Region key, WeatherResponse value) throws JsonProcessingException {
         String mapperK = writeKeyAsString(key);
         var mapperV = objectMapper.writeValueAsString(value);
 
-        redisTemplate.opsForValue().set(mapperK, mapperV);
+        weatherRedisTemplate.opsForValue().set(mapperK, mapperV);
     }
 
     public WeatherResponse getObjectValues(Region key) throws JsonProcessingException {
         String mapperK = writeKeyAsString(key);
-        String value = redisTemplate.opsForValue().get(mapperK);
+        String value = weatherRedisTemplate.opsForValue().get(mapperK);
 
         return objectMapper.readValue(value, WeatherResponse.class);
     }

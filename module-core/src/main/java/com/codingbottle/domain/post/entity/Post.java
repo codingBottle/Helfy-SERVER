@@ -30,6 +30,9 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "image_id")
     private Image image;
 
+    @Column(name = "post_likeCount")
+    private int likeCount;
+
     @Builder
     public Post(String content, User user, Image image) {
         this.content = content;
@@ -40,5 +43,13 @@ public class Post extends BaseEntity {
     public void update(String content, Image image) {
         this.content = content;
         this.image = image;
+    }
+
+    public void addLikeCount(){
+        likeCount++;
+    }
+
+    public void subLikeCount(){
+        likeCount--;
     }
 }

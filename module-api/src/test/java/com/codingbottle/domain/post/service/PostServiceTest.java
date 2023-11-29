@@ -32,6 +32,8 @@ class PostServiceTest {
 
     @Mock
     private PostRepository postRepository;
+    @Mock
+    private UserPostLikesService userPostLikesService;
 
     @Mock
     private ImageService imageService;
@@ -109,6 +111,7 @@ class PostServiceTest {
     void delete_post() {
         // given
         given(postRepository.findById(any())).willReturn(Optional.ofNullable(게시글1));
+        given(userPostLikesService.deletePost(any(Post.class))).willReturn(true);
         // when
         postService.delete(게시글1.getId(), 게시글1.getUser());
         // then

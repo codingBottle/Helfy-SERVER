@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostService {
     private final PostRepository postRepository;
     private final ImageService imageService;
+    private final UserPostLikesService userPostLikesService;
 
     @Transactional
     public Post save(PostRequest postRequest, User user) {
@@ -33,15 +34,6 @@ public class PostService {
                 .build();
 
         return postRepository.save(post);
-    }
-
-    public Page<Post> findAll(Pageable pageable) {
-        return postRepository.findAll(pageable);
-    }
-
-    public Post findById(Long id) {
-        return postRepository.findById(id)
-                .orElseThrow(() -> new ApplicationErrorException(ApplicationErrorType.POST_NOT_FOUND, String.format("해당 게시글(%s)을 찾을 수 없습니다.", id)));
     }
 
     @Transactional
@@ -58,6 +50,15 @@ public class PostService {
         return post;
     }
 
+    public Page<Post> findAll(Pageable pageable) {
+        return postRepository.findAll(pageable);
+    }
+
+    public Post findById(Long id) {
+        return postRepository.findById(id)
+                .orElseThrow(() -> new ApplicationErrorException(ApplicationErrorType.POST_NOT_FOUND, String.format("해당 게시글(%s)을 찾을 수 없습니다.", id)));
+    }
+
     @Transactional
     public void delete(Long id, User user) {
         Post post = findById(id);
@@ -66,6 +67,9 @@ public class PostService {
             throw new ApplicationErrorException(ApplicationErrorType.NO_AUTHENTICATION, String.format("해당 게시글(%s)에 접근 권한이 없습니다.", id));
         }
         postRepository.delete(post);
+        if(!userPostLikesService.deletePost(post)){
+            throw new ApplicationErrorException(ApplicationErrorType.INTERNAL_ERROR, "좋아요 상태를 변경 실패했습니다.");
+        }
     }
 
     private boolean isNotSameWriter(Post post, User user) {
