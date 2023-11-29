@@ -59,7 +59,7 @@ public class PostController {
     public ResponseEntity<String> likesPut(@PathVariable(value = "id") Long id,
                                            @AuthenticationPrincipal User user) {
         if(userPostLikesService.isAlreadyLikes(user, id)){
-            userPostLikesService.cancelLikes(user.getId(), id);
+            userPostLikesService.cancelLikes(user, id);
         }
         userPostLikesService.likesPut(user, id);
         return ResponseEntity.ok("Likes operation completed successfully.");

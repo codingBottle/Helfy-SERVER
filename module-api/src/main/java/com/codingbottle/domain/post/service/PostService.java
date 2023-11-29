@@ -3,6 +3,7 @@ package com.codingbottle.domain.post.service;
 import com.codingbottle.auth.entity.User;
 import com.codingbottle.common.exception.ApplicationErrorException;
 import com.codingbottle.common.exception.ApplicationErrorType;
+import com.codingbottle.common.redis.LikesRedisService;
 import com.codingbottle.domain.image.entity.Image;
 import com.codingbottle.domain.image.service.ImageService;
 import com.codingbottle.domain.post.entity.Post;
@@ -21,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostService {
     private final PostRepository postRepository;
     private final ImageService imageService;
-    private final UserPostLikesService userPostLikesService;
+    private final LikesRedisService likesRedisService;
 
     @Transactional
     public Post save(PostRequest postRequest, User user) {
@@ -67,9 +68,7 @@ public class PostService {
             throw new ApplicationErrorException(ApplicationErrorType.NO_AUTHENTICATION, String.format("해당 게시글(%s)에 접근 권한이 없습니다.", id));
         }
         postRepository.delete(post);
-        if(!userPostLikesService.deletePost(post)){
-            throw new ApplicationErrorException(ApplicationErrorType.INTERNAL_ERROR, "좋아요 상태를 변경 실패했습니다.");
-        }
+        likesRedisService.deleteLikesPost(post.getId());
     }
 
     private boolean isNotSameWriter(Post post, User user) {
