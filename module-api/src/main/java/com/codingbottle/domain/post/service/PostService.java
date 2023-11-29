@@ -68,7 +68,8 @@ public class PostService {
             throw new ApplicationErrorException(ApplicationErrorType.NO_AUTHENTICATION, String.format("해당 게시글(%s)에 접근 권한이 없습니다.", id));
         }
         postRepository.delete(post);
-        if(likesRedisService.deleteLikesPost(id)) {
+      
+        if(!likesRedisService.deleteLikesPost(id)) {
             throw new ApplicationErrorException(ApplicationErrorType.REDIS_DELETE_ERROR, String.format("Redis에 해당 게시글(%s)의 좋아요 정보를 삭제하는데 실패했습니다.", id));
         }
     }
