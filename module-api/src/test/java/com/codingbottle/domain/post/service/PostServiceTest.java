@@ -76,7 +76,7 @@ class PostServiceTest {
     @DisplayName("게시글을 수정한다.")
     void update_post() {
         // given
-        given(postRepository.findById(any())).willReturn(Optional.ofNullable(게시글1));
+        given(postRepository.findById(any())).willReturn(Optional.of(게시글1));
         given(imageService.findById(anyLong())).willReturn(게시글_수정_이미지1);
         // when
         Post post = postService.update(게시글_수정_요청1, 게시글1.getId(), 게시글1.getUser());
@@ -111,12 +111,12 @@ class PostServiceTest {
     @DisplayName("게시글을 삭제한다.")
     void delete_post() {
         // given
-        given(postRepository.findById(any())).willReturn(Optional.ofNullable(게시글1));
-        given(likesRedisService.deleteLikesPost(any(Long.class))).willReturn(true);
+        given(postRepository.findById(any())).willReturn(Optional.of(게시글1));
         // when
         postService.delete(게시글1.getId(), 게시글1.getUser());
         // then
         verify(postRepository).delete(any(Post.class));
+        verify(likesRedisService).deleteLikesPost(any());
     }
 
     @Test
