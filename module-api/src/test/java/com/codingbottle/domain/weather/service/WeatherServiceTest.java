@@ -1,7 +1,7 @@
 package com.codingbottle.domain.weather.service;
 
 import com.codingbottle.auth.entity.User;
-import com.codingbottle.common.redis.RedisService;
+import com.codingbottle.common.redis.WeatherRedisService;
 import com.codingbottle.domain.region.entity.Region;
 import com.codingbottle.domain.weather.entity.WeatherCode;
 import com.codingbottle.domain.weather.model.WeatherResponse;
@@ -23,7 +23,7 @@ class WeatherServiceTest {
     WeatherService weatherService;
 
     @Mock
-    RedisService redisService;
+    WeatherRedisService redisService;
 
     @Test
     @DisplayName("해당 지역 날씨 정보 조회")

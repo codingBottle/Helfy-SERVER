@@ -20,22 +20,22 @@ public class RedisConfig {
 
     @Bean
     public RedisConnectionFactory redisConnectionFactoryForWeather() {
-        RedisStandaloneConfiguration config1 = new RedisStandaloneConfiguration();
-        config1.setHostName(redisProperties.getHost());
-        config1.setPort(redisProperties.getPort());
-        config1.setDatabase(0);
+        RedisStandaloneConfiguration weatherRedisConfig = new RedisStandaloneConfiguration();
+        weatherRedisConfig.setHostName(redisProperties.getHost());
+        weatherRedisConfig.setPort(redisProperties.getPort());
+        weatherRedisConfig.setDatabase(0);
 
-        return new LettuceConnectionFactory(config1);
+        return new LettuceConnectionFactory(weatherRedisConfig);
     }
 
     @Bean
     public RedisConnectionFactory redisConnectionFactoryForLikes() {
-        RedisStandaloneConfiguration config2 = new RedisStandaloneConfiguration();
-        config2.setHostName(redisProperties.getHost());
-        config2.setPort(redisProperties.getPort());
-        config2.setDatabase(1);
+        RedisStandaloneConfiguration likesRedisConfig = new RedisStandaloneConfiguration();
+        likesRedisConfig.setHostName(redisProperties.getHost());
+        likesRedisConfig.setPort(redisProperties.getPort());
+        likesRedisConfig.setDatabase(1);
 
-        return new LettuceConnectionFactory(config2);
+        return new LettuceConnectionFactory(likesRedisConfig);
     }
 
     @Bean
@@ -49,12 +49,10 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<String, Object> likesRedisTemplate() {
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+    public RedisTemplate<Long, Long> likesRedisTemplate() {
+        RedisTemplate<Long, Long> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactoryForLikes());
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new StringRedisSerializer());
-        redisTemplate.setDefaultSerializer(RedisSerializer.string());
+        redisTemplate.setDefaultSerializer(RedisSerializer.java());
         return redisTemplate;
     }
 }

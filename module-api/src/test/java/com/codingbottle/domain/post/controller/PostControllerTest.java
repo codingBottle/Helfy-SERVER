@@ -4,6 +4,7 @@ import com.codingbottle.auth.entity.User;
 import com.codingbottle.docs.util.RestDocsTest;
 import com.codingbottle.domain.post.model.PostRequest;
 import com.codingbottle.domain.post.service.PostService;
+import com.codingbottle.domain.post.service.UserPostLikesService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
@@ -34,8 +35,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class PostControllerTest extends RestDocsTest {
     @MockBean
     PostService postService;
+    @MockBean
+    UserPostLikesService userPostLikesService;
 
-    private static final String REQUEST_URL = "/api/posts";
+    private static final String REQUEST_URL = "/api/v1/posts";
 
     @DisplayName("게시글 리스트 조회")
     @Test
@@ -68,6 +71,8 @@ class PostControllerTest extends RestDocsTest {
                                 fieldWithPath("content[].id").description("게시물 id").type("Number"),
                                 fieldWithPath("content[].content").description("게시물 내용"),
                                 fieldWithPath("content[].username").description("게시물 작성자"),
+                                fieldWithPath("content[].likeCount").description("게시물 좋아요 수"),
+                                fieldWithPath("content[].likeStatus").description("게시물 좋아요 여부"),
                                 fieldWithPath("content[].image").description("게시물 이미지"),
                                 fieldWithPath("content[].image.id").description("게시물 이미지 id"),
                                 fieldWithPath("content[].image.imageUrl").description("게시물 이미지 url"),
@@ -92,32 +97,12 @@ class PostControllerTest extends RestDocsTest {
                         )));
     }
 
-    @DisplayName("게시글 개별 조회")
-    @Test
-    void find_post() throws Exception{
-        //given
-        given(postService.findById(any(Long.class))).willReturn(게시글1);
-        //when & then
-        mvc.perform(RestDocumentationRequestBuilders.get(REQUEST_URL + "/{id}", 1L)
-                        .header("Authorization", "Bearer FirebaseToken"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").exists())
-                .andExpect(jsonPath("$.username").exists())
-                .andExpect(jsonPath("$.image").exists())
-                .andDo(document("get-post",
-                        getDocumentRequest(),
-                        getDocumentResponse(),
-                        getAuthorizationHeader(),
-                        pathParameters(
-                                parameterWithName("id").description("게시물 id")),
-                        getPostResponseFields()));
-    }
-
     @DisplayName("게시글 생성")
     @Test
     void create_post() throws Exception{
         //given
         given(postService.save(any(PostRequest.class), any(User.class))).willReturn(게시글1);
+        given(userPostLikesService.isAlreadyLikes(any(User.class), any(Long.class))).willReturn(false);
         //when & then
         mvc.perform(post(REQUEST_URL)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -176,11 +161,49 @@ class PostControllerTest extends RestDocsTest {
                                 parameterWithName("id").description("게시물 id"))));
     }
 
+    @Test
+    @DisplayName("게시글 좋아요 요청")
+    void likes_put() throws Exception{
+        //given
+        given(userPostLikesService.isAlreadyLikes(any(User.class), any(Long.class))).willReturn(false);
+        //when & then
+        mvc.perform(RestDocumentationRequestBuilders.put(REQUEST_URL + "/{id}/likes", 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer FirebaseToken"))
+                .andExpect(status().isOk())
+                .andDo(document("put-likes",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        getAuthorizationHeader(),
+                        pathParameters(
+                                parameterWithName("id").description("게시물 id"))));
+    }
+
+    @Test
+    @DisplayName("게시글 좋아요 취소 요청")
+    void likes_cancel() throws Exception{
+        //given
+        given(userPostLikesService.isAlreadyLikes(any(User.class), any(Long.class))).willReturn(true);
+        //when & then
+        mvc.perform(RestDocumentationRequestBuilders.put(REQUEST_URL + "/{id}/likes", 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer FirebaseToken"))
+                .andExpect(status().isOk())
+                .andDo(document("put-likes",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        getAuthorizationHeader(),
+                        pathParameters(
+                                parameterWithName("id").description("게시물 id"))));
+    }
+
     private ResponseFieldsSnippet getPostResponseFields() {
         return responseFields(
                 fieldWithPath("id").description("게시물 id").type("Number"),
                 fieldWithPath("content").description("게시물 내용"),
                 fieldWithPath("username").description("게시물 작성자 명"),
+                fieldWithPath("likeCount").description("게시물 좋아요 수"),
+                fieldWithPath("likeStatus").description("게시물 좋아요 여부"),
                 fieldWithPath("image").description("게시물 이미지"),
                 fieldWithPath("image.id").description("게시물 이미지 id").type("Number"),
                 fieldWithPath("image.imageUrl").description("게시물 이미지 url"),

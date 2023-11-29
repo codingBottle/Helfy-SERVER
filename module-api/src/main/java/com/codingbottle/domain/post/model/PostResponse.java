@@ -15,8 +15,13 @@ public record PostResponse (
         LocalDateTime createdTime,
         LocalDateTime modifiedTime
 ){
-    public static PostResponse createInstance(Post post, Boolean likeStatus) {
+    public static PostResponse from(Post post, Boolean likeStatus) {
         return new PostResponse(post.getId(), post.getContent(), post.getUser().getUsername(),post.getImage(), post.getLikeCount(), likeStatus, post.getCreatedTime(), post.getModifiedTime()
+        );
+    }
+
+    public static PostResponse from(Post post) {
+        return new PostResponse(post.getId(), post.getContent(), post.getUser().getUsername(),post.getImage(), post.getLikeCount(), false, post.getCreatedTime(), post.getModifiedTime()
         );
     }
 }

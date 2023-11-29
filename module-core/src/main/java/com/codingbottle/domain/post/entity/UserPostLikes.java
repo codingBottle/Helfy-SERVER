@@ -1,8 +1,7 @@
-package com.codingbottle.domain.userPostLikes.entity;
+package com.codingbottle.domain.post.entity;
 
 import com.codingbottle.auth.entity.User;
 import com.codingbottle.common.entity.BaseEntity;
-import com.codingbottle.domain.post.entity.Post;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

@@ -8,24 +8,21 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class LikesRedisService {
-    private final RedisTemplate<String, String> likesRedisTemplate;
+    private final RedisTemplate<Long, Long> likesRedisTemplate;
 
-    public void setLikeStatus(Long userId, Long postId, boolean likeStatus) throws JsonProcessingException {
-        String mapperK = buildLikeKey(userId, postId);
-
-        if (likeStatus) {
-            likesRedisTemplate.opsForValue().set(mapperK, "LIKED");
-        } else {
-            likesRedisTemplate.delete(mapperK);
-        }
+    public void setLikes(Long userId, Long postId) throws JsonProcessingException {
+        likesRedisTemplate.opsForHash().put(postId, userId, true);
     }
 
-    public Boolean getLikeStatus(Long userId, Long postId) {
-        String mapperK = buildLikeKey(userId, postId);
-        return likesRedisTemplate.hasKey(mapperK);
+    public void deleteLikes(Long userId, Long postId) {
+        likesRedisTemplate.opsForHash().delete(postId, userId);
     }
 
-    private String buildLikeKey(Long userId, Long postId) {
-        return "user::" + userId + "::post::" + postId;
+    public Boolean isAlreadyLikes(Long userId, Long postId) {
+        return likesRedisTemplate.opsForHash().hasKey(postId, userId);
+    }
+
+    public Boolean deleteLikesPost(Long postId) {
+        return likesRedisTemplate.delete(postId);
     }
 }
