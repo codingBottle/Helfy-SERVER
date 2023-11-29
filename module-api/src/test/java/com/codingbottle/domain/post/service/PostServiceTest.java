@@ -112,6 +112,7 @@ class PostServiceTest {
     void delete_post() {
         // given
         given(postRepository.findById(any())).willReturn(Optional.of(게시글1));
+        given(likesRedisService.deleteLikesPost(any())).willReturn(true);
         // when
         postService.delete(게시글1.getId(), 게시글1.getUser());
         // then
