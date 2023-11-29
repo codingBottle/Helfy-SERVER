@@ -34,11 +34,11 @@ public class UserPostLikesService {
     }
 
     @Transactional
-    public void cancelLikes(Long userId, Long postId) {
+    public void cancelLikes(User user, Long postId) {
         Post post = postService.findById(postId);
 
-        delete(userId, postId);
-        userPostLikesRepository.deleteByUserAndPost(userId, postId);
+        delete(user.getId(), postId);
+        userPostLikesRepository.deleteByUserAndPost(user, post);
         post.subLikeCount();
     }
 
@@ -48,10 +48,6 @@ public class UserPostLikesService {
 
     public void delete(Long userId, Long postId) {
         likesRedisService.deleteLikes(userId, postId);
-    }
-
-    public Boolean deletePost(Post post) {
-        return likesRedisService.deleteLikesPost(post.getId());
     }
 
     private void setLikes(User user, Long postId) {

@@ -1,6 +1,7 @@
 package com.codingbottle.domain.post.service;
 
 import com.codingbottle.common.exception.ApplicationErrorException;
+import com.codingbottle.common.redis.LikesRedisService;
 import com.codingbottle.domain.image.service.ImageService;
 import com.codingbottle.domain.post.entity.Post;
 import com.codingbottle.domain.post.repo.PostRepository;
@@ -33,7 +34,7 @@ class PostServiceTest {
     @Mock
     private PostRepository postRepository;
     @Mock
-    private UserPostLikesService userPostLikesService;
+    private LikesRedisService likesRedisService;
 
     @Mock
     private ImageService imageService;
@@ -111,7 +112,7 @@ class PostServiceTest {
     void delete_post() {
         // given
         given(postRepository.findById(any())).willReturn(Optional.ofNullable(게시글1));
-        given(userPostLikesService.deletePost(any(Post.class))).willReturn(true);
+        given(likesRedisService.deleteLikesPost(any(Long.class))).willReturn(true);
         // when
         postService.delete(게시글1.getId(), 게시글1.getUser());
         // then
