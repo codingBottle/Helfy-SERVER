@@ -5,6 +5,7 @@ import com.codingbottle.auth.entity.User;
 import com.codingbottle.auth.repository.UserRepository;
 import com.codingbottle.common.exception.ApplicationErrorException;
 import com.codingbottle.common.exception.ApplicationErrorType;
+import com.codingbottle.domain.region.entity.Region;
 import com.google.firebase.auth.FirebaseToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -27,10 +28,9 @@ public class UserDetailService implements UserDetailsService {
     @Transactional
     public User create(FirebaseToken firebaseToken, Role role) {
         User user = User.builder()
-                .username(firebaseToken.getUid())
+                .username("user"+firebaseToken.getUid())
                 .email(firebaseToken.getEmail())
-                .name(firebaseToken.getName())
-                .picture(firebaseToken.getPicture())
+                .region(Region.NONE)
                 .role(role)
                 .build();
 

@@ -28,12 +28,6 @@ public class User implements UserDetails {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "picture")
-    private String picture;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private Role role;
@@ -45,8 +39,6 @@ public class User implements UserDetails {
     public void update(FirebaseToken token) {
         this.username = token.getUid();
         this.email = token.getEmail();
-        this.name = token.getName();
-        this.picture = token.getPicture();
     }
 
     public User updateRegion(Region region) {
@@ -100,8 +92,6 @@ public class User implements UserDetails {
     public User(String username, String email, String name, String picture, Role role, Region region) {
         this.username = username;
         this.email = email;
-        this.name = name;
-        this.picture = picture;
         this.role = role;
         this.region = region;
     }
@@ -115,13 +105,11 @@ public class User implements UserDetails {
                 && Objects.equal(username, user.username)
                 && role == user.role
                 && Objects.equal(email, user.email)
-                && Objects.equal(name, user.name)
-                && Objects.equal(picture, user.picture)
                 && region == user.region;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id, username, role, email, name, picture, region);
+        return Objects.hashCode(id, username, role, email, region);
     }
 }
