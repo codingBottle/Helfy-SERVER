@@ -15,9 +15,7 @@ public class CoreDomainFixture {
             .username("유저1")
             .email("helfy@gmail.com")
             .region(Region.SEOUL)
-            .picture("https://d1csu9i9ktup9e.cloudfront.net/default.png")
             .role(Role.ROLE_USER)
-            .name("이름")
             .build();
 
     public static final Quiz 퀴즈1 = Quiz.builder()
