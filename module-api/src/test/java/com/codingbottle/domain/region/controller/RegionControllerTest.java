@@ -76,7 +76,6 @@ class RegionControllerTest extends RestDocsTest {
                         ),
                         responseFields(
                                 fieldWithPath("username").description("사용자 이름"),
-                                fieldWithPath("picture").description("사용자 프로필 사진"),
                                 fieldWithPath("region").description("사용자 지역")
                         )));
     }
