@@ -5,12 +5,12 @@ import lombok.Builder;
 
 @Builder
 public record ImageResponse(
-         Long imageId,
+         Long id,
          String imageUrl
 ) {
     public static ImageResponse of(Image image) {
         return ImageResponse.builder()
-                .imageId(image.getId())
+                .id(image.getId())
                 .imageUrl(image.getImageUrl())
                 .build();
     }

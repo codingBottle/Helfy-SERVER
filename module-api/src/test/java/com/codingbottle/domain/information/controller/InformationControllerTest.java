@@ -11,7 +11,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 
 import static com.codingbottle.docs.util.ApiDocumentUtils.*;
-import static com.codingbottle.fixture.DomainFixture.정보1;
+import static com.codingbottle.fixture.DomainFixture.정보_응답1;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -35,7 +35,7 @@ class InformationControllerTest extends RestDocsTest {
     @DisplayName("카테고리에 해당하는 정보를 조회한다.")
     void findByCategory() throws Exception {
         //given
-        given(informationService.findByCategory(any(Category.class))).willReturn(정보1);
+        given(informationService.findByCategory(any(Category.class))).willReturn(정보_응답1);
         //when
         mvc.perform(get(REQUEST_URL)
                         .queryParam("category", "FLOOD")
@@ -51,17 +51,11 @@ class InformationControllerTest extends RestDocsTest {
                                 fieldWithPath("id").description("정보 ID").type("Number"),
                                 fieldWithPath("category").description("카테고리"),
                                 fieldWithPath("content").description("내용"),
-                                fieldWithPath("news").description("뉴스 url"),
-                                fieldWithPath("youtube").description("유튜브 url"),
+                                fieldWithPath("news_url").description("뉴스 url"),
+                                fieldWithPath("youtube_url").description("유튜브 url"),
                                 fieldWithPath("image").description("게시물 이미지"),
                                 fieldWithPath("image.id").description("게시물 이미지 id").type("Number"),
-                                fieldWithPath("image.imageUrl").description("게시물 이미지 url"),
-                                fieldWithPath("image.directory").description("게시물 이미지 디렉토리"),
-                                fieldWithPath("image.createdTime").description("게시물 이미지 생성시간").type("LocalDateTime"),
-                                fieldWithPath("image.modifiedTime").description("게시물 이미지 수정시간").type("LocalDateTime"),
-                                fieldWithPath("image.convertImageName").description("게시물 이미지 convertImageName"),
-                                fieldWithPath("createdTime").description("생성시간").type("LocalDateTime"),
-                                fieldWithPath("modifiedTime").description("수정시간").type("LocalDateTime")
+                                fieldWithPath("image.imageUrl").description("게시물 이미지 url")
                 )));
     }
 }

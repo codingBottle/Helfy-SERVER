@@ -17,10 +17,9 @@ public class WithAuthUserSecurityContextFactory implements WithSecurityContextFa
         String role = annotation.role();
 
         User user = User.builder()
-                .username(annotation.username())
+                .nickname(annotation.username())
                 .email(email)
                 .region(annotation.region())
-                .picture(annotation.picture())
                 .build();
 
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user, null, List.of(new SimpleGrantedAuthority(role)));

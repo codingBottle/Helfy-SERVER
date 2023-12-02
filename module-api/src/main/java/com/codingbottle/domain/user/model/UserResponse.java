@@ -6,12 +6,11 @@ import lombok.Builder;
 
 @Builder
 public record UserResponse(
-        String username,
-        Region region
-) {
+        Region region,
+        String nickname) {
     public static UserResponse of(User user) {
         return UserResponse.builder()
-                .username(user.getUsername())
+                .nickname(user.getNickname())
                 .region(user.getRegion())
                 .build();
     }

@@ -1,8 +1,9 @@
 package com.codingbottle.domain.information.controller;
 
 import com.codingbottle.domain.category.entity.Category;
-import com.codingbottle.domain.information.entity.Information;
+import com.codingbottle.domain.information.model.InformationResponse;
 import com.codingbottle.domain.information.service.InformationService;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,8 @@ public class InformationController {
     private final InformationService informationService;
 
     @GetMapping
-    public ResponseEntity<Information> findByCategory(@RequestParam Category category) {
-        Information information = informationService.findByCategory(category);
+    public ResponseEntity<InformationResponse> findByCategory(@Parameter(name = "category") @RequestParam(name = "category") Category category) {
+        InformationResponse information = informationService.findByCategory(category);
 
         return ResponseEntity.ok(information);
     }

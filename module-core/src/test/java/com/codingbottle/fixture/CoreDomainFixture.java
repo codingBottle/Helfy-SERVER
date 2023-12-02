@@ -12,7 +12,8 @@ import java.util.HashMap;
 
 public class CoreDomainFixture {
     public static final User 유저1 = User.builder()
-            .username("유저1")
+            .nickname("유저1")
+            .firebaseUid("firebaseUid")
             .email("helfy@gmail.com")
             .region(Region.SEOUL)
             .role(Role.ROLE_USER)

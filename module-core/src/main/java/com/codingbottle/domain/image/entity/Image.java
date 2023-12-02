@@ -20,11 +20,11 @@ public class Image extends BaseEntity {
     private String imageUrl;
 
     @Column(name = "directory", nullable = false)
+    @Enumerated(EnumType.STRING)
     private Directory directory;
 
     @Column(name = "convert_image_name", nullable = false)
     private String convertImageName;
-
 
     public Image(String imageUrl, Directory directory, String convertImageName) {
         this.imageUrl = imageUrl;

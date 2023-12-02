@@ -6,6 +6,7 @@ import com.codingbottle.domain.category.entity.Category;
 import com.codingbottle.domain.image.entity.Directory;
 import com.codingbottle.domain.image.entity.Image;
 import com.codingbottle.domain.information.entity.Information;
+import com.codingbottle.domain.information.model.InformationResponse;
 import com.codingbottle.domain.post.entity.Post;
 import com.codingbottle.domain.post.model.PostRequest;
 import com.codingbottle.domain.quiz.entity.Quiz;
@@ -30,19 +31,18 @@ public class DomainFixture {
             .build();
 
     public static final User 유저1 = User.builder()
-            .username("유저1")
+            .firebaseUid("firebaseUid")
+            .nickname("유저1")
             .email("helfy@gmail.com")
             .region(Region.SEOUL)
-            .picture("https://d1csu9i9ktup9e.cloudfront.net/default.png")
             .role(Role.ROLE_USER)
-            .name("유저1")
             .build();
 
     public static final User 유저2 = User.builder()
-            .username("유저2")
+            .firebaseUid("firebaseUid")
+            .nickname("유저2")
             .email("helfy@gmail.com")
             .region(Region.SEOUL)
-            .picture("https://d1csu9i9ktup9e.cloudfront.net/default.png")
             .role(Role.ROLE_USER)
             .build();
 
@@ -119,5 +119,7 @@ public class DomainFixture {
             .youtube("유튜브")
             .image(정보_이미지1)
             .build();
+
+    public static final InformationResponse 정보_응답1 = InformationResponse.of(정보1);
 }
 
