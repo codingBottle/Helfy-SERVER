@@ -72,7 +72,7 @@ class UserControllerTest extends RestDocsTest {
 
     private static ResponseFieldsSnippet responseFieldsByUser() {
         return responseFields(
-                fieldWithPath("username").description("사용자 이름").type("String"),
+                fieldWithPath("nickname").description("사용자 이름").type("String"),
                 fieldWithPath("region").description("사용자 지역").type("String")
         );
     }

@@ -41,7 +41,7 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return webSecurity -> webSecurity.ignoring().requestMatchers("/docs/**","/api-docs/**", "/swagger-ui/**","/favicon.ico");
+        return webSecurity -> webSecurity.ignoring().requestMatchers("/docs/**", "/api-docs/**", "/swagger-ui/**", "/favicon.ico", "/api/v1/information");
     }
 
     public FirebaseTokenFilter firebaseTokenFilter() {

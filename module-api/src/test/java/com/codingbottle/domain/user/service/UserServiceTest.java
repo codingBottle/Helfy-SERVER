@@ -22,6 +22,6 @@ class UserServiceTest {
         //when
         User user = userService.updateNickname(유저_닉네임_변경_요청1, 유저1);
         //then
-        assertThat(user.getUsername()).isEqualTo(유저_닉네임_변경_요청1.nickname());
+        assertThat(user.getFirebaseUid()).isEqualTo(유저_닉네임_변경_요청1.nickname());
     }
 }

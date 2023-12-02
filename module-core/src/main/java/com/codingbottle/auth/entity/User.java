@@ -23,10 +23,13 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(name = "username", nullable = false, unique = true)
-    private String username;
+    private String firebaseUid;
 
     @Column(name = "email", nullable = false)
     private String email;
+
+    @Column(name = "nickname", nullable = false)
+    private String nickname;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
@@ -37,7 +40,7 @@ public class User implements UserDetails {
     private Region region = Region.NONE;
 
     public void update(FirebaseToken token) {
-        this.username = token.getUid();
+        this.firebaseUid = token.getUid();
         this.email = token.getEmail();
     }
 
@@ -48,7 +51,7 @@ public class User implements UserDetails {
     }
 
     public User updateNickname(String nickname) {
-        this.username = nickname;
+        this.firebaseUid = nickname;
 
         return this;
     }
@@ -83,15 +86,15 @@ public class User implements UserDetails {
         return true;
     }
 
-    @Override
     public String getUsername(){
-        return username;
+        return firebaseUid;
     }
 
     @Builder
-    public User(String username, String email, String name, String picture, Role role, Region region) {
-        this.username = username;
+    public User(String firebaseUid, String email, String nickname, Role role, Region region) {
+        this.firebaseUid = firebaseUid;
         this.email = email;
+        this.nickname = nickname;
         this.role = role;
         this.region = region;
     }
@@ -102,14 +105,15 @@ public class User implements UserDetails {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
         return Objects.equal(id, user.id)
-                && Objects.equal(username, user.username)
+                && Objects.equal(firebaseUid, user.firebaseUid)
                 && role == user.role
+                && Objects.equal(nickname, user.nickname)
                 && Objects.equal(email, user.email)
                 && region == user.region;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id, username, role, email, region);
+        return Objects.hashCode(id, firebaseUid, role, email, region);
     }
 }

@@ -75,7 +75,7 @@ class RegionControllerTest extends RestDocsTest {
                                         .description("변경 지역 (ex. SEOUL, GYEONGGI, INCHEON)")
                         ),
                         responseFields(
-                                fieldWithPath("username").description("사용자 이름"),
+                                fieldWithPath("nickname").description("사용자 이름"),
                                 fieldWithPath("region").description("사용자 지역")
                         )));
     }
