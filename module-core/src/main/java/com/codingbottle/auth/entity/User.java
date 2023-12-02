@@ -114,6 +114,6 @@ public class User implements UserDetails {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id, firebaseUid, role, email, region);
+        return Objects.hashCode(id, firebaseUid, nickname, role, email, region);
     }
 }
