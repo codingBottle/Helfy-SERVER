@@ -16,12 +16,12 @@ public record PostResponse (
         LocalDateTime modifiedTime
 ){
     public static PostResponse from(Post post, Boolean likeStatus) {
-        return new PostResponse(post.getId(), post.getContent(), post.getUser().getUsername(),post.getImage(), post.getLikeCount(), likeStatus, post.getCreatedTime(), post.getModifiedTime()
+        return new PostResponse(post.getId(), post.getContent(), post.getUser().getFirebaseUid(),post.getImage(), post.getLikeCount(), likeStatus, post.getCreatedTime(), post.getModifiedTime()
         );
     }
 
     public static PostResponse from(Post post) {
-        return new PostResponse(post.getId(), post.getContent(), post.getUser().getUsername(),post.getImage(), post.getLikeCount(), false, post.getCreatedTime(), post.getModifiedTime()
+        return new PostResponse(post.getId(), post.getContent(), post.getUser().getFirebaseUid(),post.getImage(), post.getLikeCount(), false, post.getCreatedTime(), post.getModifiedTime()
         );
     }
 }

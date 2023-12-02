@@ -1,7 +1,7 @@
 package com.codingbottle.domain.information.service;
 
 import com.codingbottle.domain.category.entity.Category;
-import com.codingbottle.domain.information.entity.Information;
+import com.codingbottle.domain.information.model.InformationResponse;
 import com.codingbottle.domain.information.repo.InformationRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,8 +29,8 @@ class InformationServiceTest {
         //given
         given(informationRepository.findByCategory(any(Category.class))).willReturn(정보1);
         //when
-        Information information = informationService.findByCategory(Category.FLOOD);
+        InformationResponse information = informationService.findByCategory(Category.FLOOD);
         //then
-        assertThat(information).isEqualTo(정보1);
+        assertThat(information).isEqualTo(InformationResponse.of(정보1));
     }
 }

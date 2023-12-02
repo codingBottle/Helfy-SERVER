@@ -54,7 +54,7 @@ class ImageControllerTest extends RestDocsTest {
                         .accept(MediaType.APPLICATION_JSON)
                         .queryParam("directory", "POST"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("imageId").value(1L))
+                .andExpect(jsonPath("id").value(1L))
                 .andExpect(jsonPath("imageUrl").value("https://d2zp5u7z0buhfu.cloudfront.net/swagger.png"))
                 .andDo(document("images-upload",
                         getDocumentRequest(),
@@ -68,7 +68,7 @@ class ImageControllerTest extends RestDocsTest {
                                 partWithName("image").description("이미지 파일 (png, jpg, jpeg)")
                         ),
                         responseFields(
-                                fieldWithPath("imageId").description("이미지 식별자"),
+                                fieldWithPath("id").description("이미지 식별자"),
                                 fieldWithPath("imageUrl").description("이미지 URL"))));
     }
 }
