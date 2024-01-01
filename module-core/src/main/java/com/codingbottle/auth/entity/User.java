@@ -116,4 +116,16 @@ public class User implements UserDetails {
     public int hashCode() {
         return Objects.hashCode(id, firebaseUid, nickname, role, email, region);
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firebaseUid='" + firebaseUid + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", role=" + role +
+                ", email='" + email + '\'' +
+                ", region=" + region +
+                '}';
+    }
 }
