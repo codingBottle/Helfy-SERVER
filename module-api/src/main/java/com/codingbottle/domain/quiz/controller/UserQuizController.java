@@ -15,12 +15,12 @@ import java.util.List;
 
 @Tag(name = "오답 퀴즈", description = "오답 퀴즈 API")
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 public class UserQuizController {
     private final UserQuizService userQuizService;
 
-    @GetMapping("/wrong-quizzes")
+    @GetMapping("/wrong-quiz")
     public ResponseEntity<List<Quiz>> getWrongQuizzes(@AuthenticationPrincipal User user) {
         List<Quiz> wrongQuizzes = userQuizService.findRandomWrongQuizzesByUser(user);
 

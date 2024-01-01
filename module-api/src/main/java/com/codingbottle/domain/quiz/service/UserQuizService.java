@@ -3,7 +3,7 @@ package com.codingbottle.domain.quiz.service;
 import com.codingbottle.auth.entity.User;
 import com.codingbottle.common.exception.ApplicationErrorException;
 import com.codingbottle.common.exception.ApplicationErrorType;
-import com.codingbottle.common.redis.RankRedisService;
+import com.codingbottle.common.redis.service.QuizRankRedisService;
 import com.codingbottle.domain.quiz.entity.Quiz;
 import com.codingbottle.domain.quiz.entity.QuizStatus;
 import com.codingbottle.domain.quiz.entity.UserQuiz;
@@ -23,7 +23,7 @@ public class UserQuizService {
     private final UserQuizQueryRepository userQuizQueryRepository;
     private final QuizService quizService;
     private final UserQuizSimpleJPARepository userQuizSimpleJPARepository;
-    private final RankRedisService rankRedisService;
+    private final QuizRankRedisService quizRankRedisService;
 
     public List<Quiz> findRandomWrongQuizzesByUser(User user) {
         List<Quiz> randomWrongQuizzes = userQuizQueryRepository.findRandomWrongQuizzesByUser(user);
@@ -34,17 +34,19 @@ public class UserQuizService {
         return randomWrongQuizzes;
     }
 
-    public UserQuiz findByUserAndQuiz(User user, Long id){
-        Quiz quiz = quizService.findById(id);
-        return userQuizSimpleJPARepository.findByUserAndQuiz(user, quiz).orElseThrow(() -> new ApplicationErrorException(ApplicationErrorType.USER_QUIZ_NOT_FOUND, String.format("해당 사용자(%s)의 퀴즈(%s)를 찾을 수 없습니다.", user.getId(), id)));
+    @Transactional
+    public String updateQuizStatus(Long quizId, QuizStatusRequest quizStatusRequest, User user) {
+        if(quizStatusRequest.quizStatus() == QuizStatus.CORRECT){
+            updateScoreAndQuizStatus(user, quizId, quizStatusRequest);
+            return "CORRECT";
+        } else {
+            saveWrongAnswer(user, quizId, quizStatusRequest);
+            return "WRONG";
+        }
     }
 
-    @Transactional
-    public void createUserQuiz(User user, Long quizId, QuizStatusRequest quizStatusRequest){
-        updateScore(user, quizStatusRequest);
-
+    private void saveUserQuiz(User user, Long quizId, QuizStatusRequest quizStatusRequest){
         Quiz quiz = quizService.findById(quizId);
-
         UserQuiz userQuiz = UserQuiz.builder()
                 .quiz(quiz)
                 .user(user)
@@ -53,28 +55,28 @@ public class UserQuizService {
         userQuizSimpleJPARepository.save(userQuiz);
     }
 
-    @Transactional
-    public void updateUserQuiz(User user, Long quizId, QuizStatusRequest quizStatusRequest){
-        updateScore(user, quizStatusRequest);
-
-        Quiz quiz = quizService.findById(quizId);
-
-        UserQuiz userQuiz = findByUserAndQuiz(user, quizId);
-        userQuiz.updateQuizStatus(quizStatusRequest.quizStatus());
+    private Boolean existsUserQuiz(User user, Long quizId){
+        return userQuizSimpleJPARepository.existsByUserIdAndQuizId(user.getId(), quizId);
     }
 
-    public Boolean isAlreadyUserQuiz(User user, Long quizId){
-        try{
-            findByUserAndQuiz(user, quizId);
-        }catch (ApplicationErrorException e){
-            return false;
+    private UserQuiz findUserQuiz(Long quizId, User user) {
+        return userQuizSimpleJPARepository.findByUserIdAndQuizId(user.getId(), quizId).orElseThrow(() -> new ApplicationErrorException(ApplicationErrorType.USER_QUIZ_NOT_FOUND));
+    }
+
+    private void updateScoreAndQuizStatus(User user, Long quizId, QuizStatusRequest quizStatusRequest) {
+        quizRankRedisService.updateScore(user.toString(), 10.0);
+
+        if(existsUserQuiz(user, quizId)) {
+            UserQuiz userQuiz = findUserQuiz(quizId, user);
+            userQuiz.updateQuizStatus(quizStatusRequest.quizStatus());
+        } else {
+            saveUserQuiz(user, quizId, quizStatusRequest);
         }
-        return true;
     }
 
-    private void updateScore(User user, QuizStatusRequest quizStatusRequest) {
-        if(quizStatusRequest.quizStatus() == QuizStatus.CORRECT){
-            rankRedisService.ZSetAddOrUpdate("user_score", user.getId().toString(), 1.0);
+    private void saveWrongAnswer(User user, Long quizId, QuizStatusRequest quizStatusRequest) {
+        if(!existsUserQuiz(user, quizId)) {
+            saveUserQuiz(user, quizId, quizStatusRequest);
         }
     }
 }
