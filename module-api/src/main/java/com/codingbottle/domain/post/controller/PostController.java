@@ -1,6 +1,7 @@
 package com.codingbottle.domain.post.controller;
 
 import com.codingbottle.auth.entity.User;
+import com.codingbottle.common.annotation.CustomPageableAsQueryParam;
 import com.codingbottle.domain.post.entity.Post;
 import com.codingbottle.domain.post.model.PostRequest;
 import com.codingbottle.domain.post.model.PostResponse;
@@ -32,6 +33,7 @@ public class PostController {
     }
 
     @GetMapping
+    @CustomPageableAsQueryParam
     public ResponseEntity<Page<PostResponse>> findAll(@PageableDefault Pageable pageable,
                                                       @AuthenticationPrincipal User user) {
         Page<PostResponse> posts = postService.findAll(pageable)
@@ -55,13 +57,10 @@ public class PostController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("{id}/likes")
-    public ResponseEntity<String> likesPut(@PathVariable(value = "id") Long id,
-                                           @AuthenticationPrincipal User user) {
-        if(userPostLikesService.isAlreadyLikes(user, id)){
-            userPostLikesService.cancelLikes(user, id);
-        }
-        userPostLikesService.likesPut(user, id);
-        return ResponseEntity.ok("Likes operation completed successfully.");
+    @PutMapping("/{id}/likes")
+    public ResponseEntity<String> toggleLikeStatus(@PathVariable(value = "id") Long postId,
+                                                   @AuthenticationPrincipal User user) {
+        boolean isLiked = userPostLikesService.toggleLikeStatus(user, postId);
+        return ResponseEntity.ok().body(isLiked ? "Liked" : "Unliked");
     }
 }

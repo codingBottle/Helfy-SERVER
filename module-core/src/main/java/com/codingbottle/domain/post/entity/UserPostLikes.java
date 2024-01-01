@@ -17,11 +17,11 @@ public class UserPostLikes extends BaseEntity {
     @Column(name = "likes_num")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post;
 
@@ -30,5 +30,4 @@ public class UserPostLikes extends BaseEntity {
         this.user = user;
         this.post = post;
     }
-
 }
