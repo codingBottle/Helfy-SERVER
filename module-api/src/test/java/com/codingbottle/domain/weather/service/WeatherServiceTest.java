@@ -1,7 +1,7 @@
 package com.codingbottle.domain.weather.service;
 
 import com.codingbottle.auth.entity.User;
-import com.codingbottle.common.redis.WeatherRedisService;
+import com.codingbottle.common.redis.service.WeatherRedisService;
 import com.codingbottle.domain.region.entity.Region;
 import com.codingbottle.domain.weather.entity.WeatherCode;
 import com.codingbottle.domain.weather.model.WeatherResponse;
