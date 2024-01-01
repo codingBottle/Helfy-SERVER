@@ -1,4 +1,4 @@
-package com.codingbottle.common.config;
+package com.codingbottle.common.redis.config;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
