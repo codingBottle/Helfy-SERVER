@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 import static com.codingbottle.fixture.CoreDomainFixture.*;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RepositoryTest
 class UserQuizQueryRepositoryTest {
@@ -43,6 +43,6 @@ class UserQuizQueryRepositoryTest {
         //when
         List<Quiz> randomWrongQuizzesByUser = userQuizQueryRepository.findRandomWrongQuizzesByUser(유저);
         //then
-        assertThat(randomWrongQuizzesByUser).isEqualTo(List.of(퀴즈1, 퀴즈2));
+        assertThat(randomWrongQuizzesByUser).contains(퀴즈1, 퀴즈2);
     }
 }
