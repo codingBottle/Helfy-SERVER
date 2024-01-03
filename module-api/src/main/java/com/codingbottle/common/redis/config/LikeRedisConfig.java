@@ -1,4 +1,4 @@
-package com.codingbottle.common.config;
+package com.codingbottle.common.redis.config;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -12,7 +12,7 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 @EnableRedisRepositories
 public class LikeRedisConfig extends RedisConfig {
     @Bean
-    public RedisConnectionFactory deviceControlRedisConnectionFactory() {
+    public RedisConnectionFactory likeRedisConnectionFactory() {
         return createLettuceConnectionFactory(2); // Redis DB 선택
     }
 
@@ -20,7 +20,7 @@ public class LikeRedisConfig extends RedisConfig {
     @Qualifier("likesRedisTemplate")
     public RedisTemplate<Long, Long> likesRedisTemplate() {
         RedisTemplate<Long, Long>  template = new RedisTemplate<>();
-        template.setConnectionFactory(deviceControlRedisConnectionFactory());
+        template.setConnectionFactory(likeRedisConnectionFactory());
         template.setKeySerializer(new GenericJackson2JsonRedisSerializer());
         template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
         template.afterPropertiesSet();

@@ -1,4 +1,4 @@
-package com.codingbottle.common.redis;
+package com.codingbottle.common.redis.service;
 
 import com.codingbottle.domain.region.entity.Region;
 import com.codingbottle.domain.weather.model.WeatherResponse;

@@ -1,7 +1,7 @@
 package com.codingbottle.domain.post.service;
 
 import com.codingbottle.common.exception.ApplicationErrorException;
-import com.codingbottle.common.redis.LikesRedisService;
+import com.codingbottle.common.redis.service.LikesRedisService;
 import com.codingbottle.domain.image.service.ImageService;
 import com.codingbottle.domain.post.entity.Post;
 import com.codingbottle.domain.post.repo.PostRepository;
