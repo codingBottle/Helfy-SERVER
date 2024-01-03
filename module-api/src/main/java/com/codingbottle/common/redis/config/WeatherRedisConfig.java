@@ -1,6 +1,5 @@
 package com.codingbottle.common.redis.config;
 
-import com.codingbottle.common.config.RedisConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -15,7 +14,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class WeatherRedisConfig extends RedisConfig {
     @Bean
     public RedisConnectionFactory defaultRedisConnectionFactory() {
-        return createLettuceConnectionFactory(0);  // Redis DB 선택
+        return createLettuceConnectionFactory(1);  // Redis DB 선택
     }
 
     @Bean

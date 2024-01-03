@@ -1,6 +1,5 @@
 package com.codingbottle.common.redis.config;
 
-import com.codingbottle.common.config.RedisConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;

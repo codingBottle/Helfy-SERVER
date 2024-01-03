@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 
 @Service
 @Transactional(readOnly = true)
@@ -45,8 +46,12 @@ public class PostService {
             throw new ApplicationErrorException(ApplicationErrorType.NO_AUTHENTICATION, String.format("해당 게시글(%s)에 접근 권한이 없습니다.", id));
         }
 
-        Image image = imageService.findById(postRequest.imageId());
-        post.update(postRequest.content(), image);
+        if(!Objects.equals(post.getImage().getId(), postRequest.imageId())) {
+            Image image = imageService.findById(postRequest.imageId());
+            post.update(postRequest.content(), image);
+        } else if (postRequest.imageId() == null) {
+            post.update(postRequest.content(), null);
+        }
 
         return post;
     }
@@ -67,14 +72,13 @@ public class PostService {
         if (isNotSameWriter(post, user)) {
             throw new ApplicationErrorException(ApplicationErrorType.NO_AUTHENTICATION, String.format("해당 게시글(%s)에 접근 권한이 없습니다.", id));
         }
+
+        imageService.delete(post.getImage());
         postRepository.delete(post);
-      
-        if(!likesRedisService.deleteLikesPost(id)) {
-            throw new ApplicationErrorException(ApplicationErrorType.REDIS_DELETE_ERROR, String.format("Redis에 해당 게시글(%s)의 좋아요 정보를 삭제하는데 실패했습니다.", id));
-        }
+        likesRedisService.deleteLikesPost(id);
     }
 
     private boolean isNotSameWriter(Post post, User user) {
-        return !user.equals(post.getUser());
+        return !post.getUser().equals(user);
     }
 }

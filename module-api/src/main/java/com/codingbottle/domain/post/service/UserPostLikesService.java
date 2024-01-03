@@ -29,22 +29,32 @@ public class UserPostLikesService {
                 .post(post)
                 .user(user)
                 .build();
-        userPostLikesRepository.save(userPostLikes);
-        post.addLikeCount();
+
+        post.addLikes(userPostLikes);
     }
 
     @Transactional
     public void cancelLikes(User user, Long postId) {
         Post post = postService.findById(postId);
 
+        post.removeLikes(user);
         delete(user.getId(), postId);
-        userPostLikesRepository.deleteByUserAndPost(user, post);
-        post.subLikeCount();
     }
 
     public Boolean isAlreadyLikes(User user, Long postId) {
         return likesRedisService.isAlreadyLikes(user.getId(), postId);
     }
+
+    @Transactional
+    public boolean toggleLikeStatus(User user, Long postId) {
+        if(isAlreadyLikes(user, postId)){
+            cancelLikes(user, postId);
+            return false;
+        }
+        likesPut(user, postId);
+        return true;
+    }
+
 
     public void delete(Long userId, Long postId) {
         likesRedisService.deleteLikes(userId, postId);

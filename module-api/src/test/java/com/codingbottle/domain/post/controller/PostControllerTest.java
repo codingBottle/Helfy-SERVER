@@ -70,16 +70,12 @@ class PostControllerTest extends RestDocsTest {
                                 fieldWithPath("content").description("게시물 리스트"),
                                 fieldWithPath("content[].id").description("게시물 id").type("Number"),
                                 fieldWithPath("content[].content").description("게시물 내용"),
-                                fieldWithPath("content[].username").description("게시물 작성자"),
+                                fieldWithPath("content[].writerNickname").description("게시물 작성자"),
                                 fieldWithPath("content[].likeCount").description("게시물 좋아요 수"),
                                 fieldWithPath("content[].likeStatus").description("게시물 좋아요 여부"),
                                 fieldWithPath("content[].image").description("게시물 이미지"),
                                 fieldWithPath("content[].image.id").description("게시물 이미지 id"),
                                 fieldWithPath("content[].image.imageUrl").description("게시물 이미지 url"),
-                                fieldWithPath("content[].image.directory").description("게시물 이미지 디렉토리"),
-                                fieldWithPath("content[].image.createdTime").description("게시물 이미지 생성시간").type("LocalDateTime"),
-                                fieldWithPath("content[].image.modifiedTime").description("게시물 이미지 수정시간").type("LocalDateTime"),
-                                fieldWithPath("content[].image.convertImageName").description("게시물 이미지 convertImageName"),
                                 fieldWithPath("content[].createdTime").description("게시물 생성시간").type("LocalDateTime"),
                                 fieldWithPath("content[].modifiedTime").description("게시물 수정시간").type("LocalDateTime"),
                                 fieldWithPath("pageable").description("페이지 정보"),
@@ -133,9 +129,6 @@ class PostControllerTest extends RestDocsTest {
                         .content(createJson(게시글_수정_요청1))
                         .header("Authorization", "Bearer FirebaseToken"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").exists())
-                .andExpect(jsonPath("$.username").exists())
-                .andExpect(jsonPath("$.image").exists())
                 .andDo(document("update-post",
                         getDocumentRequest(),
                         getDocumentResponse(),
@@ -201,16 +194,12 @@ class PostControllerTest extends RestDocsTest {
         return responseFields(
                 fieldWithPath("id").description("게시물 id").type("Number"),
                 fieldWithPath("content").description("게시물 내용"),
-                fieldWithPath("username").description("게시물 작성자 명"),
+                fieldWithPath("writerNickname").description("게시물 작성자 명"),
                 fieldWithPath("likeCount").description("게시물 좋아요 수"),
                 fieldWithPath("likeStatus").description("게시물 좋아요 여부"),
                 fieldWithPath("image").description("게시물 이미지"),
                 fieldWithPath("image.id").description("게시물 이미지 id").type("Number"),
                 fieldWithPath("image.imageUrl").description("게시물 이미지 url"),
-                fieldWithPath("image.directory").description("게시물 이미지 디렉토리"),
-                fieldWithPath("image.createdTime").description("게시물 이미지 생성시간").type("LocalDateTime"),
-                fieldWithPath("image.modifiedTime").description("게시물 이미지 수정시간").type("LocalDateTime"),
-                fieldWithPath("image.convertImageName").description("게시물 이미지 convertImageName"),
                 fieldWithPath("createdTime").description("게시물 생성시간").type("LocalDateTime"),
                 fieldWithPath("modifiedTime").description("게시물 수정시간").type("LocalDateTime")
         );

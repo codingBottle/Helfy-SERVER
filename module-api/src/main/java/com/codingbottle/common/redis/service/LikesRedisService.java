@@ -11,15 +11,15 @@ public class LikesRedisService {
     private final RedisTemplate<Long, Long> likesRedisTemplate;
 
     public void setLikes(Long userId, Long postId) throws JsonProcessingException {
-        likesRedisTemplate.opsForHash().put(postId, userId, true);
+        likesRedisTemplate.opsForSet().add(postId, userId);
     }
 
     public void deleteLikes(Long userId, Long postId) {
-        likesRedisTemplate.opsForHash().delete(postId, userId);
+        likesRedisTemplate.opsForSet().remove(postId, userId);
     }
 
     public Boolean isAlreadyLikes(Long userId, Long postId) {
-        return likesRedisTemplate.opsForHash().hasKey(postId, userId);
+        return likesRedisTemplate.opsForSet().isMember(postId, userId);
     }
 
     public Boolean deleteLikesPost(Long postId) {
