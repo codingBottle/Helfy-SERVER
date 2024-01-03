@@ -30,7 +30,7 @@ class UserQuizControllerTest extends RestDocsTest {
     @MockBean
     private UserQuizService userQuizService;
 
-    private static final String REQUEST_URL = "/api/users";
+    private static final String REQUEST_URL = "/api/v1/users";
 
     @Test
     @DisplayName("사용자 오답 퀴즈를 조회한다")
@@ -38,7 +38,7 @@ class UserQuizControllerTest extends RestDocsTest {
         //given
         given(userQuizService.findRandomWrongQuizzesByUser(any(User.class))).willReturn(List.of(퀴즈1, 퀴즈2));
         //when & then
-        mvc.perform(get(REQUEST_URL + "/wrong-quizzes")
+        mvc.perform(get(REQUEST_URL + "/wrong-quiz")
                 .header("Authorization", "Bearer FirebaseToken"))
                 .andExpect(status().isOk())
                 .andDo(document("wrong-answer-list",

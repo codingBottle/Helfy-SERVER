@@ -33,4 +33,8 @@ public class UserQuiz extends BaseEntity {
         this.user = user;
         this.quizStatus = quizStatus;
     }
+
+    public void updateQuizStatus(QuizStatus quizStatus){
+        this.quizStatus = quizStatus;
+    }
 }
