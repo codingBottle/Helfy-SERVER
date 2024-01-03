@@ -13,6 +13,10 @@
 == 퀴즈 조회(오늘의 퀴즈, 랜덤 퀴즈 풀어보기)
 operation::quiz-list[snippets='http-request,query-parameters,http-response,response-fields']
 
+[[퀴즈-결과-]]
+== 퀴즈 결과 전송
+operation::put-quiz-status[snippets='http-request,path-parameters,request-body,request-fields,http-response,response-fields']
+
 [[틀린퀴즈-조회]]
 == 틀린 퀴즈 조회
 IMPORTANT:  (만약 틀린 문제가 없으면 오류 응답)

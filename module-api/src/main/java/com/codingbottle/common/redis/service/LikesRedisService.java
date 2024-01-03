@@ -1,4 +1,4 @@
-package com.codingbottle.common.redis;
+package com.codingbottle.common.redis.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;

@@ -3,7 +3,7 @@ package com.codingbottle.domain.post.service;
 import com.codingbottle.auth.entity.User;
 import com.codingbottle.common.exception.ApplicationErrorException;
 import com.codingbottle.common.exception.ApplicationErrorType;
-import com.codingbottle.common.redis.LikesRedisService;
+import com.codingbottle.common.redis.service.LikesRedisService;
 import com.codingbottle.domain.post.entity.UserPostLikes;
 import com.codingbottle.domain.post.repo.UserPostLikesRepository;
 import com.codingbottle.domain.post.entity.Post;
