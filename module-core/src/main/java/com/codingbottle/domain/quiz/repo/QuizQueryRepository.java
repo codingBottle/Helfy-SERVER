@@ -19,11 +19,23 @@ public class QuizQueryRepository {
     private final QQuiz qQuiz = QQuiz.quiz;
     private final QUserQuiz qUserQuiz = QUserQuiz.userQuiz;
 
+    public List<Quiz> findRandomWrongQuizzes(User user, int limit) {
+        return jpaQueryFactory.selectFrom(qQuiz)
+                .leftJoin(qUserQuiz)
+                .on(qQuiz.eq(qUserQuiz.quiz), qUserQuiz.user.eq(user))
+                .where(qUserQuiz.quizStatus.eq(QuizStatus.WRONG)
+                        .or(qUserQuiz.quizStatus.isNull()))
+                .orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc())
+                .limit(limit)
+                .fetch();
+    }
+
     public List<Quiz> findRandomQuizzes(User user, int limit) {
         return jpaQueryFactory.selectFrom(qQuiz)
                 .leftJoin(qUserQuiz)
-                .on(qQuiz.eq(qUserQuiz.quiz), qUserQuiz.user.eq(user), qUserQuiz.quizStatus.eq(QuizStatus.CORRECT))
-                .where(qUserQuiz.id.isNull())
+                .on(qQuiz.eq(qUserQuiz.quiz), qUserQuiz.user.eq(user))
+                .where(qUserQuiz.quizStatus.ne(QuizStatus.CORRECT)
+                        .or(qUserQuiz.quizStatus.isNull()))
                 .orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc())
                 .limit(limit)
                 .fetch();

@@ -43,7 +43,7 @@ class QuizQueryRepositoryTest {
     @DisplayName("랜덤으로 퀴즈를 조회한다")
     void find_random_quizzes() {
         //when
-        List<Quiz> randomQuizzes = quizQueryRepository.findRandomQuizzes(유저, 3);
+        List<Quiz> randomQuizzes = quizQueryRepository.findRandomWrongQuizzes(유저, 3);
         //then
         assertThat(randomQuizzes).hasSize(2);
     }
@@ -54,7 +54,7 @@ class QuizQueryRepositoryTest {
         //given
         userQuizSimpleJPARepository.save(유저1_퀴즈1);
         //when
-        List<Quiz> randomQuizzes = quizQueryRepository.findRandomQuizzes(유저, 3);
+        List<Quiz> randomQuizzes = quizQueryRepository.findRandomWrongQuizzes(유저, 3);
         //then
         assertThat(randomQuizzes).hasSize(1);
     }
@@ -64,7 +64,7 @@ class QuizQueryRepositoryTest {
     @DisplayName("랜덤으로 퀴즈를 조회하는데 limit을 지정할 수 있다.")
     void find_random_quizzes_limit(int limit, int expectedSize) {
         //when
-        List<Quiz> randomQuizzes = quizQueryRepository.findRandomQuizzes(유저, limit);
+        List<Quiz> randomQuizzes = quizQueryRepository.findRandomWrongQuizzes(유저, limit);
         //then
         assertThat(randomQuizzes).hasSize(expectedSize);
     }

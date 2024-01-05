@@ -16,7 +16,7 @@ public enum Type {
     NORMAL{
         @Override
         public List<Quiz> getQuizzes(User user, QuizQueryRepository quizRepository) {
-            return quizRepository.findRandomQuizzes(user, 10);
+            return quizRepository.findRandomWrongQuizzes(user, 10);
         }
     };
 
