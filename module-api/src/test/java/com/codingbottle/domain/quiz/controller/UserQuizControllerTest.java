@@ -13,8 +13,7 @@ import org.springframework.test.context.ContextConfiguration;
 import java.util.List;
 
 import static com.codingbottle.docs.util.ApiDocumentUtils.*;
-import static com.codingbottle.fixture.DomainFixture.퀴즈1;
-import static com.codingbottle.fixture.DomainFixture.퀴즈2;
+import static com.codingbottle.fixture.DomainFixture.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
@@ -30,7 +29,7 @@ class UserQuizControllerTest extends RestDocsTest {
     @MockBean
     private UserQuizService userQuizService;
 
-    private static final String REQUEST_URL = "/api/v1/users";
+    private static final String REQUEST_URL = "/api/v1/quiz/users";
 
     @Test
     @DisplayName("사용자 오답 퀴즈를 조회한다")
@@ -38,7 +37,7 @@ class UserQuizControllerTest extends RestDocsTest {
         //given
         given(userQuizService.findRandomWrongQuizzesByUser(any(User.class))).willReturn(List.of(퀴즈1, 퀴즈2));
         //when & then
-        mvc.perform(get(REQUEST_URL + "/wrong-quiz")
+        mvc.perform(get(REQUEST_URL + "/wrong")
                 .header("Authorization", "Bearer FirebaseToken"))
                 .andExpect(status().isOk())
                 .andDo(document("wrong-answer-list",
@@ -47,17 +46,32 @@ class UserQuizControllerTest extends RestDocsTest {
                         getAuthorizationHeader(),
                         responseFields(
                                 fieldWithPath("[].id").description("퀴즈 ID").type("Number"),
-                                fieldWithPath("[].question").description("퀴즈 제목"),
+                                fieldWithPath("[].question").description("퀴즈 질문"),
                                 fieldWithPath("[].answer").description("퀴즈 정답"),
                                 fieldWithPath("[].quizType").description("퀴즈 타입 (MultipleChoice / OX)"),
                                 fieldWithPath("[].choices.*").description("퀴즈 보기 (객관식은 4개, OX는 2개)").type("Map"),
                                 fieldWithPath("[].image").description("퀴즈 이미지 (null일 수 있음)").optional(),
                                 fieldWithPath("[].image.id").description("퀴즈 이미지 id").type("Number"),
-                                fieldWithPath("[].image.imageUrl").description("퀴즈 이미지 url"),
-                                fieldWithPath("[].image.directory").description("퀴즈 이미지 디렉토리"),
-                                fieldWithPath("[].image.createdTime").description("퀴즈 이미지 생성시간").type("LocalDateTime"),
-                                fieldWithPath("[].image.modifiedTime").description("퀴즈 이미지 수정시간").type("LocalDateTime"),
-                                fieldWithPath("[].image.convertImageName").description("퀴즈 이미지 변환 이미지 이름")
+                                fieldWithPath("[].image.imageUrl").description("퀴즈 이미지 url")
+                        )));
+    }
+
+    @Test
+    @DisplayName("사용자 퀴즈 정보를 조회한다")
+    void get_user_quiz_info() throws Exception {
+        //given
+        given(userQuizService.getUserQuizInfo(any(User.class))).willReturn(퀴즈정보1);
+        //when & then
+        mvc.perform(get(REQUEST_URL)
+                        .header("Authorization", "Bearer FirebaseToken"))
+                .andExpect(status().isOk())
+                .andDo(document("get-user-quiz-info",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        getAuthorizationHeader(),
+                        responseFields(
+                                fieldWithPath("nickname").description("사용자 닉네임"),
+                                fieldWithPath("score").description("사용자 점수").type("Number")
                         )));
     }
 }

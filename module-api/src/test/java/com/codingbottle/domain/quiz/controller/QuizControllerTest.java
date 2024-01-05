@@ -57,17 +57,13 @@ class QuizControllerTest extends RestDocsTest {
                         ),
                         responseFields(
                                 fieldWithPath("[].id").description("퀴즈 ID").type("Number"),
-                                fieldWithPath("[].question").description("퀴즈 제목"),
+                                fieldWithPath("[].question").description("퀴즈 질문"),
                                 fieldWithPath("[].answer").description("퀴즈 정답"),
                                 fieldWithPath("[].quizType").description("퀴즈 타입 (MultipleChoice / OX)"),
                                 fieldWithPath("[].choices.*").description("퀴즈 보기 (객관식은 4개, OX는 2개)").type("Map"),
                                 fieldWithPath("[].image").description("퀴즈 이미지 (null일 수 있음)").optional(),
                                 fieldWithPath("[].image.id").description("퀴즈 이미지 id").type("Number"),
-                                fieldWithPath("[].image.imageUrl").description("퀴즈 이미지 url"),
-                                fieldWithPath("[].image.directory").description("퀴즈 이미지 디렉토리"),
-                                fieldWithPath("[].image.createdTime").description("퀴즈 이미지 생성시간").type("LocalDateTime"),
-                                fieldWithPath("[].image.modifiedTime").description("퀴즈 이미지 수정시간").type("LocalDateTime"),
-                                fieldWithPath("[].image.convertImageName").description("퀴즈 이미지 변환 이미지 이름")
+                                fieldWithPath("[].image.imageUrl").description("퀴즈 이미지 url")
                 )));
     }
 

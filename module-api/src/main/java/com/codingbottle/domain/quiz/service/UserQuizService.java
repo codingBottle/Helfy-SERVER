@@ -8,6 +8,7 @@ import com.codingbottle.domain.quiz.entity.Quiz;
 import com.codingbottle.domain.quiz.entity.QuizStatus;
 import com.codingbottle.domain.quiz.entity.UserQuiz;
 import com.codingbottle.domain.quiz.model.QuizStatusRequest;
+import com.codingbottle.domain.quiz.model.UserQuizInfo;
 import com.codingbottle.domain.quiz.repo.UserQuizQueryRepository;
 import com.codingbottle.domain.quiz.repo.UserQuizSimpleJPARepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -64,7 +66,7 @@ public class UserQuizService {
     }
 
     private void updateScoreAndQuizStatus(User user, Long quizId, QuizStatusRequest quizStatusRequest) {
-        quizRankRedisService.updateScore(user.toString(), 10.0);
+        quizRankRedisService.updateScore(user.toString(), 10);
 
         if(existsUserQuiz(user, quizId)) {
             UserQuiz userQuiz = findUserQuiz(quizId, user);
@@ -78,5 +80,10 @@ public class UserQuizService {
         if(!existsUserQuiz(user, quizId)) {
             saveUserQuiz(user, quizId, quizStatusRequest);
         }
+    }
+
+    public UserQuizInfo getUserQuizInfo(User user) {
+        Optional<Double> score = quizRankRedisService.getScore(user.toString());
+        return UserQuizInfo.from(user.getNickname(), score.orElse(0.0));
     }
 }

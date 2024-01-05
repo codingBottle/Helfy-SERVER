@@ -1,7 +1,7 @@
 package com.codingbottle.domain.quiz.controller;
 
 import com.codingbottle.auth.entity.User;
-import com.codingbottle.domain.quiz.entity.Quiz;
+import com.codingbottle.domain.quiz.model.QuizResponse;
 import com.codingbottle.domain.quiz.model.QuizStatusRequest;
 import com.codingbottle.domain.quiz.model.Type;
 import com.codingbottle.domain.quiz.service.QuizService;
@@ -14,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Tag(name = "퀴즈", description = "퀴즈 API")
 @RestController
@@ -24,9 +25,12 @@ public class QuizController {
     private final UserQuizService userQuizService;
 
     @GetMapping
-    public ResponseEntity<List<Quiz>> getQuizzes(@AuthenticationPrincipal User user,
+    public ResponseEntity<List<QuizResponse>> getQuizzes(@AuthenticationPrincipal User user,
                                                  @RequestParam(value = "type") Type type) {
-        List<Quiz> quizzes = quizService.findByType(user, type);
+        List<QuizResponse> quizzes = quizService.findByType(user, type).stream()
+                .map(QuizResponse::from)
+                .collect(Collectors.toList());
+        
         return ResponseEntity.ok(quizzes);
     }
 

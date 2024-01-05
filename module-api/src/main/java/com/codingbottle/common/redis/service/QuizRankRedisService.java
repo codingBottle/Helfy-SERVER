@@ -29,12 +29,12 @@ public class QuizRankRedisService {
         return Optional.ofNullable(zSetOperations.score(QUIZ_RANK_KEY, user));
     }
 
-    public void addScore(String user, double score) {
+    public void addScore(String user, int score) {
         zSetOperations.add(QUIZ_RANK_KEY, user, score);
     }
 
-    public void updateScore(String user, double score) {
-        double newScore = getScore(user).orElse(0.0) + score;
+    public void updateScore(String user, int score) {
+        int newScore = (int) (getScore(user).orElse(0.0) + score);
         addScore(user, newScore);
     }
 }
