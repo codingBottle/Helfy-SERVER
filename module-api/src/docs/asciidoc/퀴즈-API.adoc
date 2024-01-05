@@ -22,3 +22,7 @@ operation::put-quiz-status[snippets='http-request,path-parameters,request-body,r
 IMPORTANT:  (만약 틀린 문제가 없으면 오류 응답)
 
 operation::wrong-answer-list[snippets='http-request,http-response,response-fields']
+
+[[사용자-퀴즈-점수-조회]]
+== 사용자 닉네임, 점수 조회
+operation::get-user-quiz-info[snippets='http-request,http-response,response-fields']

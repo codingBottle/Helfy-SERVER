@@ -13,6 +13,7 @@ import com.codingbottle.domain.quiz.entity.Quiz;
 import com.codingbottle.domain.quiz.entity.QuizStatus;
 import com.codingbottle.domain.quiz.entity.QuizType;
 import com.codingbottle.domain.quiz.model.QuizStatusRequest;
+import com.codingbottle.domain.quiz.model.UserQuizInfo;
 import com.codingbottle.domain.region.entity.Region;
 import com.codingbottle.domain.user.model.UserNicknameRequest;
 
@@ -125,5 +126,7 @@ public class DomainFixture {
     public static final InformationResponse 정보_응답1 = InformationResponse.of(정보1);
 
     public static final QuizStatusRequest 퀴즈_결과_요청 = new QuizStatusRequest(QuizStatus.CORRECT);
+
+    public static final UserQuizInfo 퀴즈정보1 = new UserQuizInfo("닉네임", 10);
 }
 
