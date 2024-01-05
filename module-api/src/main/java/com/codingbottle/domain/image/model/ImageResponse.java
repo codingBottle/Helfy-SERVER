@@ -8,7 +8,7 @@ public record ImageResponse(
          Long id,
          String imageUrl
 ) {
-    public static ImageResponse of(Image image) {
+    public static ImageResponse from(Image image) {
         return ImageResponse.builder()
                 .id(image.getId())
                 .imageUrl(image.getImageUrl())
