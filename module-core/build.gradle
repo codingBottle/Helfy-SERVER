@@ -32,11 +32,7 @@ jacocoTestReport {
         classDirectories.setFrom(
                 files(classDirectories.files.collect {
                     fileTree(dir: it, excludes: [
-                            "**/*Application*",
                             "**/*Config*",
-                            "**/*Dto*",
-                            "**/*Request*",
-                            "**/*Response*",
                             "**/*Exception*"
                     ] + QueryDslDomains)
                 })
