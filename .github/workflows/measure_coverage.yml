@@ -28,10 +28,6 @@ jobs:
       - name: Run tests
         run: ./gradlew test
 
-      # Jacoco를 이용해 테스트 커버리지 측정
-      - name: Build Jacoco
-        run: ./gradlew jacocoRootReport
-
       - name: Add coverage to PR
         id: jacoco
         uses: madrapps/jacoco-report@v1.6.1
