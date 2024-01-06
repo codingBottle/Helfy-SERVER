@@ -7,3 +7,42 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation 'com.h2database:h2'
 }
+
+test {
+    useJUnitPlatform()
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    reports {
+        html.required.set(true)
+        xml.required.set(true)
+        csv.required.set(false)
+        xml.destination file("${buildDir}/reports/jacoco/test/jacocoTestReport.xml")
+    }
+    def QueryDslDomains = []
+    for (qPattern in '**/QA'..'**/QZ') {
+        QueryDslDomains.add(qPattern + '*')
+    }
+    afterEvaluate {
+        classDirectories.setFrom(
+                files(classDirectories.files.collect {
+                    fileTree(dir: it, excludes: [
+                            "**/*Application*",
+                            "**/*Config*",
+                            "**/*Dto*",
+                            "**/*Request*",
+                            "**/*Response*",
+                            "**/*Exception*"
+                    ] + QueryDslDomains)
+                })
+        )
+    }
+    finalizedBy jacocoTestCoverageVerification
+}
+
+

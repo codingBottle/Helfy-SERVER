@@ -46,6 +46,7 @@ ext {
 }
 
 test {
+    useJUnitPlatform()
     outputs.dir snippetsDir
 }
 
@@ -59,8 +60,38 @@ asciidoctor.doFirst {
     delete file("src/main/resources/static/docs")
 }
 
-task copyDocument(type: Copy){
+tasks.register('copyDocument', Copy) {
     dependsOn asciidoctor
     from file("build/docs/asciidoc")
     into file("src/main/resources/static/docs")
+}
+
+jacocoTestReport {
+    reports {
+        html.required.set(true)
+        xml.required.set(true)
+        csv.required.set(false)
+        xml.destination file("${buildDir}/reports/jacoco/test/jacocoTestReport.xml")
+    }
+
+    afterEvaluate {
+        classDirectories.setFrom(
+                files(classDirectories.files.collect {
+                    fileTree(dir: it, excludes: [
+                            "**/*Application*",
+                            "**/*Config*",
+                            "**/*Dto*",
+                            "**/*Request*",
+                            "**/*Response*",
+                            "**/*Exception*"
+                    ])
+                })
+        )
+    }
+    finalizedBy jacocoTestCoverageVerification
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
 }

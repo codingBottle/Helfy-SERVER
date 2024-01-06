@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'jacoco'
     id 'org.springframework.boot' version '3.1.4'
     id 'io.spring.dependency-management' version '1.1.3'
 }
@@ -21,90 +22,6 @@ repositories {
     mavenCentral()
 }
 
-allprojects {
-    apply plugin: 'java'
-    apply plugin: 'jacoco'
-    group = 'com.codingbottle'
-    version = '0.0.1-SNAPSHOT'
-
-    repositories {
-        mavenCentral()
-        maven { url 'https://jitpack.io' }
-    }
-
-    tasks.withType(Test).configureEach {
-        useJUnitPlatform()
-        finalizedBy 'jacocoTestReport'
-    }
-
-    jacoco {
-        toolVersion = '0.8.7'
-    }
-
-    jacocoTestReport {
-        finalizedBy 'jacocoTestCoverageVerification'
-
-        def Qdomains = []
-        for (qPattern in "**/QA".."**/QZ") {
-            Qdomains.add(qPattern + "*")
-        }
-
-        afterEvaluate {
-            classDirectories.setFrom(files(classDirectories.files.collect {
-                fileTree(dir: it,
-                        exclude: [] + Qdomains)
-            }))
-        }
-    }
-
-    jacocoTestCoverageVerification {
-        violationRules {
-            rule {
-                element = 'CLASS'
-
-
-                limit {
-                    counter = 'BRANCH'
-                    value = 'COVEREDRATIO'
-                    minimum = 0
-                }
-
-                limit {
-                    counter = 'LINE'
-                    value = 'COVEREDRATIO'
-                    minimum = 0.0
-                }
-
-                limit {
-                    counter = 'METHOD'
-                    value = 'COVEREDRATIO'
-                    minimum = 0
-                }
-
-                excludes = [
-                        '**/*Application*',
-                        '**/*dto*',
-                        '**/*Response*',
-                        '**/*Requset*',
-                        '**/*config*',
-                        '**/*ErrorCode*',
-                        "*Q*",
-                ]
-            }
-
-            rule {
-                element = 'METHOD'
-
-                limit {
-                    counter = 'LINE'
-                    value = 'TOTALCOUNT'
-                    maximum = 200
-                }
-            }
-        }
-    }
-}
-
 subprojects { subproject ->
     apply plugin: 'java'
     apply plugin: 'io.spring.dependency-management'
@@ -113,6 +30,20 @@ subprojects { subproject ->
     apply plugin: 'application'
     apply plugin: 'distribution'
     apply plugin: 'org.springframework.boot'
+    apply plugin: 'jacoco'
+
+    group = 'com.codingbottle'
+    version = '0.0.1-SNAPSHOT'
+
+    repositories {
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+
+
+    jacoco {
+        toolVersion = '0.8.10'
+    }
 
     dependencies {
         compileOnly 'org.projectlombok:lombok'
@@ -149,22 +80,37 @@ subprojects { subproject ->
     }
 }
 
-tasks.register('jacocoRootReport', JacocoReport) {
-    additionalSourceDirs.from files(subprojects.sourceSets.main.allSource.srcDirs)
-    sourceDirectories.from files(subprojects.sourceSets.main.allSource.srcDirs)
-    classDirectories.from files(subprojects.sourceSets.main.output)
-    executionData.from fileTree(project.rootDir.absolutePath).include("**/build/jacoco/test.exec")
-
+jacocoTestReport {
     reports {
-        xml.required = true
+        html.required.set(true)
+        xml.required.set(true)
+        csv.required.set(false)
         xml.destination file("${buildDir}/reports/jacoco/test/jacocoTestReport.xml")
-        html.destination file("${buildDir}/reports/jacoco/test/jacocoTestReport.html")
     }
+    def QueryDslDomains = []
+    for (qPattern in '**/QA'..'**/QZ') {
+        QueryDslDomains.add(qPattern + '*')
+    }
+    afterEvaluate {
+        classDirectories.setFrom(
+                files(classDirectories.files.collect {
+                    fileTree(dir: it, excludes: [
+                            "**/*Application*",
+                            "**/*Config*",
+                            "**/*Dto*",
+                            "**/*Request*",
+                            "**/*Response*",
+                            "**/*Interceptor*",
+                            "**/*Exception*"
+                    ] + QueryDslDomains)
+                })
+        )
+    }
+    finalizedBy jacocoTestCoverageVerification
+}
 
-    doLast {
-        subprojects.each { subproject ->
-            delete subproject.buildDir.path + "/reports/jacoco"
-        }
-    }
+tasks.named('test') {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
 }
 
