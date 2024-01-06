@@ -22,6 +22,8 @@ repositories {
 }
 
 allprojects {
+    apply plugin: 'java'
+    apply plugin: 'jacoco'
     group = 'com.codingbottle'
     version = '0.0.1-SNAPSHOT'
 
@@ -30,6 +32,77 @@ allprojects {
         maven { url 'https://jitpack.io' }
     }
 
+    tasks.withType(Test).configureEach {
+        useJUnitPlatform()
+        finalizedBy 'jacocoTestReport'
+    }
+
+    jacoco {
+        toolVersion = '0.8.7'
+    }
+
+    jacocoTestReport {
+        finalizedBy 'jacocoTestCoverageVerification'
+
+        def Qdomains = []
+        for (qPattern in "**/QA".."**/QZ") {
+            Qdomains.add(qPattern + "*")
+        }
+
+        afterEvaluate {
+            classDirectories.setFrom(files(classDirectories.files.collect {
+                fileTree(dir: it,
+                        exclude: [] + Qdomains)
+            }))
+        }
+    }
+
+    jacocoTestCoverageVerification {
+        violationRules {
+            rule {
+                element = 'CLASS'
+
+
+                limit {
+                    counter = 'BRANCH'
+                    value = 'COVEREDRATIO'
+                    minimum = 0
+                }
+
+                limit {
+                    counter = 'LINE'
+                    value = 'COVEREDRATIO'
+                    minimum = 0.0
+                }
+
+                limit {
+                    counter = 'METHOD'
+                    value = 'COVEREDRATIO'
+                    minimum = 0
+                }
+
+                excludes = [
+                        '**/*Application*',
+                        '**/*dto*',
+                        '**/*Response*',
+                        '**/*Requset*',
+                        '**/*config*',
+                        '**/*ErrorCode*',
+                        "*Q*",
+                ]
+            }
+
+            rule {
+                element = 'METHOD'
+
+                limit {
+                    counter = 'LINE'
+                    value = 'TOTALCOUNT'
+                    maximum = 200
+                }
+            }
+        }
+    }
 }
 
 subprojects { subproject ->
@@ -55,25 +128,43 @@ subprojects { subproject ->
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
     }
 
-    plugins.withType(JavaPlugin) {
-        java {
-            sourceCompatibility = JavaVersion.VERSION_17
-            targetCompatibility = JavaVersion.VERSION_17
-        }
+    plugins.withType(JavaPlugin).tap {
+        configureEach {
+            java {
+                sourceCompatibility = JavaVersion.VERSION_17
+                targetCompatibility = JavaVersion.VERSION_17
+            }
 
-        compileJava {
-            options.encoding = 'UTF-8'
-        }
+            compileJava {
+                options.encoding = 'UTF-8'
+            }
 
-        idea {
-            module {
-                outputDir = file("$buildDir/classes/main/")
-                testOutputDir = file("$buildDir/classes/test/")
+            idea {
+                module {
+                    outputDir = file("$buildDir/classes/main/")
+                    testOutputDir = file("$buildDir/classes/test/")
+                }
             }
         }
     }
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
+tasks.register('jacocoRootReport', JacocoReport) {
+    additionalSourceDirs.from files(subprojects.sourceSets.main.allSource.srcDirs)
+    sourceDirectories.from files(subprojects.sourceSets.main.allSource.srcDirs)
+    classDirectories.from files(subprojects.sourceSets.main.output)
+    executionData.from fileTree(project.rootDir.absolutePath).include("**/build/jacoco/test.exec")
+
+    reports {
+        xml.required = true
+        xml.destination file("${buildDir}/reports/jacoco/test/jacocoTestReport.xml")
+        html.destination file("${buildDir}/reports/jacoco/test/jacocoTestReport.html")
+    }
+
+    doLast {
+        subprojects.each { subproject ->
+            delete subproject.buildDir.path + "/reports/jacoco"
+        }
+    }
 }
+

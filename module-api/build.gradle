@@ -1,7 +1,6 @@
 import java.text.SimpleDateFormat
 
 plugins {
-    id 'java'
     id 'com.google.cloud.tools.jib' version '3.3.1'
     id 'org.asciidoctor.jvm.convert' version '3.3.2'
 }
@@ -47,7 +46,6 @@ ext {
 }
 
 test {
-    useJUnitPlatform()
     outputs.dir snippetsDir
 }
 
