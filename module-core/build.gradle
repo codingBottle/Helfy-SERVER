@@ -1,11 +1,3 @@
-plugins {
-    id 'java'
-}
-
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
     annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
@@ -19,3 +11,36 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+tasks.named('test') {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    reports {
+        html.required.set(true)
+        xml.required.set(true)
+        csv.required.set(false)
+        xml.destination file("${buildDir}/reports/jacoco/test/jacocoTestReport.xml")
+    }
+    def QueryDslDomains = []
+    for (qPattern in '**/QA'..'**/QZ') {
+        QueryDslDomains.add(qPattern + '*')
+    }
+    afterEvaluate {
+        classDirectories.setFrom(
+                files(classDirectories.files.collect {
+                    fileTree(dir: it, excludes: [
+                            "**/*Application*",
+                            "**/*Error*",
+                            "**/*Config*",
+                            "**/*Exception*"
+                    ] + QueryDslDomains)
+                })
+        )
+    }
+    finalizedBy jacocoTestCoverageVerification
+}
+
+

@@ -1,7 +1,6 @@
 import java.text.SimpleDateFormat
 
 plugins {
-    id 'java'
     id 'com.google.cloud.tools.jib' version '3.3.1'
     id 'org.asciidoctor.jvm.convert' version '3.3.2'
 }
@@ -61,8 +60,37 @@ asciidoctor.doFirst {
     delete file("src/main/resources/static/docs")
 }
 
-task copyDocument(type: Copy){
+tasks.register('copyDocument', Copy) {
     dependsOn asciidoctor
     from file("build/docs/asciidoc")
     into file("src/main/resources/static/docs")
+}
+
+jacocoTestReport {
+    reports {
+        html.required.set(true)
+        xml.required.set(true)
+        csv.required.set(false)
+        xml.destination file("${buildDir}/reports/jacoco/test/jacocoTestReport.xml")
+    }
+
+    afterEvaluate {
+        classDirectories.setFrom(
+                files(classDirectories.files.collect {
+                    fileTree(dir: it, excludes: [
+                            "**/*Config*",
+                            "**/*Dto*",
+                            "**/*Request*",
+                            "**/*Response*",
+                            "**/*Exception*"
+                    ])
+                })
+        )
+    }
+    finalizedBy jacocoTestCoverageVerification
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
 }
