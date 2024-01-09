@@ -158,12 +158,13 @@ class PostControllerTest extends RestDocsTest {
     @DisplayName("게시글 좋아요 요청")
     void likes_put() throws Exception{
         //given
-        given(userPostLikesService.isAlreadyLikes(any(User.class), any(Long.class))).willReturn(false);
+        given(userPostLikesService.toggleLikeStatus(any(User.class), any(Long.class))).willReturn(true);
         //when & then
         mvc.perform(RestDocumentationRequestBuilders.put(REQUEST_URL + "/{id}/likes", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer FirebaseToken"))
                 .andExpect(status().isOk())
+                .andExpect(content().string("Liked"))
                 .andDo(document("put-likes",
                         getDocumentRequest(),
                         getDocumentResponse(),
@@ -182,6 +183,7 @@ class PostControllerTest extends RestDocsTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer FirebaseToken"))
                 .andExpect(status().isOk())
+                .andExpect(content().string("Unliked"))
                 .andDo(document("put-likes",
                         getDocumentRequest(),
                         getDocumentResponse(),
