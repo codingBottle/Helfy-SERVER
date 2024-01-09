@@ -14,6 +14,7 @@ import com.codingbottle.domain.quiz.entity.QuizStatus;
 import com.codingbottle.domain.quiz.entity.QuizType;
 import com.codingbottle.domain.quiz.model.QuizStatusRequest;
 import com.codingbottle.domain.quiz.model.UserQuizInfo;
+import com.codingbottle.domain.rank.model.UserRankResponse;
 import com.codingbottle.domain.region.entity.Region;
 import com.codingbottle.domain.user.model.UserNicknameRequest;
 
@@ -128,5 +129,11 @@ public class DomainFixture {
     public static final QuizStatusRequest 퀴즈_결과_요청 = new QuizStatusRequest(QuizStatus.CORRECT);
 
     public static final UserQuizInfo 퀴즈정보1 = new UserQuizInfo("닉네임", 10);
+
+    public static final UserRankResponse 유저_랭킹1 = new UserRankResponse(1L, "닉네임", 30);
+
+    public static final UserRankResponse 유저_랭킹2 = new UserRankResponse(2L, "닉네임", 20);
+
+    public static final UserRankResponse 유저_랭킹3 = new UserRankResponse(3L, "닉네임", 10);
 }
 
