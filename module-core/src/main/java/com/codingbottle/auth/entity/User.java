@@ -51,8 +51,7 @@ public class User implements UserDetails {
     }
 
     public User updateNickname(String nickname) {
-        this.firebaseUid = nickname;
-
+        this.nickname = nickname;
         return this;
     }
 

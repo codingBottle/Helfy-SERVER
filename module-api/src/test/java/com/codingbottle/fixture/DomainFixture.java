@@ -35,16 +35,16 @@ public class DomainFixture {
             .build();
 
     public static final User 유저1 = User.builder()
-            .firebaseUid("firebaseUid")
-            .nickname("유저1")
+            .firebaseUid("firebaseUid1")
+            .nickname("닉네임")
             .email("helfy@gmail.com")
             .region(Region.SEOUL)
             .role(Role.ROLE_USER)
             .build();
 
     public static final User 유저2 = User.builder()
-            .firebaseUid("firebaseUid")
-            .nickname("유저2")
+            .firebaseUid("firebaseUid2")
+            .nickname("닉네임")
             .email("helfy@gmail.com")
             .region(Region.SEOUL)
             .role(Role.ROLE_USER)
