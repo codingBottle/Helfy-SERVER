@@ -1,0 +1,20 @@
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 3
+:leveloffset: 1
+:secttlinks:
+
+[[랭킹-API]]
+= 랭킹 API
+
+[[랭킹-조회]]
+== 랭킹 조회(1~10위)
+WARNING: 밑의 예시는 유저가 3명 밖에 없어서 1~3위까지만 랭킹이 존재하지만 10위까지 랭킹이 존재한다면 10위까지 랭킹이 조회된다.
+
+operation::rank-list[snippets='http-request,http-response,response-fields']
+
+[[나의-랭킹-조회]]
+== 나의 랭킹 조회
+operation::user-rank[snippets='http-request,http-response,response-fields']
