@@ -85,6 +85,10 @@ public class PostService {
         likesRedisService.deleteLikesPost(id);
     }
 
+    public List<Post> searchByKeyword(String keyword) {
+        return postQueryRepository.searchByKeyword(keyword);
+    }
+
     private boolean isNotSameWriter(Post post, User user) {
         return !post.getUser().equals(user);
     }
