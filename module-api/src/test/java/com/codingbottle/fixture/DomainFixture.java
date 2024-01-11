@@ -19,16 +19,26 @@ import com.codingbottle.domain.region.entity.Region;
 import com.codingbottle.domain.user.model.UserNicknameRequest;
 
 import java.util.HashMap;
+import java.util.List;
 
 
 public class DomainFixture {
     public static final Image 게시글1_이미지 = Image.builder()
+            .id(1L)
             .directory(Directory.POST)
             .imageUrl("https://d1csu9i9ktup9e.cloudfront.net/default.png")
             .convertImageName("default.png")
             .build();
 
     public static final Image 게시글2_이미지 = Image.builder()
+            .id(2L)
+            .directory(Directory.POST)
+            .imageUrl("https://d1csu9i9ktup9e.cloudfront.net/default.png")
+            .convertImageName("default.png")
+            .build();
+
+    public static final Image 게시글3_이미지 = Image.builder()
+            .id(3L)
             .directory(Directory.POST)
             .imageUrl("https://d1csu9i9ktup9e.cloudfront.net/default.png")
             .convertImageName("default.png")
@@ -62,11 +72,29 @@ public class DomainFixture {
             .user(유저1)
             .build();
 
-    public static final PostRequest 게시글_생성_요청1 = new PostRequest("게시글", 1L);
+    public static final Post 게시글3 = Post.builder()
+            .content("게시글")
+            .image(게시글3_이미지)
+            .user(유저1)
+            .build();
 
-    public static final PostRequest 게시글_수정_요청1 = new PostRequest("게시글 수정", 1L);
+    public static final PostRequest 게시글_생성_요청1 = new PostRequest("게시글", 1L, List.of("해시태그"));
+
+    public static final PostRequest 게시글_생성_요청2 = new PostRequest("게시글", 3L, null);
+
+    public static final PostRequest 게시글_수정_요청1 = new PostRequest("게시글 수정", 1L, List.of("해시태그"));
+
+    public static final PostRequest 게시글_수정_요청2 = new PostRequest("게시글 수정", 4L, List.of("해시태그"));
 
     public static final Image 게시글_수정_이미지1 = Image.builder()
+            .id(3L)
+            .directory(Directory.POST)
+            .imageUrl("https://d1csu9i9ktup9e.cloudfront.net/default.png")
+            .convertImageName("default.png")
+            .build();
+
+    public static final Image 게시글_수정_이미지2 = Image.builder()
+            .id(4L)
             .directory(Directory.POST)
             .imageUrl("https://d1csu9i9ktup9e.cloudfront.net/default.png")
             .convertImageName("default.png")

@@ -4,7 +4,8 @@ import com.codingbottle.common.exception.ApplicationErrorException;
 import com.codingbottle.common.redis.service.LikesRedisService;
 import com.codingbottle.domain.image.service.ImageService;
 import com.codingbottle.domain.post.entity.Post;
-import com.codingbottle.domain.post.repo.PostRepository;
+import com.codingbottle.domain.post.repo.PostQueryRepository;
+import com.codingbottle.domain.post.repo.PostSimpleJPARepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,18 +33,19 @@ class PostServiceTest {
     private PostService postService;
 
     @Mock
-    private PostRepository postRepository;
+    private PostSimpleJPARepository postSimpleJPARepository;
     @Mock
     private LikesRedisService likesRedisService;
-
     @Mock
     private ImageService imageService;
+    @Mock
+    private PostQueryRepository postQueryRepository;
 
     @Test
     @DisplayName("ID에 해당하는 게시글을 조회한다.")
     void find_post_by_id() {
         // given
-        given(postRepository.findById(anyLong())).willReturn(Optional.ofNullable(게시글1));
+        given(postSimpleJPARepository.findById(anyLong())).willReturn(Optional.ofNullable(게시글1));
         // when
         Post post = postService.findById(anyLong());
         // then
@@ -54,7 +56,7 @@ class PostServiceTest {
     @DisplayName("ID에 해당하는 게시글이 없으면 예외를 발생시킨다.")
     void find_post_by_id_not_found() {
         // given
-        given(postRepository.findById(anyLong())).willReturn(Optional.empty());
+        given(postSimpleJPARepository.findById(anyLong())).willReturn(Optional.empty());
         // when & then
         assertThatThrownBy(() -> postService.findById(anyLong()))
                 .isInstanceOf(ApplicationErrorException.class);
@@ -65,7 +67,7 @@ class PostServiceTest {
     void save_post() {
         // given
         given(imageService.findById(anyLong())).willReturn(게시글1.getImage());
-        given(postRepository.save(any(Post.class))).willReturn(게시글1);
+        given(postSimpleJPARepository.save(any(Post.class))).willReturn(게시글1);
         // when
         Post post = postService.save(게시글_생성_요청1, 게시글1.getUser());
         // then
@@ -73,17 +75,17 @@ class PostServiceTest {
     }
 
     @Test
-    @DisplayName("게시글을 수정한다.")
+    @DisplayName("게시글 수정시 게시글 이미지가 기존의 이미지와 같은 경우 이미지 외의 내용만 수정한다.")
     void update_post() {
         // given
-        given(postRepository.findById(any())).willReturn(Optional.of(게시글1));
-        given(imageService.findById(anyLong())).willReturn(게시글_수정_이미지1);
+        given(postSimpleJPARepository.findById(any())).willReturn(Optional.of(게시글1));
         // when
         Post post = postService.update(게시글_수정_요청1, 게시글1.getId(), 게시글1.getUser());
         // then
         assertAll(() -> {
             assertThat(post.getContent()).isEqualTo(게시글_수정_요청1.content());
-            assertThat(post.getImage()).isEqualTo(게시글_수정_이미지1);
+            assertThat(post.getImage()).isEqualTo(게시글1.getImage());
+            assertThat(post.getHashtags()).isEqualTo(게시글_수정_요청1.hashtags());
         });
     }
 
@@ -91,7 +93,7 @@ class PostServiceTest {
     @DisplayName("게시글 수정시 게시글 작성자와 수정자가 같은 사용자가 아닌 경우 예외를 발생시킨다.")
     void update_post_not_same_user() {
         // given
-        given(postRepository.findById(any())).willReturn(Optional.ofNullable(게시글1));
+        given(postSimpleJPARepository.findById(any())).willReturn(Optional.ofNullable(게시글1));
         // when & then
         assertThatThrownBy(() -> postService.update(게시글_수정_요청1, 게시글1.getId(), 유저2))
                 .isInstanceOf(ApplicationErrorException.class);
@@ -101,7 +103,7 @@ class PostServiceTest {
     @DisplayName("게시글 삭제시 게시글 작성자와 삭제자가 같은 사용자가 아닌 경우 예외를 발생시킨다.")
     void delete_post_not_same_user() {
         // given
-        given(postRepository.findById(any())).willReturn(Optional.ofNullable(게시글1));
+        given(postSimpleJPARepository.findById(any())).willReturn(Optional.ofNullable(게시글1));
         // when & then
         assertThatThrownBy(() -> postService.delete(게시글1.getId(), 유저2))
                 .isInstanceOf(ApplicationErrorException.class);
@@ -111,12 +113,12 @@ class PostServiceTest {
     @DisplayName("게시글을 삭제한다.")
     void delete_post() {
         // given
-        given(postRepository.findById(any())).willReturn(Optional.of(게시글1));
+        given(postSimpleJPARepository.findById(any())).willReturn(Optional.of(게시글1));
         given(likesRedisService.deleteLikesPost(any())).willReturn(true);
         // when
         postService.delete(게시글1.getId(), 게시글1.getUser());
         // then
-        verify(postRepository).delete(any(Post.class));
+        verify(postSimpleJPARepository).delete(any(Post.class));
         verify(likesRedisService).deleteLikesPost(any());
     }
 
@@ -126,10 +128,53 @@ class PostServiceTest {
         // given
         PageRequest pageRequest = PageRequest.of(0, 10);
 
-        given(postRepository.findAll(any(PageRequest.class))).willReturn(new PageImpl<>(List.of(게시글1)));
+        given(postSimpleJPARepository.findAll(any(PageRequest.class))).willReturn(new PageImpl<>(List.of(게시글1)));
         // when
         Page<Post> posts = postService.findAll(pageRequest);
         // then
         assertThat(posts).containsExactly(게시글1);
+    }
+
+    @Test
+    @DisplayName("키워드로 게시글을 검색한다.")
+    void search_post_by_keyword() {
+        // given
+        given(postQueryRepository.searchByKeyword(any())).willReturn(List.of(게시글1));
+        // when
+        List<Post> posts = postService.searchByKeyword(any(String.class));
+        // then
+        assertThat(posts).containsExactly(게시글1);
+    }
+
+    @Test
+    @DisplayName("게시글 수정 요청시 이미지가 기존의 이미지와 달라질 경우 기존의 이미지를 삭제하고 새로운 이미지를 저장한다.")
+    void update_post_image() {
+        // given
+        given(postSimpleJPARepository.findById(any())).willReturn(Optional.of(게시글2));
+        given(imageService.findById(anyLong())).willReturn(게시글_수정_이미지2);
+        // when
+        Post post = postService.update(게시글_수정_요청2, 게시글2.getId(), 게시글2.getUser());
+        // then
+        assertAll(() -> {
+            assertThat(post.getContent()).isEqualTo(게시글_수정_요청1.content());
+            assertThat(post.getImage()).isEqualTo(게시글_수정_이미지2);
+            assertThat(post.getHashtags()).isEqualTo(게시글_수정_요청1.hashtags());
+        });
+    }
+
+    @Test
+    @DisplayName("게시글 저장 요청시 해시태그가 null이어도 정상적으로 저장한다.")
+    void save_post_without_hashtags() {
+        // given
+        given(imageService.findById(anyLong())).willReturn(게시글3.getImage());
+        given(postSimpleJPARepository.save(any(Post.class))).willReturn(게시글3);
+        // when
+        Post post = postService.save(게시글_생성_요청2, 게시글1.getUser());
+        // then
+        assertAll(
+                () -> assertThat(post.getContent()).isEqualTo(게시글_생성_요청2.content()),
+                () -> assertThat(post.getImage()).isEqualTo(게시글3.getImage()),
+                () -> assertThat(post.getHashtags()).isEmpty()
+        );
     }
 }

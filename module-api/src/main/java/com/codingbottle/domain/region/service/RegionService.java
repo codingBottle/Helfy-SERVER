@@ -11,9 +11,7 @@ import java.util.stream.Collectors;
 @Service
 public class RegionService {
     public Map<String, String> findAll() {
-        List<Region> regions = Arrays.asList(Region.values());
-
-        return regions.stream()
+        return Arrays.stream(Region.values())
                 .filter(region -> !region.equals(Region.NONE))
                 .sorted(Comparator.comparing(Region::getCode))
                 .collect(Collectors.toMap(Region::name, Region::getDetail, (oldValue, newValue) -> oldValue, LinkedHashMap::new));

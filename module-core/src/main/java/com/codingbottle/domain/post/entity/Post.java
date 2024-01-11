@@ -18,12 +18,17 @@ import java.util.List;
 public class Post extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "post_num")
+    @Column(name = "post_id")
     private Long id;
 
     @Lob
     @Column(name = "post_content")
     private String content;
+
+    @ElementCollection
+    @CollectionTable(name = "post_hashtags", joinColumns = @JoinColumn(name = "post_id"))
+    @Column(name = "hashtag")
+    private List<String> hashtags = new ArrayList<>(5);
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -43,9 +48,17 @@ public class Post extends BaseEntity {
         this.image = image;
     }
 
-    public void update(String content, Image image) {
+    public Post update(String content, Image image, List<String> hashtags) {
         this.content = content;
         this.image = image;
+        this.hashtags = hashtags;
+        return this;
+    }
+
+    public Post update(String content, List<String> hashtags) {
+        this.content = content;
+        this.hashtags = hashtags;
+        return this;
     }
 
     public void addLikes(UserPostLikes userPostLikes) {
@@ -54,5 +67,9 @@ public class Post extends BaseEntity {
 
     public void removeLikes(User user) {
         this.likes.removeIf(likes -> likes.getUser().equals(user));
+    }
+
+    public void addHashtags(List<String> hashtags) {
+        this.hashtags.addAll(hashtags);
     }
 }

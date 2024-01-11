@@ -2,6 +2,9 @@ package com.codingbottle.fixture;
 
 import com.codingbottle.auth.entity.Role;
 import com.codingbottle.auth.entity.User;
+import com.codingbottle.domain.image.entity.Directory;
+import com.codingbottle.domain.image.entity.Image;
+import com.codingbottle.domain.post.entity.Post;
 import com.codingbottle.domain.quiz.entity.Quiz;
 import com.codingbottle.domain.quiz.entity.QuizStatus;
 import com.codingbottle.domain.quiz.entity.QuizType;
@@ -65,5 +68,31 @@ public class CoreDomainFixture {
             .user(유저1)
             .quiz(퀴즈2)
             .quizStatus(QuizStatus.WRONG)
+            .build();
+
+    public static final Image 게시글_이미지1 = Image.builder()
+            .id(1L)
+            .directory(Directory.POST)
+            .imageUrl("https://d1csu9i9ktup9e.cloudfront.net/default.png")
+            .convertImageName("default.png")
+            .build();
+
+    public static final Image 게시글_이미지2 = Image.builder()
+            .id(2L)
+            .directory(Directory.POST)
+            .imageUrl("https://d1csu9i9ktup9e.cloudfront.net/default.png")
+            .convertImageName("default.png")
+            .build();
+
+    public static final Post 게시글1 = Post.builder()
+            .content("게시글")
+            .image(게시글_이미지1)
+            .user(유저1)
+            .build();
+
+    public static final Post 게시글2 = Post.builder()
+            .content("게시글")
+            .image(게시글_이미지2)
+            .user(유저1)
             .build();
 }

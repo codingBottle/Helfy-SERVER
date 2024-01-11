@@ -17,6 +17,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Tag(name = "게시판", description = "게시판 API")
 @RestController
 @RequestMapping("/api/v1/posts")
@@ -37,7 +39,7 @@ public class PostController {
     public ResponseEntity<Page<PostResponse>> findAll(@PageableDefault Pageable pageable,
                                                       @AuthenticationPrincipal User user) {
         Page<PostResponse> posts = postService.findAll(pageable)
-                .map(post -> PostResponse.from(post, userPostLikesService.isAlreadyLikes(user, post.getId())));
+                .map(post -> PostResponse.of(post, userPostLikesService.isAlreadyLikes(user, post.getId())));
         return ResponseEntity.ok(posts);
     }
 
@@ -47,7 +49,7 @@ public class PostController {
                                                @AuthenticationPrincipal User user) {
         Post post = postService.update(postRequest, id, user);
         Boolean likeStatus = userPostLikesService.isAlreadyLikes(user, id);
-        return ResponseEntity.ok(PostResponse.from(post, likeStatus));
+        return ResponseEntity.ok(PostResponse.of(post, likeStatus));
     }
 
     @DeleteMapping("/{id}")
@@ -62,5 +64,13 @@ public class PostController {
                                                    @AuthenticationPrincipal User user) {
         boolean isLiked = userPostLikesService.toggleLikeStatus(user, postId);
         return ResponseEntity.ok().body(isLiked ? "Liked" : "Unliked");
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<PostResponse>> searchByKeyword(@RequestParam(value = "keyword") String keyword) {
+        List<PostResponse> posts = postService.searchByKeyword(keyword).stream()
+                .map(PostResponse::from)
+                .toList();
+        return ResponseEntity.ok(posts);
     }
 }

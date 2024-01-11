@@ -1,5 +1,6 @@
 package com.codingbottle.common.config;
 
+import com.codingbottle.domain.post.repo.PostQueryRepository;
 import com.codingbottle.domain.quiz.repo.QuizQueryRepository;
 import com.codingbottle.domain.quiz.repo.UserQuizQueryRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -28,5 +29,10 @@ public class TestQueryDslConfig {
     @Bean
     public UserQuizQueryRepository userQuizRepository() {
         return new UserQuizQueryRepository(jpaQueryFactory());
+    }
+
+    @Bean
+    public PostQueryRepository postQueryRepository() {
+        return new PostQueryRepository(jpaQueryFactory());
     }
 }

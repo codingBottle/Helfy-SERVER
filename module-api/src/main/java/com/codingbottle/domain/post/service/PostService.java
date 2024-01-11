@@ -7,7 +7,8 @@ import com.codingbottle.common.redis.service.LikesRedisService;
 import com.codingbottle.domain.image.entity.Image;
 import com.codingbottle.domain.image.service.ImageService;
 import com.codingbottle.domain.post.entity.Post;
-import com.codingbottle.domain.post.repo.PostRepository;
+import com.codingbottle.domain.post.repo.PostQueryRepository;
+import com.codingbottle.domain.post.repo.PostSimpleJPARepository;
 import com.codingbottle.domain.post.model.PostRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,13 +16,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class PostService {
-    private final PostRepository postRepository;
+    private final PostSimpleJPARepository postSimpleJPARepository;
+    private final PostQueryRepository postQueryRepository;
     private final ImageService imageService;
     private final LikesRedisService likesRedisService;
 
@@ -35,7 +38,11 @@ public class PostService {
                 .image(image)
                 .build();
 
-        return postRepository.save(post);
+        if(postRequest.hashtags() != null) {
+            post.addHashtags(postRequest.hashtags());
+        }
+
+        return postSimpleJPARepository.save(post);
     }
 
     @Transactional
@@ -47,21 +54,21 @@ public class PostService {
         }
 
         if(!Objects.equals(post.getImage().getId(), postRequest.imageId())) {
+            imageService.delete(post.getImage());
+
             Image image = imageService.findById(postRequest.imageId());
-            post.update(postRequest.content(), image);
-        } else if (postRequest.imageId() == null) {
-            post.update(postRequest.content(), null);
+            return post.update(postRequest.content(), image, postRequest.hashtags());
         }
 
-        return post;
+        return post.update(postRequest.content(), postRequest.hashtags());
     }
 
     public Page<Post> findAll(Pageable pageable) {
-        return postRepository.findAll(pageable);
+        return postSimpleJPARepository.findAll(pageable);
     }
 
     public Post findById(Long id) {
-        return postRepository.findById(id)
+        return postSimpleJPARepository.findById(id)
                 .orElseThrow(() -> new ApplicationErrorException(ApplicationErrorType.POST_NOT_FOUND, String.format("해당 게시글(%s)을 찾을 수 없습니다.", id)));
     }
 
@@ -74,8 +81,12 @@ public class PostService {
         }
 
         imageService.delete(post.getImage());
-        postRepository.delete(post);
+        postSimpleJPARepository.delete(post);
         likesRedisService.deleteLikesPost(id);
+    }
+
+    public List<Post> searchByKeyword(String keyword) {
+        return postQueryRepository.searchByKeyword(keyword);
     }
 
     private boolean isNotSameWriter(Post post, User user) {

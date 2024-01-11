@@ -70,6 +70,7 @@ class PostControllerTest extends RestDocsTest {
                                 fieldWithPath("content").description("게시물 리스트"),
                                 fieldWithPath("content[].id").description("게시물 id").type("Number"),
                                 fieldWithPath("content[].content").description("게시물 내용"),
+                                fieldWithPath("content[].hashtags").description("게시물 해시태그"),
                                 fieldWithPath("content[].writerNickname").description("게시물 작성자"),
                                 fieldWithPath("content[].likeCount").description("게시물 좋아요 수"),
                                 fieldWithPath("content[].likeStatus").description("게시물 좋아요 여부"),
@@ -113,7 +114,8 @@ class PostControllerTest extends RestDocsTest {
                         getAuthorizationHeader(),
                         requestFields(
                                 fieldWithPath("content").description("게시물 내용 (필수)"),
-                                fieldWithPath("imageId").description("게시물 이미지 id (필수)")
+                                fieldWithPath("imageId").description("게시물 이미지 id (필수)"),
+                                fieldWithPath("hashtags").description("게시물 해시태그 (선택)")
                         ),
                         getPostResponseFields()));
     }
@@ -192,10 +194,44 @@ class PostControllerTest extends RestDocsTest {
                                 parameterWithName("id").description("게시물 id"))));
     }
 
+    @Test
+    @DisplayName("게시글 검색")
+    void search_keyword() throws Exception{
+        //given
+        given(postService.searchByKeyword(any(String.class))).willReturn(List.of(게시글1, 게시글2));
+        //when & then
+        mvc.perform(get(REQUEST_URL + "/search")
+                        .queryParam("keyword", "검색어")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer FirebaseToken"))
+                .andExpect(status().isOk())
+                .andDo(document("search-keyword",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        getAuthorizationHeader(),
+                        queryParameters(
+                                parameterWithName("keyword").description("검색어")),
+                        responseFields(
+                                fieldWithPath("[]").description("게시물 리스트"),
+                                fieldWithPath("[].id").description("게시물 id").type("Number"),
+                                fieldWithPath("[].content").description("게시물 내용"),
+                                fieldWithPath("[].hashtags").description("게시물 해시태그"),
+                                fieldWithPath("[].writerNickname").description("게시물 작성자"),
+                                fieldWithPath("[].likeCount").description("게시물 좋아요 수"),
+                                fieldWithPath("[].likeStatus").description("게시물 좋아요 여부"),
+                                fieldWithPath("[].image").description("게시물 이미지"),
+                                fieldWithPath("[].image.id").description("게시물 이미지 id"),
+                                fieldWithPath("[].image.imageUrl").description("게시물 이미지 url"),
+                                fieldWithPath("[].createdTime").description("게시물 생성시간").type("LocalDateTime"),
+                                fieldWithPath("[].modifiedTime").description("게시물 수정시간").type("LocalDateTime")
+                        )));
+    }
+
     private ResponseFieldsSnippet getPostResponseFields() {
         return responseFields(
                 fieldWithPath("id").description("게시물 id").type("Number"),
                 fieldWithPath("content").description("게시물 내용"),
+                fieldWithPath("hashtags").description("게시물 해시태그"),
                 fieldWithPath("writerNickname").description("게시물 작성자 명"),
                 fieldWithPath("likeCount").description("게시물 좋아요 수"),
                 fieldWithPath("likeStatus").description("게시물 좋아요 여부"),
