@@ -2,6 +2,7 @@ package com.codingbottle.domain.post.controller;
 
 import com.codingbottle.auth.entity.User;
 import com.codingbottle.common.annotation.CustomPageableAsQueryParam;
+import com.codingbottle.common.util.PagingUtil;
 import com.codingbottle.domain.post.entity.Post;
 import com.codingbottle.domain.post.model.PostRequest;
 import com.codingbottle.domain.post.model.PostResponse;
@@ -9,8 +10,8 @@ import com.codingbottle.domain.post.service.PostService;
 import com.codingbottle.domain.post.service.UserPostLikesService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,6 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Tag(name = "게시판", description = "게시판 API")
 @RestController
@@ -36,11 +38,15 @@ public class PostController {
 
     @GetMapping
     @CustomPageableAsQueryParam
-    public ResponseEntity<Page<PostResponse>> findAll(@PageableDefault Pageable pageable,
-                                                      @AuthenticationPrincipal User user) {
-        Page<PostResponse> posts = postService.findAll(pageable)
-                .map(post -> PostResponse.of(post, userPostLikesService.isAlreadyLikes(user, post.getId())));
-        return ResponseEntity.ok(posts);
+    public ResponseEntity<SliceImpl<PostResponse>> findAll(@PageableDefault Pageable pageable,
+                                                           @AuthenticationPrincipal User user) {
+        List<Post> posts = postService.findAll(pageable);
+
+        List<PostResponse> postResponses = posts.stream()
+                .map(post -> PostResponse.of(post, userPostLikesService.isAlreadyLikes(user, post.getId())))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(PagingUtil.toSliceImpl(postResponses, pageable));
     }
 
     @PatchMapping("/{id}")

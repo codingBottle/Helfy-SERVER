@@ -12,8 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
@@ -128,11 +126,11 @@ class PostServiceTest {
         // given
         PageRequest pageRequest = PageRequest.of(0, 10);
 
-        given(postSimpleJPARepository.findAll(any(PageRequest.class))).willReturn(new PageImpl<>(List.of(게시글1)));
+        given(postQueryRepository.finAll(any(PageRequest.class))).willReturn(List.of(게시글1, 게시글2));
         // when
-        Page<Post> posts = postService.findAll(pageRequest);
+        List<Post> posts = postService.findAll(pageRequest);
         // then
-        assertThat(posts).containsExactly(게시글1);
+        assertThat(posts).contains(게시글1, 게시글2);
     }
 
     @Test
