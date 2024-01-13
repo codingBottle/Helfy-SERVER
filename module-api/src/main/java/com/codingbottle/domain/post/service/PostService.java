@@ -11,7 +11,8 @@ import com.codingbottle.domain.post.repo.PostQueryRepository;
 import com.codingbottle.domain.post.repo.PostSimpleJPARepository;
 import com.codingbottle.domain.post.model.PostRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +30,7 @@ public class PostService {
     private final LikesRedisService likesRedisService;
 
     @Transactional
+    @CacheEvict(value = "posts", allEntries = true)
     public Post save(PostRequest postRequest, User user) {
         Image image = imageService.findById(postRequest.imageId());
 
@@ -46,6 +48,7 @@ public class PostService {
     }
 
     @Transactional
+    @CacheEvict(value = "posts", allEntries = true)
     public Post update(PostRequest postRequest, Long id, User user) {
         Post post = findById(id);
 
@@ -63,8 +66,9 @@ public class PostService {
         return post.update(postRequest.content(), postRequest.hashtags());
     }
 
-    public Page<Post> findAll(Pageable pageable) {
-        return postSimpleJPARepository.findAll(pageable);
+    @Cacheable(value = "posts", key = "#pageable.pageNumber", unless = "#result == null")
+    public List<Post> findAll(Pageable pageable) {
+        return postQueryRepository.finAll(pageable);
     }
 
     public Post findById(Long id) {
@@ -73,6 +77,7 @@ public class PostService {
     }
 
     @Transactional
+    @CacheEvict(value = "posts", allEntries = true)
     public void delete(Long id, User user) {
         Post post = findById(id);
 
@@ -81,8 +86,8 @@ public class PostService {
         }
 
         imageService.delete(post.getImage());
-        postSimpleJPARepository.delete(post);
         likesRedisService.deleteLikesPost(id);
+        postSimpleJPARepository.delete(post);
     }
 
     public List<Post> searchByKeyword(String keyword) {

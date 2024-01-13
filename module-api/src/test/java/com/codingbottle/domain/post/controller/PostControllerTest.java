@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
@@ -44,7 +43,7 @@ class PostControllerTest extends RestDocsTest {
     @Test
     void find_all_posts() throws Exception{
         //given
-        given(postService.findAll(any(PageRequest.class))).willReturn(new PageImpl<>(List.of(게시글1, 게시글2)));
+        given(postService.findAll(any(PageRequest.class))).willReturn(List.of(게시글1, 게시글2));
         //when & then
         mvc.perform(get(REQUEST_URL)
                         .queryParam("page", "0")
@@ -52,10 +51,6 @@ class PostControllerTest extends RestDocsTest {
                         .queryParam("sort", "modifiedTime,desc")
                         .header("Authorization", "Bearer FirebaseToken"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").exists())
-                .andExpect(jsonPath("$.totalPages").exists())
-                .andExpect(jsonPath("$.totalElements").exists())
-                .andExpect(jsonPath("$.size").exists())
                 .andDo(document("posts-list",
                         getDocumentRequest(),
                         getDocumentResponse(),
@@ -80,18 +75,25 @@ class PostControllerTest extends RestDocsTest {
                                 fieldWithPath("content[].createdTime").description("게시물 생성시간").type("LocalDateTime"),
                                 fieldWithPath("content[].modifiedTime").description("게시물 수정시간").type("LocalDateTime"),
                                 fieldWithPath("pageable").description("페이지 정보"),
+                                fieldWithPath("pageable.pageNumber").description("페이지 번호"),
+                                fieldWithPath("pageable.pageSize").description("페이지 사이즈"),
+                                fieldWithPath("pageable.sort").description("정렬 방식"),
+                                fieldWithPath("pageable.sort.empty").description("페이징 정렬 방식 (빈 값)"),
+                                fieldWithPath("pageable.sort.sorted").description("페이징 정렬 유무"),
+                                fieldWithPath("pageable.sort.unsorted").description("페이징 정렬 유무"),
+                                fieldWithPath("pageable.offset").description("페이지 offset"),
+                                fieldWithPath("pageable.paged").description("페이지 여부"),
+                                fieldWithPath("pageable.unpaged").description("페이지 여부"),
+                                fieldWithPath("first").description("첫번째 페이지 여부"),
                                 fieldWithPath("last").description("마지막 페이지 여부"),
-                                fieldWithPath("totalElements").description("전체 요소 수"),
-                                fieldWithPath("totalPages").description("전체 페이지 수"),
-                                fieldWithPath("size").description("페이지 크기"),
-                                fieldWithPath("number").description("현재 페이지 번호"),
-                                fieldWithPath("sort.empty").description("정렬되지 않은 경우"),
-                                fieldWithPath("sort.sorted").description("정렬된 경우"),
-                                fieldWithPath("sort.unsorted").description("정렬되지 않은 경우"),
-                                fieldWithPath("first").description("첫 페이지 여부"),
-                                fieldWithPath("numberOfElements").description("현재 페이지의 요소 수"),
-                                fieldWithPath("empty").description("데이터가 비어 있는지 여부")
-                        )));
+                                fieldWithPath("size").description("페이지 사이즈"),
+                                fieldWithPath("number").description("페이지 번호"),
+                                fieldWithPath("sort").description("정렬 방식"),
+                                fieldWithPath("sort.empty").description("정렬 여부"),
+                                fieldWithPath("sort.sorted").description("정렬 여부"),
+                                fieldWithPath("sort.unsorted").description("정렬 여부"),
+                                fieldWithPath("numberOfElements").description("페이지 요소 수"),
+                                fieldWithPath("empty").description("페이지 여부"))));
     }
 
     @DisplayName("게시글 생성")

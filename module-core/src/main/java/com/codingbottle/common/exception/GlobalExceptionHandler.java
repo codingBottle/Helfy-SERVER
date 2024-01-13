@@ -5,6 +5,7 @@ import com.google.api.pathtemplate.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.context.annotation.Primary;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -21,6 +22,13 @@ public class GlobalExceptionHandler {
         log.error("ApplicationErrorException {}", e.getMessage());
         ErrorResponseDto errorResponseDto = new ErrorResponseDto(e.getApplicationErrorType().name(), e.getMessage());
         return new ResponseEntity<>(errorResponseDto, e.getApplicationErrorType().getHttpStatus());
+    }
+
+    @ExceptionHandler(value = InvalidDataAccessApiUsageException.class)
+    public ResponseEntity<ErrorResponseDto> handleInvalidDataAccessApiUsageException(WebRequest request, InvalidDataAccessApiUsageException e) {
+        log.error("InvalidDataAccessApiUsageException {}", e.getMessage());
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto(ApplicationErrorType.INVALID_DATA_ACCESS.name(), e.getMessage());
+        return new ResponseEntity<>(errorResponseDto, ApplicationErrorType.INTERNAL_ERROR.getHttpStatus());
     }
 
     @ExceptionHandler(value = ValidationException.class)

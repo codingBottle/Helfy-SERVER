@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
@@ -47,5 +48,23 @@ class PostQueryRepositoryTest {
         List<Post> post = postQueryRepository.searchByKeyword("해시태그1");
         // then
         Assertions.assertThat(post).contains(게시글1);
+    }
+
+    @Test
+    @DisplayName("페이징 처리된 게시글을 조회한다. (최근 저장된 순)")
+    void find_all_post_with_paging() {
+        // when
+        List<Post> posts = postQueryRepository.finAll(PageRequest.of(0, 1));
+        // then
+        Assertions.assertThat(posts).contains(게시글2);
+    }
+
+    @Test
+    @DisplayName("페이징에 따라 반환 게시글 갯수가 드르게 된다.")
+    void find_all_post_with_paging_by_page_size() {
+        // when
+        List<Post> posts = postQueryRepository.finAll(PageRequest.of(0, 2));
+        // then
+        Assertions.assertThat(posts).contains(게시글1, 게시글2);
     }
 }
