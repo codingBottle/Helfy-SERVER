@@ -1,7 +1,7 @@
 package com.codingbottle.fixture;
 
-import com.codingbottle.auth.entity.Role;
-import com.codingbottle.auth.entity.User;
+import com.codingbottle.domain.user.entity.Role;
+import com.codingbottle.domain.user.entity.User;
 import com.codingbottle.domain.category.entity.Category;
 import com.codingbottle.domain.image.entity.Directory;
 import com.codingbottle.domain.image.entity.Image;
