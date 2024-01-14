@@ -1,6 +1,6 @@
-package com.codingbottle.common.config;
+package com.codingbottle.common.security.config;
 
-import com.codingbottle.auth.service.UserDetailService;
+import com.codingbottle.common.security.service.UserDetailService;
 import com.codingbottle.common.security.entry.CustomAccessDeniedHandler;
 import com.codingbottle.common.security.entry.CustomAuthenticationEntryPoint;
 import com.codingbottle.common.security.filter.FirebaseTokenFilter;

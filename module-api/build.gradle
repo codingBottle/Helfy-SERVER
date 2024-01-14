@@ -85,6 +85,7 @@ jacocoTestReport {
                             "**/*Response*",
                             "**/*Exception*",
                             "**/*Application*",
+                            "**/security/**",
                             "**/*Redis*"
                     ])
                 })

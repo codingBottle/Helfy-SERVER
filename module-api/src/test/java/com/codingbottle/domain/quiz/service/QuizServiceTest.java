@@ -1,6 +1,6 @@
 package com.codingbottle.domain.quiz.service;
 
-import com.codingbottle.auth.entity.User;
+import com.codingbottle.domain.user.entity.User;
 import com.codingbottle.domain.quiz.entity.Quiz;
 import com.codingbottle.domain.quiz.model.Type;
 import com.codingbottle.domain.quiz.repo.QuizQueryRepository;

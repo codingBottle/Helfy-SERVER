@@ -1,6 +1,6 @@
 package com.codingbottle.domain.quiz.service;
 
-import com.codingbottle.auth.entity.User;
+import com.codingbottle.domain.user.entity.User;
 import com.codingbottle.common.exception.ApplicationErrorException;
 import com.codingbottle.common.exception.ApplicationErrorType;
 import com.codingbottle.domain.quiz.entity.Quiz;

@@ -1,6 +1,6 @@
 package com.codingbottle.domain.post.service;
 
-import com.codingbottle.auth.entity.User;
+import com.codingbottle.domain.user.entity.User;
 import com.codingbottle.common.exception.ApplicationErrorException;
 import com.codingbottle.common.exception.ApplicationErrorType;
 import com.codingbottle.common.redis.service.LikesRedisService;
@@ -30,7 +30,7 @@ public class PostService {
     private final LikesRedisService likesRedisService;
 
     @Transactional
-    @CacheEvict(value = "posts", allEntries = true)
+    @CacheEvict(value = "posts", allEntries = true, cacheManager = "postCacheManager")
     public Post save(PostRequest postRequest, User user) {
         Image image = imageService.findById(postRequest.imageId());
 
@@ -40,7 +40,7 @@ public class PostService {
                 .image(image)
                 .build();
 
-        if(postRequest.hashtags() != null) {
+        if (postRequest.hashtags() != null) {
             post.addHashtags(postRequest.hashtags());
         }
 
@@ -48,7 +48,7 @@ public class PostService {
     }
 
     @Transactional
-    @CacheEvict(value = "posts", allEntries = true)
+    @CacheEvict(value = "posts", allEntries = true, cacheManager = "postCacheManager")
     public Post update(PostRequest postRequest, Long id, User user) {
         Post post = findById(id);
 
@@ -66,7 +66,7 @@ public class PostService {
         return post.update(postRequest.content(), postRequest.hashtags());
     }
 
-    @Cacheable(value = "posts", key = "#pageable.pageNumber", unless = "#result == null")
+    @Cacheable(value = "posts", key = "#pageable.pageNumber", unless = "#result == null", cacheManager = "postCacheManager")
     public List<Post> findAll(Pageable pageable) {
         return postQueryRepository.finAll(pageable);
     }
@@ -77,7 +77,7 @@ public class PostService {
     }
 
     @Transactional
-    @CacheEvict(value = "posts", allEntries = true)
+    @CacheEvict(value = "posts", allEntries = true, cacheManager = "postCacheManager")
     public void delete(Long id, User user) {
         Post post = findById(id);
 

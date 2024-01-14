@@ -1,6 +1,6 @@
 package com.codingbottle.domain.quiz.controller;
 
-import com.codingbottle.auth.entity.User;
+import com.codingbottle.domain.user.entity.User;
 import com.codingbottle.docs.util.RestDocsTest;
 import com.codingbottle.domain.quiz.service.UserQuizService;
 import org.junit.jupiter.api.DisplayName;

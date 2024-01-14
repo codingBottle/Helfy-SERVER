@@ -1,6 +1,6 @@
 package com.codingbottle.domain.region.service;
 
-import com.codingbottle.auth.entity.User;
+import com.codingbottle.domain.user.entity.User;
 import com.codingbottle.domain.region.entity.Region;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

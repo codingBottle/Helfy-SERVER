@@ -1,6 +1,6 @@
 package com.codingbottle.domain.post.controller;
 
-import com.codingbottle.auth.entity.User;
+import com.codingbottle.domain.user.entity.User;
 import com.codingbottle.common.annotation.CustomPageableAsQueryParam;
 import com.codingbottle.common.util.PagingUtil;
 import com.codingbottle.domain.post.entity.Post;

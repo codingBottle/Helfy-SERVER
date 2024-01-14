@@ -1,7 +1,7 @@
 package com.codingbottle.domain.user.service;
 
-import com.codingbottle.auth.entity.User;
-import com.codingbottle.auth.repository.UserRepository;
+import com.codingbottle.domain.user.entity.User;
+import com.codingbottle.domain.user.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

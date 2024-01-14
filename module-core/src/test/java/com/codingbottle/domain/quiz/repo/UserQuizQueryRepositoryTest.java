@@ -1,7 +1,7 @@
 package com.codingbottle.domain.quiz.repo;
 
-import com.codingbottle.auth.entity.User;
-import com.codingbottle.auth.repository.UserRepository;
+import com.codingbottle.domain.user.entity.User;
+import com.codingbottle.domain.user.repository.UserRepository;
 import com.codingbottle.common.annotation.RepositoryTest;
 import com.codingbottle.domain.quiz.entity.Quiz;
 import org.junit.jupiter.api.BeforeEach;

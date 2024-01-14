@@ -1,6 +1,6 @@
 package com.codingbottle.domain.quiz.controller;
 
-import com.codingbottle.auth.entity.User;
+import com.codingbottle.domain.user.entity.User;
 import com.codingbottle.domain.quiz.model.QuizResponse;
 import com.codingbottle.domain.quiz.model.UserQuizInfo;
 import com.codingbottle.domain.quiz.service.UserQuizService;

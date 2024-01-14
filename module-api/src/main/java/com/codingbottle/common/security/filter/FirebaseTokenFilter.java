@@ -1,8 +1,7 @@
 package com.codingbottle.common.security.filter;
 
-import com.codingbottle.auth.entity.Role;
-import com.codingbottle.auth.entity.User;
-import com.codingbottle.auth.service.UserDetailService;
+import com.codingbottle.domain.user.entity.User;
+import com.codingbottle.common.security.service.UserDetailService;
 import com.codingbottle.common.exception.ApplicationErrorException;
 import com.codingbottle.common.exception.ApplicationErrorType;
 import com.codingbottle.common.model.ErrorResponseDto;
@@ -45,7 +44,7 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
         try {
             FirebaseToken firebaseToken = firebaseAuth.verifyIdToken(token);
             log.debug("requestURL: {},Valid firebaseToken: {}", request.getRequestURI(), firebaseToken);
-            User user = getUser(firebaseToken);
+            User user = getUser(firebaseToken, token);
 
             authenticateUser(user);
 
@@ -68,19 +67,19 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
         return header == null || !header.startsWith("Bearer ");
     }
 
-    private User getUser(FirebaseToken firebaseToken) {
+    private User getUser(FirebaseToken firebaseToken, String token) {
         User user;
         try {
             user = userService.updateByUsername(firebaseToken);
         } catch (ApplicationErrorException e) {
-            user = userService.create(firebaseToken, Role.ROLE_USER);
+            user = userService.create(firebaseToken, token);
             log.debug("Create User: {}", user);
         }
         return user;
     }
 
     private void authenticateUser(User user) {
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, null);
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 

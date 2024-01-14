@@ -1,6 +1,6 @@
 package com.codingbottle.domain.post.repo;
 
-import com.codingbottle.auth.repository.UserRepository;
+import com.codingbottle.domain.user.repository.UserRepository;
 import com.codingbottle.common.annotation.RepositoryTest;
 import com.codingbottle.domain.image.repo.ImageRepository;
 import com.codingbottle.domain.post.entity.Post;

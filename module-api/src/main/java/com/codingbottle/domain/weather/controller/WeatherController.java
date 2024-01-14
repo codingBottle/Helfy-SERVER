@@ -1,6 +1,6 @@
 package com.codingbottle.domain.weather.controller;
 
-import com.codingbottle.auth.entity.User;
+import com.codingbottle.domain.user.entity.User;
 import com.codingbottle.domain.weather.model.WeatherResponse;
 import com.codingbottle.domain.weather.service.WeatherService;
 import io.swagger.v3.oas.annotations.tags.Tag;

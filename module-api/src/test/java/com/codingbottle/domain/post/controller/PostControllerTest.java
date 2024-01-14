@@ -1,6 +1,6 @@
 package com.codingbottle.domain.post.controller;
 
-import com.codingbottle.auth.entity.User;
+import com.codingbottle.domain.user.entity.User;
 import com.codingbottle.docs.util.RestDocsTest;
 import com.codingbottle.domain.post.model.PostRequest;
 import com.codingbottle.domain.post.service.PostService;

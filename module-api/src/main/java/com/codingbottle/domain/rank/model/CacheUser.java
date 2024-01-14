@@ -1,6 +1,6 @@
 package com.codingbottle.domain.rank.model;
 
-import com.codingbottle.auth.entity.User;
+import com.codingbottle.domain.user.entity.User;
 
 public record CacheUser(
         Long id,

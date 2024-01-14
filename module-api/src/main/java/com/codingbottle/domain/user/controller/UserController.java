@@ -1,6 +1,6 @@
 package com.codingbottle.domain.user.controller;
 
-import com.codingbottle.auth.entity.User;
+import com.codingbottle.domain.user.entity.User;
 import com.codingbottle.domain.user.model.UserNicknameRequest;
 import com.codingbottle.domain.user.model.UserResponse;
 import com.codingbottle.domain.user.service.UserService;

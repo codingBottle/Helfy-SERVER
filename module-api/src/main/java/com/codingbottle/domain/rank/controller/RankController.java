@@ -1,6 +1,6 @@
 package com.codingbottle.domain.rank.controller;
 
-import com.codingbottle.auth.entity.User;
+import com.codingbottle.domain.user.entity.User;
 import com.codingbottle.common.redis.service.QuizRankRedisService;
 import com.codingbottle.domain.rank.model.UsersRankResponse;
 import com.codingbottle.domain.rank.model.UserRankResponse;

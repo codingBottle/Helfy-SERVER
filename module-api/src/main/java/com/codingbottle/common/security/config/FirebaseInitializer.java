@@ -1,4 +1,4 @@
-package com.codingbottle.common.config;
+package com.codingbottle.common.security.config;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;

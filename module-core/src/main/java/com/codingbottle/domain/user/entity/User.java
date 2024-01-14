@@ -1,22 +1,19 @@
-package com.codingbottle.auth.entity;
+package com.codingbottle.domain.user.entity;
 
 import com.codingbottle.domain.region.entity.Region;
 import com.google.common.base.Objects;
-import com.google.firebase.auth.FirebaseToken;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.Collections;
+import java.io.Serializable;
 
 @Getter
 @Entity
 @Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User implements UserDetails {
+public class User implements Serializable {
+    private static final long serialVersionUID = -8334446707837563525L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -39,54 +36,19 @@ public class User implements UserDetails {
     @Column(name = "region", nullable = false)
     private Region region = Region.NONE;
 
-    public void update(FirebaseToken token) {
-        this.firebaseUid = token.getUid();
-        this.email = token.getEmail();
+    public void updateByFirebaseToken(final String firebaseUid, final String email) {
+        this.firebaseUid = firebaseUid;
+        this.email = email;
     }
 
     public User updateRegion(Region region) {
         this.region = region;
-
         return this;
     }
 
     public User updateNickname(String nickname) {
         this.nickname = nickname;
         return this;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority(role.name()));
-    }
-
-    @Override
-    public String getPassword() {
-        return null;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
-    public String getUsername(){
-        return firebaseUid;
     }
 
     @Builder

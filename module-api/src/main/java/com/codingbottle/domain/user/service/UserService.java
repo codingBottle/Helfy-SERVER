@@ -1,7 +1,7 @@
 package com.codingbottle.domain.user.service;
 
-import com.codingbottle.auth.entity.User;
-import com.codingbottle.auth.repository.UserRepository;
+import com.codingbottle.domain.user.entity.User;
+import com.codingbottle.domain.user.repository.UserRepository;
 import com.codingbottle.domain.rank.model.CacheUser;
 import com.codingbottle.domain.user.model.UpdateUser;
 import com.codingbottle.domain.user.model.UserNicknameRequest;
