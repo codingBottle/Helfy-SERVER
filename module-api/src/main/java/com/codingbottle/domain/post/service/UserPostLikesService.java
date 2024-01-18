@@ -5,7 +5,6 @@ import com.codingbottle.common.exception.ApplicationErrorException;
 import com.codingbottle.common.exception.ApplicationErrorType;
 import com.codingbottle.common.redis.service.LikesRedisService;
 import com.codingbottle.domain.post.entity.UserPostLikes;
-import com.codingbottle.domain.post.repo.UserPostLikesRepository;
 import com.codingbottle.domain.post.entity.Post;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
@@ -16,15 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserPostLikesService {
-    private final UserPostLikesRepository userPostLikesRepository;
-    private final PostService postService;
     private final LikesRedisService likesRedisService;
 
     @Transactional
-    public void likesPut(User user, Long postId) {
-        Post post = postService.findById(postId);
-
-        setLikes(user, postId);
+    public void likesPut(User user, Post post) {
+        setLikes(user, post);
         UserPostLikes userPostLikes = UserPostLikes.builder()
                 .post(post)
                 .user(user)
@@ -34,35 +29,22 @@ public class UserPostLikesService {
     }
 
     @Transactional
-    public void cancelLikes(User user, Long postId) {
-        Post post = postService.findById(postId);
-
+    public void cancelLikes(User user, Post post) {
         post.removeLikes(user);
-        delete(user.getId(), postId);
+        delete(user, post);
     }
 
-    public Boolean isAlreadyLikes(User user, Long postId) {
-        return likesRedisService.isAlreadyLikes(user.getId(), postId);
+    public Boolean isAlreadyLikes(User user, Post post) {
+        return likesRedisService.isAlreadyLikes(user, post);
     }
 
-    @Transactional
-    public boolean toggleLikeStatus(User user, Long postId) {
-        if(isAlreadyLikes(user, postId)){
-            cancelLikes(user, postId);
-            return false;
-        }
-        likesPut(user, postId);
-        return true;
+    public void delete(User user, Post post) {
+        likesRedisService.deleteLikes(user, post);
     }
 
-
-    public void delete(Long userId, Long postId) {
-        likesRedisService.deleteLikes(userId, postId);
-    }
-
-    private void setLikes(User user, Long postId) {
+    private void setLikes(User user, Post post) {
         try {
-            likesRedisService.setLikes(user.getId(), postId);
+            likesRedisService.setLikes(user, post);
         } catch (JsonProcessingException e) {
             throw new ApplicationErrorException(ApplicationErrorType.INTERNAL_ERROR, "좋아요 상태를 변경 실패했습니다.");
         }

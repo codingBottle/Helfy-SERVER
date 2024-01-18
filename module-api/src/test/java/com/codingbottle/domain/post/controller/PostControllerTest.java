@@ -1,5 +1,7 @@
 package com.codingbottle.domain.post.controller;
 
+import com.codingbottle.domain.post.entity.Post;
+import com.codingbottle.domain.post.model.PostResponse;
 import com.codingbottle.domain.user.entity.User;
 import com.codingbottle.docs.util.RestDocsTest;
 import com.codingbottle.domain.post.model.PostRequest;
@@ -43,7 +45,7 @@ class PostControllerTest extends RestDocsTest {
     @Test
     void find_all_posts() throws Exception{
         //given
-        given(postService.findAll(any(PageRequest.class))).willReturn(List.of(게시글1, 게시글2));
+        given(postService.findAll(any(PageRequest.class),any(User.class))).willReturn(List.of(PostResponse.from(게시글1), PostResponse.from(게시글2)));
         //when & then
         mvc.perform(get(REQUEST_URL)
                         .queryParam("page", "0")
@@ -66,7 +68,8 @@ class PostControllerTest extends RestDocsTest {
                                 fieldWithPath("content[].id").description("게시물 id").type("Number"),
                                 fieldWithPath("content[].content").description("게시물 내용"),
                                 fieldWithPath("content[].hashtags").description("게시물 해시태그"),
-                                fieldWithPath("content[].writerNickname").description("게시물 작성자"),
+                                fieldWithPath("content[].user").description("게시물 작성자"),
+                                fieldWithPath("content[].user.nickname").description("게시물 작성자 닉네임"),
                                 fieldWithPath("content[].likeCount").description("게시물 좋아요 수"),
                                 fieldWithPath("content[].likeStatus").description("게시물 좋아요 여부"),
                                 fieldWithPath("content[].image").description("게시물 이미지"),
@@ -101,7 +104,7 @@ class PostControllerTest extends RestDocsTest {
     void create_post() throws Exception{
         //given
         given(postService.save(any(PostRequest.class), any(User.class))).willReturn(게시글1);
-        given(userPostLikesService.isAlreadyLikes(any(User.class), any(Long.class))).willReturn(false);
+        given(userPostLikesService.isAlreadyLikes(any(User.class), any(Post.class))).willReturn(false);
         //when & then
         mvc.perform(post(REQUEST_URL)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -126,7 +129,7 @@ class PostControllerTest extends RestDocsTest {
     @Test
     void update_post() throws Exception{
         //given
-        given(postService.update(any(PostRequest.class), any(Long.class), any(User.class))).willReturn(게시글2);
+        given(postService.update(any(PostRequest.class), any(Long.class), any(User.class))).willReturn(PostResponse.from(게시글2));
         //when & then
         mvc.perform(RestDocumentationRequestBuilders.patch(REQUEST_URL + "/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -162,7 +165,7 @@ class PostControllerTest extends RestDocsTest {
     @DisplayName("게시글 좋아요 요청")
     void likes_put() throws Exception{
         //given
-        given(userPostLikesService.toggleLikeStatus(any(User.class), any(Long.class))).willReturn(true);
+        given(postService.toggleLikeStatus(any(User.class), any(Long.class))).willReturn(true);
         //when & then
         mvc.perform(RestDocumentationRequestBuilders.put(REQUEST_URL + "/{id}/likes", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -181,7 +184,7 @@ class PostControllerTest extends RestDocsTest {
     @DisplayName("게시글 좋아요 취소 요청")
     void likes_cancel() throws Exception{
         //given
-        given(userPostLikesService.isAlreadyLikes(any(User.class), any(Long.class))).willReturn(true);
+        given(userPostLikesService.isAlreadyLikes(any(User.class), any(Post.class))).willReturn(true);
         //when & then
         mvc.perform(RestDocumentationRequestBuilders.put(REQUEST_URL + "/{id}/likes", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -200,7 +203,7 @@ class PostControllerTest extends RestDocsTest {
     @DisplayName("게시글 검색")
     void search_keyword() throws Exception{
         //given
-        given(postService.searchByKeyword(any(String.class))).willReturn(List.of(게시글1, 게시글2));
+        given(postService.searchByKeyword(any(String.class),any(User.class))).willReturn(List.of(PostResponse.from(게시글1), PostResponse.from(게시글2)));
         //when & then
         mvc.perform(get(REQUEST_URL + "/search")
                         .queryParam("keyword", "검색어")
@@ -218,7 +221,8 @@ class PostControllerTest extends RestDocsTest {
                                 fieldWithPath("[].id").description("게시물 id").type("Number"),
                                 fieldWithPath("[].content").description("게시물 내용"),
                                 fieldWithPath("[].hashtags").description("게시물 해시태그"),
-                                fieldWithPath("[].writerNickname").description("게시물 작성자"),
+                                fieldWithPath("[].user").description("게시물 작성자"),
+                                fieldWithPath("[].user.nickname").description("게시물 작성자 닉네임"),
                                 fieldWithPath("[].likeCount").description("게시물 좋아요 수"),
                                 fieldWithPath("[].likeStatus").description("게시물 좋아요 여부"),
                                 fieldWithPath("[].image").description("게시물 이미지"),
@@ -234,7 +238,7 @@ class PostControllerTest extends RestDocsTest {
                 fieldWithPath("id").description("게시물 id").type("Number"),
                 fieldWithPath("content").description("게시물 내용"),
                 fieldWithPath("hashtags").description("게시물 해시태그"),
-                fieldWithPath("writerNickname").description("게시물 작성자 명"),
+                fieldWithPath("user.nickname").description("게시물 작성자 닉네임"),
                 fieldWithPath("likeCount").description("게시물 좋아요 수"),
                 fieldWithPath("likeStatus").description("게시물 좋아요 여부"),
                 fieldWithPath("image").description("게시물 이미지"),

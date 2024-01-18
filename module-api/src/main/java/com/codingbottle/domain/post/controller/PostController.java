@@ -19,7 +19,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Tag(name = "게시판", description = "게시판 API")
 @RestController
@@ -27,7 +26,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
-    private final UserPostLikesService userPostLikesService;
 
     @PostMapping
     public ResponseEntity<PostResponse> create(@RequestBody @Validated PostRequest postRequest,
@@ -40,22 +38,18 @@ public class PostController {
     @CustomPageableAsQueryParam
     public ResponseEntity<SliceImpl<PostResponse>> findAll(@PageableDefault Pageable pageable,
                                                            @AuthenticationPrincipal User user) {
-        List<Post> posts = postService.findAll(pageable);
+        List<PostResponse> posts = postService.findAll(pageable, user);
 
-        List<PostResponse> postResponses = posts.stream()
-                .map(post -> PostResponse.of(post, userPostLikesService.isAlreadyLikes(user, post.getId())))
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(PagingUtil.toSliceImpl(postResponses, pageable));
+        return ResponseEntity.ok(PagingUtil.toSliceImpl(posts, pageable));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<PostResponse> update(@PathVariable(value = "id") Long id,
                                                @RequestBody @Validated PostRequest postRequest,
                                                @AuthenticationPrincipal User user) {
-        Post post = postService.update(postRequest, id, user);
-        Boolean likeStatus = userPostLikesService.isAlreadyLikes(user, id);
-        return ResponseEntity.ok(PostResponse.of(post, likeStatus));
+        PostResponse post = postService.update(postRequest, id, user);
+
+        return ResponseEntity.ok(post);
     }
 
     @DeleteMapping("/{id}")
@@ -68,15 +62,15 @@ public class PostController {
     @PutMapping("/{id}/likes")
     public ResponseEntity<String> toggleLikeStatus(@PathVariable(value = "id") Long postId,
                                                    @AuthenticationPrincipal User user) {
-        boolean isLiked = userPostLikesService.toggleLikeStatus(user, postId);
+        boolean isLiked = postService.toggleLikeStatus(user, postId);
+
         return ResponseEntity.ok().body(isLiked ? "Liked" : "Unliked");
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<PostResponse>> searchByKeyword(@RequestParam(value = "keyword") String keyword) {
-        List<PostResponse> posts = postService.searchByKeyword(keyword).stream()
-                .map(PostResponse::from)
-                .toList();
+    public ResponseEntity<List<PostResponse>> searchByKeyword(@RequestParam(value = "keyword") String keyword,
+                                                              @AuthenticationPrincipal User user) {
+        List<PostResponse> posts = postService.searchByKeyword(keyword, user);
         return ResponseEntity.ok(posts);
     }
 }

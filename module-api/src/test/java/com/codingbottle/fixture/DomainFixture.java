@@ -152,7 +152,7 @@ public class DomainFixture {
             .image(정보_이미지1)
             .build();
 
-    public static final InformationResponse 정보_응답1 = InformationResponse.of(정보1);
+    public static final InformationResponse 정보_응답1 = InformationResponse.from(정보1);
 
     public static final QuizStatusRequest 퀴즈_결과_요청 = new QuizStatusRequest(QuizStatus.CORRECT);
 

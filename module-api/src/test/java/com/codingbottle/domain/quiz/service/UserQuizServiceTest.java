@@ -1,7 +1,7 @@
 package com.codingbottle.domain.quiz.service;
 
 import com.codingbottle.common.exception.ApplicationErrorException;
-import com.codingbottle.domain.quiz.entity.Quiz;
+import com.codingbottle.domain.quiz.model.QuizResponse;
 import com.codingbottle.domain.quiz.repo.UserQuizQueryRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,8 +42,8 @@ class UserQuizServiceTest {
         //given
         given(userQuizQueryRepository.findRandomWrongQuizzesByUser(any())).willReturn(List.of(퀴즈1, 퀴즈2));
         //when
-        List<Quiz> quizzes = userQuizService.findRandomWrongQuizzesByUser(유저1);
+        List<QuizResponse> quizzes = userQuizService.findRandomWrongQuizzesByUser(유저1);
         //then
-        assertThat(quizzes).isEqualTo(List.of(퀴즈1, 퀴즈2));
+        assertThat(quizzes).isEqualTo(List.of(QuizResponse.from(퀴즈1), QuizResponse.from(퀴즈2)));
     }
 }

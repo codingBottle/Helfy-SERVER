@@ -4,6 +4,7 @@ import com.codingbottle.domain.image.model.ImageResponse;
 import com.codingbottle.domain.quiz.entity.Quiz;
 import com.codingbottle.domain.quiz.entity.QuizType;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public record QuizResponse(
@@ -14,6 +15,6 @@ public record QuizResponse(
         ImageResponse image,
         QuizType quizType) {
     public static QuizResponse from(Quiz quiz) {
-        return new QuizResponse(quiz.getId(),quiz.getQuestion(), quiz.getAnswer(), quiz.getChoices(), quiz.getImage() == null ? null : ImageResponse.from(quiz.getImage()), quiz.getQuizType());
+        return new QuizResponse(quiz.getId(),quiz.getQuestion(), quiz.getAnswer(), new HashMap<>(quiz.getChoices()), quiz.getImage() == null ? null : ImageResponse.from(quiz.getImage()), quiz.getQuizType());
     }
 }

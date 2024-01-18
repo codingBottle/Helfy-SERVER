@@ -1,7 +1,7 @@
 package com.codingbottle.domain.quiz.service;
 
+import com.codingbottle.domain.quiz.model.QuizResponse;
 import com.codingbottle.domain.user.entity.User;
-import com.codingbottle.domain.quiz.entity.Quiz;
 import com.codingbottle.domain.quiz.model.Type;
 import com.codingbottle.domain.quiz.repo.QuizQueryRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -33,7 +33,7 @@ class QuizServiceTest {
         //given
         given(quizRepository.findRandomWrongQuizzes(any(User.class), anyInt())).willReturn(List.of(퀴즈1, 퀴즈2));
         //when
-        List<Quiz> quizzes = quizService.findByType(유저1, Type.NORMAL);
+        List<QuizResponse> quizzes = quizService.findByType(유저1, Type.NORMAL);
         //then
         assertThat(quizzes.size()).isEqualTo(2);
     }
@@ -44,7 +44,7 @@ class QuizServiceTest {
         //given
         given(quizRepository.findRandomQuizzes(any(User.class), anyInt())).willReturn(List.of(퀴즈1, 퀴즈2));
         //when
-        List<Quiz> quizzes = quizService.findByType(유저1, Type.TODAY);
+        List<QuizResponse> quizzes = quizService.findByType(유저1, Type.TODAY);
         //then
         assertThat(quizzes.size()).isEqualTo(2);
     }

@@ -1,5 +1,6 @@
 package com.codingbottle.domain.quiz.service;
 
+import com.codingbottle.domain.quiz.model.QuizResponse;
 import com.codingbottle.domain.user.entity.User;
 import com.codingbottle.common.exception.ApplicationErrorException;
 import com.codingbottle.common.exception.ApplicationErrorType;
@@ -11,12 +12,13 @@ import com.codingbottle.domain.quiz.model.QuizStatusRequest;
 import com.codingbottle.domain.quiz.model.UserQuizInfo;
 import com.codingbottle.domain.quiz.repo.UserQuizQueryRepository;
 import com.codingbottle.domain.quiz.repo.UserQuizSimpleJPARepository;
-import com.codingbottle.domain.rank.model.CacheUser;
+import com.codingbottle.common.redis.model.CacheUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -27,13 +29,15 @@ public class UserQuizService {
     private final UserQuizSimpleJPARepository userQuizSimpleJPARepository;
     private final QuizRankRedisService quizRankRedisService;
 
-    public List<Quiz> findRandomWrongQuizzesByUser(User user) {
+    public List<QuizResponse> findRandomWrongQuizzesByUser(User user) {
         List<Quiz> randomWrongQuizzes = userQuizQueryRepository.findRandomWrongQuizzesByUser(user);
 
         if (randomWrongQuizzes.isEmpty()) {
             throw new ApplicationErrorException(ApplicationErrorType.NOT_EXIT_WRONG_ANSWER);
         }
-        return randomWrongQuizzes;
+        return randomWrongQuizzes.stream()
+                .map(QuizResponse::from)
+                .collect(Collectors.toList());
     }
 
     @Transactional

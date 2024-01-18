@@ -9,13 +9,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Post extends BaseEntity {
+public class Post extends BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id")
@@ -71,5 +72,9 @@ public class Post extends BaseEntity {
 
     public void addHashtags(List<String> hashtags) {
         this.hashtags.addAll(hashtags);
+    }
+
+    public int getLikesCount() {
+        return this.likes.size();
     }
 }

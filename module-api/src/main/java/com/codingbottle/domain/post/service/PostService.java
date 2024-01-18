@@ -1,5 +1,6 @@
 package com.codingbottle.domain.post.service;
 
+import com.codingbottle.domain.post.model.PostResponse;
 import com.codingbottle.domain.user.entity.User;
 import com.codingbottle.common.exception.ApplicationErrorException;
 import com.codingbottle.common.exception.ApplicationErrorType;
@@ -19,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Transactional(readOnly = true)
@@ -28,6 +31,7 @@ public class PostService {
     private final PostQueryRepository postQueryRepository;
     private final ImageService imageService;
     private final LikesRedisService likesRedisService;
+    private final UserPostLikesService userPostLikesService;
 
     @Transactional
     @CacheEvict(value = "posts", allEntries = true, cacheManager = "postCacheManager")
@@ -48,27 +52,37 @@ public class PostService {
     }
 
     @Transactional
+    public boolean toggleLikeStatus(User user, Long postId) {
+        Post post = findById(postId);
+        if(userPostLikesService.isAlreadyLikes(user, post)){
+            userPostLikesService.cancelLikes(user, post);
+            return false;
+        }
+        userPostLikesService.likesPut(user, post);
+        return true;
+    }
+
+    @Transactional
     @CacheEvict(value = "posts", allEntries = true, cacheManager = "postCacheManager")
-    public Post update(PostRequest postRequest, Long id, User user) {
+    public PostResponse update(PostRequest postRequest, Long id, User user) {
         Post post = findById(id);
 
-        if (isNotSameWriter(post, user)) {
-            throw new ApplicationErrorException(ApplicationErrorType.NO_AUTHENTICATION, String.format("해당 게시글(%s)에 접근 권한이 없습니다.", id));
-        }
+        validWriter(id, user, post);
 
-        if(!Objects.equals(post.getImage().getId(), postRequest.imageId())) {
-            imageService.delete(post.getImage());
+        updateImageIfChanged(postRequest, post);
 
-            Image image = imageService.findById(postRequest.imageId());
-            return post.update(postRequest.content(), image, postRequest.hashtags());
-        }
+        post.update(postRequest.content(), postRequest.hashtags());
 
-        return post.update(postRequest.content(), postRequest.hashtags());
+        return getPostResponse(post, user);
     }
 
     @Cacheable(value = "posts", key = "#pageable.pageNumber", unless = "#result == null", cacheManager = "postCacheManager")
-    public List<Post> findAll(Pageable pageable) {
-        return postQueryRepository.finAll(pageable);
+    public List<PostResponse> findAll(Pageable pageable, User user) {
+        List<Post> posts = postQueryRepository.finAll(pageable);
+
+        return posts.stream()
+                .map(post -> PostResponse.of(post, userPostLikesService.isAlreadyLikes(user, post)))
+                .collect(Collectors.toList());
     }
 
     public Post findById(Long id) {
@@ -81,17 +95,44 @@ public class PostService {
     public void delete(Long id, User user) {
         Post post = findById(id);
 
-        if (isNotSameWriter(post, user)) {
-            throw new ApplicationErrorException(ApplicationErrorType.NO_AUTHENTICATION, String.format("해당 게시글(%s)에 접근 권한이 없습니다.", id));
-        }
+        validWriter(id, user, post);
 
         imageService.delete(post.getImage());
-        likesRedisService.deleteLikesPost(id);
+        likesRedisService.deleteLikesPost(post);
         postSimpleJPARepository.delete(post);
     }
 
-    public List<Post> searchByKeyword(String keyword) {
-        return postQueryRepository.searchByKeyword(keyword);
+    public List<PostResponse> searchByKeyword(String keyword, User user) {
+        List<Post> posts = postQueryRepository.searchByKeyword(keyword);
+
+        return posts.stream()
+                .map(post -> PostResponse.of(post, userPostLikesService.isAlreadyLikes(user, post)))
+                .collect(Collectors.toList());
+    }
+
+    private void changeImage(PostRequest postRequest, Post post) {
+        imageService.delete(post.getImage());
+
+        Image image = imageService.findById(postRequest.imageId());
+        post.update(postRequest.content(), image, postRequest.hashtags());
+    }
+
+    private void updateImageIfChanged(PostRequest postRequest, Post post) {
+        if(!Objects.equals(post.getImage().getId(), postRequest.imageId())) {
+            changeImage(postRequest, post);
+        } else {
+            post.update(postRequest.content(), postRequest.hashtags());
+        }
+    }
+
+    private void validWriter(Long id, User user, Post post) {
+        if (isNotSameWriter(post, user)) {
+            throw new ApplicationErrorException(ApplicationErrorType.NO_AUTHENTICATION, String.format("해당 게시글(%s)에 접근 권한이 없습니다.", id));
+        }
+    }
+
+    private PostResponse getPostResponse(Post post, User user) {
+        return PostResponse.of(post, userPostLikesService.isAlreadyLikes(user, post));
     }
 
     private boolean isNotSameWriter(Post post, User user) {

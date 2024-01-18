@@ -32,7 +32,7 @@ public class UserDetailService implements UserDetailsService {
 
     @Transactional
     @CachePut(value = "user", key = "#firebaseToken.uid", cacheManager = "authRedisCacheManager")
-    public User create(FirebaseToken firebaseToken, String token) {
+    public User create(FirebaseToken firebaseToken) {
         User user = User.builder()
                 .firebaseUid(firebaseToken.getUid())
                 .email(firebaseToken.getEmail())

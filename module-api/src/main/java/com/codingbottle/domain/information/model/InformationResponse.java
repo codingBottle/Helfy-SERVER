@@ -12,7 +12,7 @@ public record InformationResponse(
         String youtube_url,
         ImageResponse image
 ) {
-    public static InformationResponse of(Information information) {
+    public static InformationResponse from(Information information) {
         return new InformationResponse(
                 information.getId(),
                 information.getCategory(),

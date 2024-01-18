@@ -31,6 +31,6 @@ class InformationServiceTest {
         //when
         InformationResponse information = informationService.findByCategory(Category.FLOOD);
         //then
-        assertThat(information).isEqualTo(InformationResponse.of(정보1));
+        assertThat(information).isEqualTo(InformationResponse.from(정보1));
     }
 }
