@@ -1,6 +1,6 @@
 package com.codingbottle.domain.user.model;
 
-import com.codingbottle.domain.rank.model.CacheUser;
+import com.codingbottle.common.redis.model.CacheUser;
 
 public record UpdateUser(
         CacheUser before,

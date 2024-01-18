@@ -1,5 +1,9 @@
 package com.codingbottle.common.redis.service;
 
+import com.codingbottle.common.redis.model.CachePost;
+import com.codingbottle.common.redis.model.CacheUser;
+import com.codingbottle.domain.post.entity.Post;
+import com.codingbottle.domain.user.entity.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -8,21 +12,21 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class LikesRedisService {
-    private final RedisTemplate<Long, Long> likesRedisTemplate;
+    private final RedisTemplate<Object, Object> likesRedisTemplate;
 
-    public void setLikes(Long userId, Long postId) throws JsonProcessingException {
-        likesRedisTemplate.opsForSet().add(postId, userId);
+    public void setLikes(User user, Post post) throws JsonProcessingException {
+        likesRedisTemplate.opsForSet().add(CachePost.from(post), CacheUser.from(user));
     }
 
-    public void deleteLikes(Long userId, Long postId) {
-        likesRedisTemplate.opsForSet().remove(postId, userId);
+    public void deleteLikes(User user, Post post) {
+        likesRedisTemplate.opsForSet().remove(CachePost.from(post), CacheUser.from(user));
     }
 
-    public Boolean isAlreadyLikes(Long userId, Long postId) {
-        return likesRedisTemplate.opsForSet().isMember(postId, userId);
+    public Boolean isAlreadyLikes(User user, Post post) {
+        return likesRedisTemplate.opsForSet().isMember(CachePost.from(post), CacheUser.from(user));
     }
 
-    public Boolean deleteLikesPost(Long postId) {
-        return likesRedisTemplate.delete(postId);
+    public Boolean deleteLikesPost(Post post) {
+        return likesRedisTemplate.delete(CachePost.from(post));
     }
 }

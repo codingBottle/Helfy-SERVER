@@ -1,5 +1,6 @@
 package com.codingbottle.domain.quiz.service;
 
+import com.codingbottle.domain.quiz.model.QuizResponse;
 import com.codingbottle.domain.user.entity.User;
 import com.codingbottle.common.exception.ApplicationErrorException;
 import com.codingbottle.common.exception.ApplicationErrorType;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -20,8 +22,10 @@ public class QuizService {
     private final QuizQueryRepository quizRepository;
     private final QuizSimpleJPARepository quizSimpleJPARepository;
 
-    public List<Quiz> findByType(User user, Type type) {
-        return type.getQuizzes(user, quizRepository);
+    public List<QuizResponse> findByType(User user, Type type) {
+        return type.getQuizzes(user, quizRepository).stream()
+                .map(QuizResponse::from)
+                .collect(Collectors.toList());
     }
 
     public Quiz findById(Long id){

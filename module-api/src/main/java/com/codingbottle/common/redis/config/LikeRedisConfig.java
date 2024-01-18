@@ -16,8 +16,8 @@ public class LikeRedisConfig extends RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<Long, Long> likesRedisTemplate() {
-        RedisTemplate<Long, Long>  template = new RedisTemplate<>();
+    public RedisTemplate<Object, Object> likesRedisTemplate() {
+        RedisTemplate<Object, Object>  template = new RedisTemplate<>();
         template.setKeySerializer(new GenericJackson2JsonRedisSerializer());
         template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
         template.setConnectionFactory(deviceControlRedisConnectionFactory());

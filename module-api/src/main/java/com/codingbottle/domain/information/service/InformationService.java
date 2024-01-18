@@ -16,6 +16,6 @@ public class InformationService {
 
     public InformationResponse findByCategory(Category category) {
         Information information = informationRepository.findByCategory(category);
-        return InformationResponse.of(information);
+        return InformationResponse.from(information);
     }
 }

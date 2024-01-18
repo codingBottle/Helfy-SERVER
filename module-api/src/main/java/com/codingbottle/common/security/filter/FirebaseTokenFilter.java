@@ -44,7 +44,7 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
         try {
             FirebaseToken firebaseToken = firebaseAuth.verifyIdToken(token);
             log.debug("requestURL: {},Valid firebaseToken: {}", request.getRequestURI(), firebaseToken);
-            User user = getUser(firebaseToken, token);
+            User user = getUser(firebaseToken);
 
             authenticateUser(user);
 
@@ -67,12 +67,12 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
         return header == null || !header.startsWith("Bearer ");
     }
 
-    private User getUser(FirebaseToken firebaseToken, String token) {
+    private User getUser(FirebaseToken firebaseToken) {
         User user;
         try {
             user = userService.updateByUsername(firebaseToken);
         } catch (ApplicationErrorException e) {
-            user = userService.create(firebaseToken, token);
+            user = userService.create(firebaseToken);
             log.debug("Create User: {}", user);
         }
         return user;
