@@ -1,4 +1,4 @@
-package com.codingbottle.domain.rank.model;
+package com.codingbottle.common.redis.model;
 
 import com.codingbottle.domain.user.entity.User;
 
