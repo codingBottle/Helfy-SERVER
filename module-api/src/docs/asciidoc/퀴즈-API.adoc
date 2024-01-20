@@ -15,7 +15,7 @@ operation::quiz-list[snippets='http-request,query-parameters,http-response,respo
 
 [[퀴즈-결과-]]
 == 퀴즈 결과 전송
-operation::put-quiz-status[snippets='http-request,path-parameters,request-body,request-fields,http-response,response-fields']
+operation::put-quiz-status[snippets='http-request,path-parameters,request-body,request-fields,http-response,response-body']
 
 [[틀린퀴즈-조회]]
 == 틀린 퀴즈 조회
