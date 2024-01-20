@@ -21,7 +21,6 @@ public class WeatherController {
     @GetMapping("/weather")
     public ResponseEntity<WeatherResponse> getCurrentWeather(@AuthenticationPrincipal User user) {
         WeatherResponse weather = weatherService.getWeather(user);
-
         return ResponseEntity.ok(weather);
     }
 }

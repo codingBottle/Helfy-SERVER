@@ -105,7 +105,8 @@ public class QuizRankRedisService {
     }
 
     private Long getRank(CacheUser cacheUser) {
-        return zSetOperations.rank(QUIZ_RANK_KEY, convertToJson(cacheUser));
+        Long rank = zSetOperations.rank(QUIZ_RANK_KEY, convertToJson(cacheUser));
+        return Optional.ofNullable(rank).orElse(-1L);
     }
 }
 
