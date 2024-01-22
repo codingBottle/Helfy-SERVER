@@ -36,9 +36,10 @@ public class User implements Serializable {
     @Column(name = "region", nullable = false)
     private Region region = Region.NONE;
 
-    public void updateByFirebaseToken(final String firebaseUid, final String email) {
+    public User updateByFirebaseToken(final String firebaseUid, final String email) {
         this.firebaseUid = firebaseUid;
         this.email = email;
+        return this;
     }
 
     public User updateRegion(Region region) {

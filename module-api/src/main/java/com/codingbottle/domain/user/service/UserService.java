@@ -1,9 +1,9 @@
 package com.codingbottle.domain.user.service;
 
 import com.codingbottle.domain.user.entity.User;
+import com.codingbottle.domain.user.event.UpdateNicknameCacheEvent;
+import com.codingbottle.domain.user.event.UpdateNicknameRedisEvent;
 import com.codingbottle.domain.user.repository.UserRepository;
-import com.codingbottle.redis.model.CacheUser;
-import com.codingbottle.domain.user.model.UpdateUser;
 import com.codingbottle.domain.user.model.UserNicknameRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -18,11 +18,12 @@ public class UserService {
 
     @Transactional
     public User updateNickname(UserNicknameRequest userNicknameRequest, User user) {
-        applicationEventPublisher.publishEvent(
-                UpdateUser.of(
-                        CacheUser.from(user),
-                        CacheUser.from(user.getId(), userNicknameRequest.nickname())));
+        updateNicknameEvent(userNicknameRequest, user);
+        return userRepository.save(user);
+    }
 
-        return userRepository.save(user.updateNickname(userNicknameRequest.nickname()));
+    private void updateNicknameEvent(UserNicknameRequest userNicknameRequest, User user) {
+        applicationEventPublisher.publishEvent(new UpdateNicknameRedisEvent(this, user, userNicknameRequest.nickname()));
+        applicationEventPublisher.publishEvent(new UpdateNicknameCacheEvent(this, user.updateNickname(userNicknameRequest.nickname())));
     }
 }
