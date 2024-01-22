@@ -20,7 +20,7 @@ public class ImageController {
     @PostMapping(value = "/images", consumes = "multipart/form-data")
     public ResponseEntity<ImageResponse> imageUpload(@RequestParam("directory") Directory directory,
                                                      @RequestPart("image") MultipartFile image) {
-        Image upload = imageService.upload(image, directory);
+        Image upload = imageService.save(image, directory);
 
         return ResponseEntity.ok(ImageResponse.from(upload));
     }

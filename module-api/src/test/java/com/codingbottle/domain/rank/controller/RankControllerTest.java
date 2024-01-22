@@ -1,7 +1,7 @@
 package com.codingbottle.domain.rank.controller;
 
 import com.codingbottle.domain.user.entity.User;
-import com.codingbottle.common.redis.service.QuizRankRedisService;
+import com.codingbottle.redis.service.QuizRankRedisService;
 import com.codingbottle.docs.util.RestDocsTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

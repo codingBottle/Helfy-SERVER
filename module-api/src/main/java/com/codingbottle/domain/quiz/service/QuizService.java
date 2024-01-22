@@ -2,12 +2,12 @@ package com.codingbottle.domain.quiz.service;
 
 import com.codingbottle.domain.quiz.model.QuizResponse;
 import com.codingbottle.domain.user.entity.User;
-import com.codingbottle.common.exception.ApplicationErrorException;
-import com.codingbottle.common.exception.ApplicationErrorType;
 import com.codingbottle.domain.quiz.entity.Quiz;
 import com.codingbottle.domain.quiz.model.Type;
 import com.codingbottle.domain.quiz.repo.QuizQueryRepository;
 import com.codingbottle.domain.quiz.repo.QuizSimpleJPARepository;
+import com.codingbottle.exception.ApplicationErrorException;
+import com.codingbottle.exception.ApplicationErrorType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

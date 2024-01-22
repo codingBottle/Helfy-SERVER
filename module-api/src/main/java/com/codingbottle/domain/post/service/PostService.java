@@ -2,15 +2,15 @@ package com.codingbottle.domain.post.service;
 
 import com.codingbottle.domain.post.model.PostResponse;
 import com.codingbottle.domain.user.entity.User;
-import com.codingbottle.common.exception.ApplicationErrorException;
-import com.codingbottle.common.exception.ApplicationErrorType;
-import com.codingbottle.common.redis.service.LikesRedisService;
+import com.codingbottle.redis.service.LikesRedisService;
 import com.codingbottle.domain.image.entity.Image;
 import com.codingbottle.domain.image.service.ImageService;
 import com.codingbottle.domain.post.entity.Post;
 import com.codingbottle.domain.post.repo.PostQueryRepository;
 import com.codingbottle.domain.post.repo.PostSimpleJPARepository;
 import com.codingbottle.domain.post.model.PostRequest;
+import com.codingbottle.exception.ApplicationErrorException;
+import com.codingbottle.exception.ApplicationErrorType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @Transactional(readOnly = true)

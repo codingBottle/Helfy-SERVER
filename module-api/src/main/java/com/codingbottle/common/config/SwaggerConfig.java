@@ -1,6 +1,6 @@
 package com.codingbottle.common.config;
 
-import com.codingbottle.common.model.ErrorResponseDto;
+import com.codingbottle.model.ErrorResponseDto;
 import io.swagger.v3.core.converter.AnnotatedType;
 import io.swagger.v3.core.converter.ModelConverters;
 import io.swagger.v3.oas.models.Components;
