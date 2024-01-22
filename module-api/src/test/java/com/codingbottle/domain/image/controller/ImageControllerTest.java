@@ -42,7 +42,7 @@ class ImageControllerTest extends RestDocsTest {
                 "multipart/form-data",
                 "image.png".getBytes(StandardCharsets.UTF_8));
 
-        given(imageService.upload(mockMultipartFile, Directory.POST)).willReturn(Image.builder()
+        given(imageService.save(mockMultipartFile, Directory.POST)).willReturn(Image.builder()
                 .id(1L)
                 .imageUrl("https://d2zp5u7z0buhfu.cloudfront.net/swagger.png")
                 .build());

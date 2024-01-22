@@ -1,13 +1,13 @@
 package com.codingbottle.domain.post.service;
 
-import com.codingbottle.common.exception.ApplicationErrorException;
-import com.codingbottle.common.redis.service.LikesRedisService;
+import com.codingbottle.redis.service.LikesRedisService;
 import com.codingbottle.domain.image.model.ImageResponse;
 import com.codingbottle.domain.image.service.ImageService;
 import com.codingbottle.domain.post.entity.Post;
 import com.codingbottle.domain.post.model.PostResponse;
 import com.codingbottle.domain.post.repo.PostQueryRepository;
 import com.codingbottle.domain.post.repo.PostSimpleJPARepository;
+import com.codingbottle.exception.ApplicationErrorException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

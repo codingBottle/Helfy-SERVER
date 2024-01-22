@@ -2,7 +2,7 @@ package com.codingbottle.domain.user.service;
 
 import com.codingbottle.domain.user.entity.User;
 import com.codingbottle.domain.user.repository.UserRepository;
-import com.codingbottle.common.redis.model.CacheUser;
+import com.codingbottle.redis.model.CacheUser;
 import com.codingbottle.domain.user.model.UpdateUser;
 import com.codingbottle.domain.user.model.UserNicknameRequest;
 import lombok.RequiredArgsConstructor;

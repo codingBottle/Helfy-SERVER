@@ -1,7 +1,7 @@
 package com.codingbottle.domain.rank.controller;
 
 import com.codingbottle.domain.user.entity.User;
-import com.codingbottle.common.redis.service.QuizRankRedisService;
+import com.codingbottle.redis.service.QuizRankRedisService;
 import com.codingbottle.domain.rank.model.UsersRankResponse;
 import com.codingbottle.domain.rank.model.UserRankResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;

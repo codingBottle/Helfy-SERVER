@@ -1,8 +1,8 @@
 package com.codingbottle.domain.quiz.service;
 
-import com.codingbottle.common.exception.ApplicationErrorException;
 import com.codingbottle.domain.quiz.model.QuizResponse;
 import com.codingbottle.domain.quiz.repo.UserQuizQueryRepository;
+import com.codingbottle.exception.ApplicationErrorException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

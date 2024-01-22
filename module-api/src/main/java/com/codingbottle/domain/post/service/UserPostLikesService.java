@@ -1,11 +1,11 @@
 package com.codingbottle.domain.post.service;
 
 import com.codingbottle.domain.user.entity.User;
-import com.codingbottle.common.exception.ApplicationErrorException;
-import com.codingbottle.common.exception.ApplicationErrorType;
-import com.codingbottle.common.redis.service.LikesRedisService;
+import com.codingbottle.redis.service.LikesRedisService;
 import com.codingbottle.domain.post.entity.UserPostLikes;
 import com.codingbottle.domain.post.entity.Post;
+import com.codingbottle.exception.ApplicationErrorException;
+import com.codingbottle.exception.ApplicationErrorType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

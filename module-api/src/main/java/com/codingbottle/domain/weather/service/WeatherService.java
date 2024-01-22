@@ -1,12 +1,12 @@
 package com.codingbottle.domain.weather.service;
 
 import com.codingbottle.domain.user.entity.User;
-import com.codingbottle.common.exception.ApplicationErrorException;
-import com.codingbottle.common.exception.ApplicationErrorType;
-import com.codingbottle.common.redis.service.WeatherRedisService;
+import com.codingbottle.redis.service.WeatherRedisService;
 import com.codingbottle.domain.region.entity.Region;
 import com.codingbottle.domain.weather.model.CurrentWeatherRequest;
 import com.codingbottle.domain.weather.model.WeatherResponse;
+import com.codingbottle.exception.ApplicationErrorException;
+import com.codingbottle.exception.ApplicationErrorType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
