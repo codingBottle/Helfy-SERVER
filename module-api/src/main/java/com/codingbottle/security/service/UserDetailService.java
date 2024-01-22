@@ -2,12 +2,14 @@ package com.codingbottle.security.service;
 
 import com.codingbottle.domain.user.entity.Role;
 import com.codingbottle.domain.user.entity.User;
+import com.codingbottle.domain.user.event.UpdateNicknameCacheEvent;
 import com.codingbottle.domain.user.repository.UserRepository;
 import com.codingbottle.domain.region.entity.Region;
 import com.google.firebase.auth.FirebaseToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.event.EventListener;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserDetailService implements UserDetailsService {
     private final UserRepository userRepository;
+
+    @EventListener
+    @CachePut(value = "user", key = "#event.user.email", cacheManager = "authRedisCacheManager")
+    public User handleUpdateUserNickname(UpdateNicknameCacheEvent event) {
+        return event.getUser();
+    }
 
     @Override
     @Transactional(readOnly = true)
@@ -45,14 +53,11 @@ public class UserDetailService implements UserDetailsService {
     }
 
     @Transactional
-    @Cacheable(value = "user", key = "#firebaseToken.uid", cacheManager = "authRedisCacheManager")
+    @Cacheable(value = "user", key = "#firebaseToken.email", cacheManager = "authRedisCacheManager")
     public User updateByUsername(FirebaseToken firebaseToken) {
         User user = userRepository.findByFirebaseUid(firebaseToken.getUid())
                 .orElseThrow(() -> new UsernameNotFoundException("해당 유저를 찾을 수 없습니다."));
 
-        user.updateByFirebaseToken(firebaseToken.getUid(), firebaseToken.getEmail());
-
-        return userRepository.save(user);
+        return user.updateByFirebaseToken(firebaseToken.getUid(), firebaseToken.getEmail());
     }
-
 }

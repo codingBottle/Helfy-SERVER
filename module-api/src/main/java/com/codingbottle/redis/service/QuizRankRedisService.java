@@ -1,9 +1,8 @@
 package com.codingbottle.redis.service;
 
 import com.codingbottle.domain.user.entity.User;
-import com.codingbottle.redis.model.CacheUser;
 import com.codingbottle.domain.rank.model.UserRankResponse;
-import com.codingbottle.domain.user.model.UpdateUser;
+import com.codingbottle.domain.user.event.UpdateNicknameRedisEvent;
 import com.codingbottle.exception.ApplicationErrorException;
 import com.codingbottle.exception.ApplicationErrorType;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -29,9 +28,10 @@ public class QuizRankRedisService {
     private static final String QUIZ_RANK_KEY = "QUIZ_RANK";
 
     @EventListener
-    public void handleUserUpdate(UpdateUser updateUser) {
-        int score = removeUserWithScore(updateUser.before());
-        addScore(updateUser.after(), score);
+    public void handleUserUpdate(UpdateNicknameRedisEvent event) {
+        int score = removeUserWithScore(event.getUser());
+        User user = event.getUser();
+        addScore(user.updateNickname(event.getNickname()), score);
     }
 
     public QuizRankRedisService(@Qualifier("quizRankRedisTemplate") RedisTemplate<String, String> quizRankRedisTemplate) {
@@ -39,19 +39,18 @@ public class QuizRankRedisService {
         this.objectMapper = new ObjectMapper();
     }
 
-    public int getScore(CacheUser user) {
+    public int getScore(User user) {
         Double score = zSetOperations.score(QUIZ_RANK_KEY, convertToJson(user));
         return getScoreAnInt(Optional.ofNullable(score));
     }
 
-    public void addScore(CacheUser user, int score) {
+    public void addScore(User user, int score) {
         zSetOperations.add(QUIZ_RANK_KEY, convertToJson(user), score);
     }
 
     public void updateScore(User user, int score) {
-        CacheUser cacheUser = CacheUser.from(user);
-        int newScore = getScore(cacheUser) + score;
-        addScore(cacheUser, newScore);
+        int newScore = getScore(user) + score;
+        addScore(user, newScore);
     }
 
     public List<UserRankResponse> getUsersRank() {
@@ -63,11 +62,11 @@ public class QuizRankRedisService {
                 .collect(Collectors.toList());
     }
 
-    private void remove(CacheUser user) {
+    private void remove(User user) {
         zSetOperations.remove(QUIZ_RANK_KEY, convertToJson(user));
     }
 
-    private int removeUserWithScore(CacheUser user) {
+    private int removeUserWithScore(User user) {
         int score = getScore(user);
         remove(user);
         return score;
@@ -78,19 +77,19 @@ public class QuizRankRedisService {
     }
 
     private UserRankResponse convertToUserScore(ZSetOperations.TypedTuple<String> rank) {
-        CacheUser user = convertToUser(rank.getValue());
-        return UserRankResponse.of(getRank(user) + 1, user.nickname(), Objects.requireNonNull(rank.getScore()).intValue());
+        User user = convertToUser(rank.getValue());
+        return UserRankResponse.of(getRank(user) + 1, user.getNickname(), Objects.requireNonNull(rank.getScore()).intValue());
     }
 
-    private CacheUser convertToUser(String userJson) {
+    private User convertToUser(String userJson) {
         try {
-            return objectMapper.readValue(userJson, CacheUser.class);
+            return objectMapper.readValue(userJson, User.class);
         } catch (JsonProcessingException e) {
             throw new ApplicationErrorException(ApplicationErrorType.JSON_PROCESSING_EXCEPTION);
         }
     }
 
-    private String convertToJson(CacheUser user) {
+    private String convertToJson(User user) {
         try {
             return objectMapper.writeValueAsString(user);
         } catch (JsonProcessingException e) {
@@ -99,13 +98,12 @@ public class QuizRankRedisService {
     }
 
     public UserRankResponse getUserRank(User user) {
-        CacheUser cacheUser = CacheUser.from(user);
-        int score = getScore(cacheUser);
-        return UserRankResponse.of(getRank(cacheUser) + 1, cacheUser.nickname(), score);
+        int score = getScore(user);
+        return UserRankResponse.of(getRank(user) + 1, user.getNickname(), score);
     }
 
-    private Long getRank(CacheUser cacheUser) {
-        Long rank = zSetOperations.rank(QUIZ_RANK_KEY, convertToJson(cacheUser));
+    private Long getRank(User user) {
+        Long rank = zSetOperations.rank(QUIZ_RANK_KEY, convertToJson(user));
         return Optional.ofNullable(rank).orElse(-1L);
     }
 }

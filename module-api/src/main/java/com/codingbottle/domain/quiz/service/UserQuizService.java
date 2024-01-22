@@ -10,7 +10,6 @@ import com.codingbottle.domain.quiz.model.QuizStatusRequest;
 import com.codingbottle.domain.quiz.model.UserQuizInfo;
 import com.codingbottle.domain.quiz.repo.UserQuizQueryRepository;
 import com.codingbottle.domain.quiz.repo.UserQuizSimpleJPARepository;
-import com.codingbottle.redis.model.CacheUser;
 import com.codingbottle.exception.ApplicationErrorException;
 import com.codingbottle.exception.ApplicationErrorType;
 import lombok.RequiredArgsConstructor;
@@ -87,7 +86,7 @@ public class UserQuizService {
     }
 
     public UserQuizInfo getUserQuizInfo(User user) {
-        int score = quizRankRedisService.getScore(CacheUser.from(user));
+        int score = quizRankRedisService.getScore(user);
         return UserQuizInfo.from(user.getNickname(), score);
     }
 }
