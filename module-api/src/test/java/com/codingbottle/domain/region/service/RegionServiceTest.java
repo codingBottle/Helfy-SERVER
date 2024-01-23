@@ -5,6 +5,7 @@ import com.codingbottle.domain.region.entity.Region;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -12,14 +13,16 @@ import java.util.LinkedHashMap;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 @DisplayName("RegionService 테스트")
 class RegionServiceTest {
-    RegionService regionService;
+    private RegionService regionService;
 
     @BeforeEach
     void setUp() {
-        regionService = new RegionService();
+        ApplicationEventPublisher applicationEventPublisher = mock(ApplicationEventPublisher.class);
+        regionService = new RegionService(applicationEventPublisher);
     }
 
     @Test
@@ -46,7 +49,6 @@ class RegionServiceTest {
         User user = User.builder()
                 .region(Region.NONE)
                 .build();
-
         // when
         var updateUser = regionService.updateRegions(region, user);
 

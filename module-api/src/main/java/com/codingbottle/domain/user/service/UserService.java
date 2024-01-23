@@ -1,8 +1,8 @@
 package com.codingbottle.domain.user.service;
 
 import com.codingbottle.domain.user.entity.User;
-import com.codingbottle.domain.user.event.UpdateNicknameCacheEvent;
-import com.codingbottle.domain.user.event.UpdateNicknameRedisEvent;
+import com.codingbottle.domain.user.event.UpdateUserInfoCacheEvent;
+import com.codingbottle.domain.user.event.UpdateUserInfoRedisEvent;
 import com.codingbottle.domain.user.repository.UserRepository;
 import com.codingbottle.domain.user.model.UserNicknameRequest;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class UserService {
     }
 
     private void updateNicknameEvent(UserNicknameRequest userNicknameRequest, User user) {
-        applicationEventPublisher.publishEvent(new UpdateNicknameRedisEvent(this, user, userNicknameRequest.nickname()));
-        applicationEventPublisher.publishEvent(new UpdateNicknameCacheEvent(this, user.updateNickname(userNicknameRequest.nickname())));
+        applicationEventPublisher.publishEvent(new UpdateUserInfoRedisEvent(this, user, userNicknameRequest.nickname()));
+        applicationEventPublisher.publishEvent(new UpdateUserInfoCacheEvent(this, user.updateNickname(userNicknameRequest.nickname())));
     }
 }

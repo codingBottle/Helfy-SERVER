@@ -2,7 +2,7 @@ package com.codingbottle.redis.service;
 
 import com.codingbottle.domain.user.entity.User;
 import com.codingbottle.domain.rank.model.UserRankResponse;
-import com.codingbottle.domain.user.event.UpdateNicknameRedisEvent;
+import com.codingbottle.domain.user.event.UpdateUserInfoRedisEvent;
 import com.codingbottle.exception.ApplicationErrorException;
 import com.codingbottle.exception.ApplicationErrorType;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -28,10 +28,10 @@ public class QuizRankRedisService {
     private static final String QUIZ_RANK_KEY = "QUIZ_RANK";
 
     @EventListener
-    public void handleUserUpdate(UpdateNicknameRedisEvent event) {
+    public void handleUserUpdate(UpdateUserInfoRedisEvent event) {
         int score = removeUserWithScore(event.getUser());
         User user = event.getUser();
-        addScore(user.updateNickname(event.getNickname()), score);
+        addScore(user.updateInfo(event.getUserUpdateInfo().nickname(), event.getUserUpdateInfo().region()), score);
     }
 
     public QuizRankRedisService(@Qualifier("quizRankRedisTemplate") RedisTemplate<String, String> quizRankRedisTemplate) {

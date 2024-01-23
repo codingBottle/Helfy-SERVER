@@ -5,10 +5,10 @@ import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 
 @Getter
-public class UpdateNicknameCacheEvent extends ApplicationEvent {
+public class UpdateUserInfoCacheEvent extends ApplicationEvent {
     private final User user;
 
-    public UpdateNicknameCacheEvent(Object source, User user) {
+    public UpdateUserInfoCacheEvent(Object source, User user) {
         super(source);
         this.user = user;
     }
