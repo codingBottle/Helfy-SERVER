@@ -5,10 +5,12 @@ import com.codingbottle.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserQuiz extends BaseEntity {
     @Id
@@ -28,7 +30,8 @@ public class UserQuiz extends BaseEntity {
     private QuizStatus quizStatus;
 
     @Builder
-    public UserQuiz(Quiz quiz, User user, QuizStatus quizStatus) {
+    public UserQuiz(Long id, Quiz quiz, User user, QuizStatus quizStatus) {
+        this.id = id;
         this.quiz = quiz;
         this.user = user;
         this.quizStatus = quizStatus;
