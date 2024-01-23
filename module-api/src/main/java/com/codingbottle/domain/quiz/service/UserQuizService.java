@@ -41,23 +41,23 @@ public class UserQuizService {
 
     @Transactional
     public String updateQuizStatus(Long quizId, QuizStatusRequest quizStatusRequest, User user) {
-        if(quizStatusRequest.quizStatus() == QuizStatus.CORRECT){
-            updateScoreAndQuizStatus(user, quizId, quizStatusRequest);
+        if (quizStatusRequest.quizStatus() == QuizStatus.CORRECT) {
+            handleCorrectAnswer(user, quizId, quizStatusRequest);
             return "CORRECT";
         } else {
-            saveWrongAnswer(user, quizId, quizStatusRequest);
+            handleWrongAnswer(user, quizId, quizStatusRequest);
             return "WRONG";
         }
     }
 
-    private void saveUserQuiz(User user, Long quizId, QuizStatusRequest quizStatusRequest){
+    private UserQuiz saveUserQuiz(User user, Long quizId, QuizStatusRequest quizStatusRequest){
         Quiz quiz = quizService.findById(quizId);
         UserQuiz userQuiz = UserQuiz.builder()
                 .quiz(quiz)
                 .user(user)
                 .quizStatus(quizStatusRequest.quizStatus())
                 .build();
-        userQuizSimpleJPARepository.save(userQuiz);
+        return userQuizSimpleJPARepository.save(userQuiz);
     }
 
     private Boolean existsUserQuiz(User user, Long quizId){
@@ -65,21 +65,33 @@ public class UserQuizService {
     }
 
     private UserQuiz findUserQuiz(Long quizId, User user) {
-        return userQuizSimpleJPARepository.findByUserIdAndQuizId(user.getId(), quizId).orElseThrow(() -> new ApplicationErrorException(ApplicationErrorType.USER_QUIZ_NOT_FOUND));
+        return userQuizSimpleJPARepository.findByUserIdAndQuizId(user.getId(), quizId)
+                .orElseThrow(() -> new ApplicationErrorException(ApplicationErrorType.USER_QUIZ_NOT_FOUND));
     }
 
-    private void updateScoreAndQuizStatus(User user, Long quizId, QuizStatusRequest quizStatusRequest) {
-        quizRankRedisService.updateScore(user, 10);
-
-        if(existsUserQuiz(user, quizId)) {
-            UserQuiz userQuiz = findUserQuiz(quizId, user);
-            userQuiz.updateQuizStatus(quizStatusRequest.quizStatus());
+    private void handleCorrectAnswer(User user, Long quizId, QuizStatusRequest quizStatusRequest) {
+        UserQuiz userQuiz;
+        if (existsUserQuiz(user, quizId)) {
+            userQuiz = findUserQuiz(quizId, user);
+            validateQuizStatus(userQuiz);
         } else {
-            saveUserQuiz(user, quizId, quizStatusRequest);
+            userQuiz = saveUserQuiz(user, quizId, quizStatusRequest);
+        }
+        userQuiz.updateQuizStatus(quizStatusRequest.quizStatus());
+        plusUserQuizScore(user);
+    }
+
+    private void validateQuizStatus(UserQuiz userQuiz) {
+        if (userQuiz.getQuizStatus() != QuizStatus.WRONG) {
+            throw new ApplicationErrorException(ApplicationErrorType.ALREADY_SOLVED_QUIZ);
         }
     }
 
-    private void saveWrongAnswer(User user, Long quizId, QuizStatusRequest quizStatusRequest) {
+    private void plusUserQuizScore(User user) {
+        quizRankRedisService.updateScore(user, 10);
+    }
+
+    private void handleWrongAnswer(User user, Long quizId, QuizStatusRequest quizStatusRequest) {
         if(!existsUserQuiz(user, quizId)) {
             saveUserQuiz(user, quizId, quizStatusRequest);
         }
