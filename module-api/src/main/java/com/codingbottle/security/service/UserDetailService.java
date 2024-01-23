@@ -2,7 +2,7 @@ package com.codingbottle.security.service;
 
 import com.codingbottle.domain.user.entity.Role;
 import com.codingbottle.domain.user.entity.User;
-import com.codingbottle.domain.user.event.UpdateNicknameCacheEvent;
+import com.codingbottle.domain.user.event.UpdateUserInfoCacheEvent;
 import com.codingbottle.domain.user.repository.UserRepository;
 import com.codingbottle.domain.region.entity.Region;
 import com.google.firebase.auth.FirebaseToken;
@@ -25,7 +25,7 @@ public class UserDetailService implements UserDetailsService {
 
     @EventListener
     @CachePut(value = "user", key = "#event.user.email", cacheManager = "authRedisCacheManager")
-    public User handleUpdateUserNickname(UpdateNicknameCacheEvent event) {
+    public User handleUpdateUserNickname(UpdateUserInfoCacheEvent event) {
         return event.getUser();
     }
 

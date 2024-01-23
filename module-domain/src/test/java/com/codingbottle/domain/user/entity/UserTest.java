@@ -119,4 +119,16 @@ class UserTest {
         // then
         assertThat(result).isFalse();
     }
+
+    @Test
+    @DisplayName("User 닉네임과 지역 업데이트 테스트")
+    void updateNicknameAndRegion() {
+        // when
+        user.updateInfo("newNickname", Region.SEOUL);
+        // then
+        assertAll(
+                () -> assertThat(user.getNickname()).isEqualTo("newNickname"),
+                () -> assertThat(user.getRegion()).isEqualTo(Region.SEOUL)
+        );
+    }
 }

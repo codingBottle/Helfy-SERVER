@@ -52,6 +52,12 @@ public class User implements Serializable {
         return this;
     }
 
+    public User updateInfo(String nickname, Region region) {
+        this.nickname = nickname;
+        this.region = region;
+        return this;
+    }
+
     @Builder
     public User(String firebaseUid, String email, String nickname, Role role, Region region) {
         this.firebaseUid = firebaseUid;
