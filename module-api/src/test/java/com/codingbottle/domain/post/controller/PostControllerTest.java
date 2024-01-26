@@ -45,7 +45,8 @@ class PostControllerTest extends RestDocsTest {
     @Test
     void find_all_posts() throws Exception{
         //given
-        given(postService.findAll(any(PageRequest.class),any(User.class))).willReturn(List.of(PostResponse.from(게시글1), PostResponse.from(게시글2)));
+        given(postService.findAll(any(PageRequest.class))).willReturn(List.of(PostResponse.of(게시글1), PostResponse.of(게시글2)));
+        given(userPostLikesService.isLikes(any(User.class), any())).willReturn(false);
         //when & then
         mvc.perform(get(REQUEST_URL)
                         .queryParam("page", "0")
@@ -65,18 +66,18 @@ class PostControllerTest extends RestDocsTest {
                                 )),
                         responseFields(
                                 fieldWithPath("content").description("게시물 리스트"),
-                                fieldWithPath("content[].id").description("게시물 id").type("Number"),
-                                fieldWithPath("content[].content").description("게시물 내용"),
-                                fieldWithPath("content[].hashtags").description("게시물 해시태그"),
-                                fieldWithPath("content[].user").description("게시물 작성자"),
-                                fieldWithPath("content[].user.nickname").description("게시물 작성자 닉네임"),
-                                fieldWithPath("content[].likeCount").description("게시물 좋아요 수"),
+                                fieldWithPath("content[].post.id").description("게시물 id").type("Number"),
+                                fieldWithPath("content[].post.content").description("게시물 내용"),
+                                fieldWithPath("content[].post.hashtags").description("게시물 해시태그"),
+                                fieldWithPath("content[].post.user").description("게시물 작성자"),
+                                fieldWithPath("content[].post.user.nickname").description("게시물 작성자 닉네임"),
+                                fieldWithPath("content[].post.likeCount").description("게시물 좋아요 수"),
+                                fieldWithPath("content[].post.image").description("게시물 이미지"),
+                                fieldWithPath("content[].post.image.id").description("게시물 이미지 id"),
+                                fieldWithPath("content[].post.image.imageUrl").description("게시물 이미지 url"),
+                                fieldWithPath("content[].post.createdTime").description("게시물 생성시간").type("LocalDateTime"),
+                                fieldWithPath("content[].post.modifiedTime").description("게시물 수정시간").type("LocalDateTime"),
                                 fieldWithPath("content[].likeStatus").description("게시물 좋아요 여부"),
-                                fieldWithPath("content[].image").description("게시물 이미지"),
-                                fieldWithPath("content[].image.id").description("게시물 이미지 id"),
-                                fieldWithPath("content[].image.imageUrl").description("게시물 이미지 url"),
-                                fieldWithPath("content[].createdTime").description("게시물 생성시간").type("LocalDateTime"),
-                                fieldWithPath("content[].modifiedTime").description("게시물 수정시간").type("LocalDateTime"),
                                 fieldWithPath("pageable").description("페이지 정보"),
                                 fieldWithPath("pageable.pageNumber").description("페이지 번호"),
                                 fieldWithPath("pageable.pageSize").description("페이지 사이즈"),
@@ -103,16 +104,14 @@ class PostControllerTest extends RestDocsTest {
     @Test
     void create_post() throws Exception{
         //given
-        given(postService.save(any(PostRequest.class), any(User.class))).willReturn(게시글1);
-        given(userPostLikesService.isAlreadyLikes(any(User.class), any(Post.class))).willReturn(false);
+        given(postService.save(any(PostRequest.class), any(User.class))).willReturn(PostResponse.of(게시글1));
+        given(userPostLikesService.isLikes(any(User.class), any())).willReturn(false);
         //when & then
         mvc.perform(post(REQUEST_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(createJson(게시글_생성_요청1))
                         .header("Authorization", "Bearer FirebaseToken"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").exists())
-                .andExpect(jsonPath("$.image").exists())
                 .andDo(document("create-post",
                         getDocumentRequest(),
                         getDocumentResponse(),
@@ -129,7 +128,7 @@ class PostControllerTest extends RestDocsTest {
     @Test
     void update_post() throws Exception{
         //given
-        given(postService.update(any(PostRequest.class), any(Long.class), any(User.class))).willReturn(PostResponse.from(게시글2));
+        given(postService.update(any(PostRequest.class), any(Long.class), any(User.class))).willReturn(PostResponse.of(게시글2));
         //when & then
         mvc.perform(RestDocumentationRequestBuilders.patch(REQUEST_URL + "/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -165,7 +164,8 @@ class PostControllerTest extends RestDocsTest {
     @DisplayName("게시글 좋아요 요청")
     void likes_put() throws Exception{
         //given
-        given(postService.toggleLikeStatus(any(User.class), any(Long.class))).willReturn(true);
+        given(postService.findById(any(Long.class))).willReturn(게시글1);
+        given(userPostLikesService.toggleLikeStatus(any(User.class), any(Post.class))).willReturn(true);
         //when & then
         mvc.perform(RestDocumentationRequestBuilders.put(REQUEST_URL + "/{id}/likes", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -184,7 +184,7 @@ class PostControllerTest extends RestDocsTest {
     @DisplayName("게시글 좋아요 취소 요청")
     void likes_cancel() throws Exception{
         //given
-        given(userPostLikesService.isAlreadyLikes(any(User.class), any(Post.class))).willReturn(true);
+        given(userPostLikesService.isLikes(any(User.class),any())).willReturn(false);
         //when & then
         mvc.perform(RestDocumentationRequestBuilders.put(REQUEST_URL + "/{id}/likes", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -203,7 +203,8 @@ class PostControllerTest extends RestDocsTest {
     @DisplayName("게시글 검색")
     void search_keyword() throws Exception{
         //given
-        given(postService.searchByKeyword(any(String.class),any(User.class))).willReturn(List.of(PostResponse.from(게시글1), PostResponse.from(게시글2)));
+        given(postService.searchByKeyword(any(String.class))).willReturn(List.of(PostResponse.of(게시글1), PostResponse.of(게시글2)));
+        given(userPostLikesService.isLikes(any(User.class), any())).willReturn(false);
         //when & then
         mvc.perform(get(REQUEST_URL + "/search")
                         .queryParam("keyword", "검색어")
@@ -217,35 +218,36 @@ class PostControllerTest extends RestDocsTest {
                         queryParameters(
                                 parameterWithName("keyword").description("검색어")),
                         responseFields(
-                                fieldWithPath("[]").description("게시물 리스트"),
-                                fieldWithPath("[].id").description("게시물 id").type("Number"),
-                                fieldWithPath("[].content").description("게시물 내용"),
-                                fieldWithPath("[].hashtags").description("게시물 해시태그"),
-                                fieldWithPath("[].user").description("게시물 작성자"),
-                                fieldWithPath("[].user.nickname").description("게시물 작성자 닉네임"),
-                                fieldWithPath("[].likeCount").description("게시물 좋아요 수"),
-                                fieldWithPath("[].likeStatus").description("게시물 좋아요 여부"),
-                                fieldWithPath("[].image").description("게시물 이미지"),
-                                fieldWithPath("[].image.id").description("게시물 이미지 id"),
-                                fieldWithPath("[].image.imageUrl").description("게시물 이미지 url"),
-                                fieldWithPath("[].createdTime").description("게시물 생성시간").type("LocalDateTime"),
-                                fieldWithPath("[].modifiedTime").description("게시물 수정시간").type("LocalDateTime")
+                                fieldWithPath("[].post").description("게시물 리스트"),
+                                fieldWithPath("[].post.id").description("게시물 id").type("Number"),
+                                fieldWithPath("[].post.content").description("게시물 내용"),
+                                fieldWithPath("[].post.hashtags").description("게시물 해시태그"),
+                                fieldWithPath("[].post.user").description("게시물 작성자"),
+                                fieldWithPath("[].post.user.nickname").description("게시물 작성자 닉네임"),
+                                fieldWithPath("[].post.likeCount").description("게시물 좋아요 수"),
+                                fieldWithPath("[].post.image").description("게시물 이미지"),
+                                fieldWithPath("[].post.image.id").description("게시물 이미지 id"),
+                                fieldWithPath("[].post.image.imageUrl").description("게시물 이미지 url"),
+                                fieldWithPath("[].post.createdTime").description("게시물 생성시간").type("LocalDateTime"),
+                                fieldWithPath("[].post.modifiedTime").description("게시물 수정시간").type("LocalDateTime"),
+                                fieldWithPath("[].likeStatus").description("게시물 좋아요 여부")
                         )));
     }
 
     private ResponseFieldsSnippet getPostResponseFields() {
         return responseFields(
-                fieldWithPath("id").description("게시물 id").type("Number"),
-                fieldWithPath("content").description("게시물 내용"),
-                fieldWithPath("hashtags").description("게시물 해시태그"),
-                fieldWithPath("user.nickname").description("게시물 작성자 닉네임"),
-                fieldWithPath("likeCount").description("게시물 좋아요 수"),
-                fieldWithPath("likeStatus").description("게시물 좋아요 여부"),
-                fieldWithPath("image").description("게시물 이미지"),
-                fieldWithPath("image.id").description("게시물 이미지 id").type("Number"),
-                fieldWithPath("image.imageUrl").description("게시물 이미지 url"),
-                fieldWithPath("createdTime").description("게시물 생성시간").type("LocalDateTime"),
-                fieldWithPath("modifiedTime").description("게시물 수정시간").type("LocalDateTime")
+                fieldWithPath("post").description("게시물"),
+                fieldWithPath("post.id").description("게시물 id").type("Number"),
+                fieldWithPath("post.content").description("게시물 내용"),
+                fieldWithPath("post.hashtags").description("게시물 해시태그"),
+                fieldWithPath("post.user.nickname").description("게시물 작성자 닉네임"),
+                fieldWithPath("post.likeCount").description("게시물 좋아요 수"),
+                fieldWithPath("post.image").description("게시물 이미지"),
+                fieldWithPath("post.image.id").description("게시물 이미지 id").type("Number"),
+                fieldWithPath("post.image.imageUrl").description("게시물 이미지 url"),
+                fieldWithPath("post.createdTime").description("게시물 생성시간").type("LocalDateTime"),
+                fieldWithPath("post.modifiedTime").description("게시물 수정시간").type("LocalDateTime"),
+                fieldWithPath("likeStatus").description("게시물 좋아요 여부")
         );
     }
 }

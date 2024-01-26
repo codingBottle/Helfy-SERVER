@@ -1,5 +1,6 @@
 package com.codingbottle.domain.post.controller;
 
+import com.codingbottle.domain.post.model.PostResponseWithLikeStatus;
 import com.codingbottle.domain.user.entity.User;
 import com.codingbottle.common.annotation.CustomPageableAsQueryParam;
 import com.codingbottle.common.util.PagingUtil;
@@ -26,30 +27,36 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
+    private final UserPostLikesService userPostLikesService;
 
     @PostMapping
-    public ResponseEntity<PostResponse> create(@RequestBody @Validated PostRequest postRequest,
+    public ResponseEntity<PostResponseWithLikeStatus> create(@RequestBody @Validated PostRequest postRequest,
                                                @AuthenticationPrincipal User user) {
-        Post post = postService.save(postRequest, user);
-        return ResponseEntity.ok(PostResponse.from(post));
+        PostResponse post = postService.save(postRequest, user);
+
+        return ResponseEntity.ok(PostResponseWithLikeStatus.of(post, userPostLikesService.isLikes(user, post.id())));
     }
 
     @GetMapping
     @CustomPageableAsQueryParam
-    public ResponseEntity<SliceImpl<PostResponse>> findAll(@PageableDefault Pageable pageable,
+    public ResponseEntity<SliceImpl<PostResponseWithLikeStatus>> findAll(@PageableDefault Pageable pageable,
                                                            @AuthenticationPrincipal User user) {
-        List<PostResponse> posts = postService.findAll(pageable, user);
+        List<PostResponse> posts = postService.findAll(pageable);
 
-        return ResponseEntity.ok(PagingUtil.toSliceImpl(posts, pageable));
+        List<PostResponseWithLikeStatus> postResponses = posts.stream()
+                .map(post -> PostResponseWithLikeStatus.of(post, userPostLikesService.isLikes(user, post.id())))
+                .toList();
+
+        return ResponseEntity.ok(PagingUtil.toSliceImpl(postResponses, pageable));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<PostResponse> update(@PathVariable(value = "id") Long id,
+    public ResponseEntity<PostResponseWithLikeStatus> update(@PathVariable(value = "id") Long id,
                                                @RequestBody @Validated PostRequest postRequest,
                                                @AuthenticationPrincipal User user) {
         PostResponse post = postService.update(postRequest, id, user);
 
-        return ResponseEntity.ok(post);
+        return ResponseEntity.ok(PostResponseWithLikeStatus.of(post, userPostLikesService.isLikes(user, post.id())));
     }
 
     @DeleteMapping("/{id}")
@@ -62,15 +69,20 @@ public class PostController {
     @PutMapping("/{id}/likes")
     public ResponseEntity<String> toggleLikeStatus(@PathVariable(value = "id") Long postId,
                                                    @AuthenticationPrincipal User user) {
-        boolean isLiked = postService.toggleLikeStatus(user, postId);
+        Post post = postService.findById(postId);
+        boolean isLiked = userPostLikesService.toggleLikeStatus(user, post);
 
         return ResponseEntity.ok().body(isLiked ? "Liked" : "Unliked");
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<PostResponse>> searchByKeyword(@RequestParam(value = "keyword") String keyword,
+    public ResponseEntity<List<PostResponseWithLikeStatus>> searchByKeyword(@RequestParam(value = "keyword") String keyword,
                                                               @AuthenticationPrincipal User user) {
-        List<PostResponse> posts = postService.searchByKeyword(keyword, user);
-        return ResponseEntity.ok(posts);
+        List<PostResponse> posts = postService.searchByKeyword(keyword);
+
+        List<PostResponseWithLikeStatus> postResponses = posts.stream()
+                .map(post -> PostResponseWithLikeStatus.of(post, userPostLikesService.isLikes(user, post.id())))
+                .toList();
+        return ResponseEntity.ok(postResponses);
     }
 }
