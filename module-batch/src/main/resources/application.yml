@@ -1,0 +1,78 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${JDBC_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    hikari:
+      pool-name: jpa-hikari-pool
+      maximum-pool-size: 5
+      jdbc-url: ${JDBC_URL}
+      username: ${DB_USERNAME}
+      password: ${DB_PASSWORD}
+      driver-class-name: ${spring.datasource.driver-class-name}
+      data-source-properties:
+        rewriteBatchedStatements: true
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: always
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        default_batch_fetch_size: ${chunkSize:100}
+        jdbc.batch_size: 10
+        order_inserts: true
+        order_updates: true
+    show-sql: true
+    open-in-view: false
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      lettuce:
+        pool:
+          max-active: 8
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: helfy-bucket
+    stack:
+      auto: false
+
+cloudfront-domain-name: https://d2zp5u7z0buhfu.cloudfront.net
+
+openweathermap:
+  api-key: ${WEATHER_API_KEY}
+  api-url: https://api.openweathermap.org/data/2.5/weather
+
+job-setting:
+  likes:
+    name: "LikesJob"
+    enabled: true
+  weather:
+    name: "WeatherJob"
+    enabled: true
+
+server:
+  port: 8081
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+logging:
+  discord:
+    webhook-url: ${DISCORD_WEBHOOK_URL}
+  config: classpath:logback-spring.xml
