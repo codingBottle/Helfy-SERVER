@@ -1,5 +1,6 @@
-package com.codingbottle.redis.config;
+package com.codingbottle.redis.domain.user.config;
 
+import com.codingbottle.redis.config.RedisConfig;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

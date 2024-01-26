@@ -1,5 +1,6 @@
-package com.codingbottle.redis.config;
+package com.codingbottle.redis.domain.weather.config;
 
+import com.codingbottle.redis.config.RedisConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;

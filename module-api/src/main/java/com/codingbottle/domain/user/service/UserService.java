@@ -10,6 +10,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -25,5 +27,9 @@ public class UserService {
     private void updateNicknameEvent(UserNicknameRequest userNicknameRequest, User user) {
         applicationEventPublisher.publishEvent(new UpdateUserInfoRedisEvent(this, user, userNicknameRequest.nickname()));
         applicationEventPublisher.publishEvent(new UpdateUserInfoCacheEvent(this, user.updateNickname(userNicknameRequest.nickname())));
+    }
+
+    public List<User> findAllById(Iterable<Long> iterable) {
+        return userRepository.findAllById(iterable);
     }
 }

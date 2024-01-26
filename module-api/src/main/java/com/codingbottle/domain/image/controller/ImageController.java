@@ -22,6 +22,6 @@ public class ImageController {
                                                      @RequestPart("image") MultipartFile image) {
         Image upload = imageService.save(image, directory);
 
-        return ResponseEntity.ok(ImageResponse.from(upload));
+        return ResponseEntity.ok(ImageResponse.of(upload));
     }
 }

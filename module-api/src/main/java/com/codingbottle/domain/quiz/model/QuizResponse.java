@@ -15,6 +15,6 @@ public record QuizResponse(
         ImageResponse image,
         QuizType quizType) {
     public static QuizResponse from(Quiz quiz) {
-        return new QuizResponse(quiz.getId(),quiz.getQuestion(), quiz.getAnswer(), new HashMap<>(quiz.getChoices()), quiz.getImage() == null ? null : ImageResponse.from(quiz.getImage()), quiz.getQuizType());
+        return new QuizResponse(quiz.getId(),quiz.getQuestion(), quiz.getAnswer(), new HashMap<>(quiz.getChoices()), quiz.getImage() == null ? null : ImageResponse.of(quiz.getImage()), quiz.getQuizType());
     }
 }
