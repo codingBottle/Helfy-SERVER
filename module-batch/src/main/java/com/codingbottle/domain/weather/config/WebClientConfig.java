@@ -1,4 +1,4 @@
-package com.codingbottle.common.config;
+package com.codingbottle.domain.weather.config;
 
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;

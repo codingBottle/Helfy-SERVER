@@ -1,10 +1,10 @@
 package com.codingbottle.domain.weather.service;
 
 import com.codingbottle.domain.user.entity.User;
-import com.codingbottle.redis.service.WeatherRedisService;
+import com.codingbottle.redis.domain.weather.service.WeatherRedisService;
 import com.codingbottle.domain.region.entity.Region;
-import com.codingbottle.domain.weather.entity.WeatherCode;
-import com.codingbottle.domain.weather.model.WeatherResponse;
+import com.codingbottle.redis.domain.weather.model.WeatherCode;
+import com.codingbottle.redis.domain.weather.model.WeatherResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ class WeatherServiceTest {
         // given
         WeatherResponse mockWeatherResponse = new WeatherResponse(WeatherCode.ATMOSPHERE, 20.0, 10);
 
-        given(redisService.getObjectValues(any(Region.class))).willReturn(mockWeatherResponse);
+        given(redisService.getWeatherData(any())).willReturn(mockWeatherResponse);
 
         User user = User.builder()
                 .region(Region.SEOUL)

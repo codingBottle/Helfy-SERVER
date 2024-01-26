@@ -1,4 +1,4 @@
-package com.codingbottle.domain.weather.entity;
+package com.codingbottle.redis.domain.weather.model;
 
 import java.util.Arrays;
 

@@ -1,8 +1,8 @@
 package com.codingbottle.domain.weather.controller;
 
 import com.codingbottle.docs.util.RestDocsTest;
-import com.codingbottle.domain.weather.entity.WeatherCode;
-import com.codingbottle.domain.weather.model.WeatherResponse;
+import com.codingbottle.redis.domain.weather.model.WeatherCode;
+import com.codingbottle.redis.domain.weather.model.WeatherResponse;
 import com.codingbottle.domain.weather.service.WeatherService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -54,7 +54,4 @@ class WeatherControllerTest extends RestDocsTest {
                                 fieldWithPath("humidity").description("습도")
                         )));
     }
-
-
-
 }
