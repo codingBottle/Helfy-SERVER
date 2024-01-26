@@ -2,7 +2,8 @@ package com.codingbottle.domain.post.service;
 
 import com.codingbottle.domain.post.model.PostResponse;
 import com.codingbottle.domain.user.entity.User;
-import com.codingbottle.redis.service.LikesRedisService;
+import com.codingbottle.redis.domain.post.model.PostCacheData;
+import com.codingbottle.redis.domain.post.service.LikesRedisService;
 import com.codingbottle.domain.image.entity.Image;
 import com.codingbottle.domain.image.service.ImageService;
 import com.codingbottle.domain.post.entity.Post;
@@ -30,11 +31,10 @@ public class PostService {
     private final PostQueryRepository postQueryRepository;
     private final ImageService imageService;
     private final LikesRedisService likesRedisService;
-    private final UserPostLikesService userPostLikesService;
 
     @Transactional
     @CacheEvict(value = "posts", allEntries = true, cacheManager = "postCacheManager")
-    public Post save(PostRequest postRequest, User user) {
+    public PostResponse save(PostRequest postRequest, User user) {
         Image image = imageService.findById(postRequest.imageId());
 
         Post post = Post.builder()
@@ -47,18 +47,7 @@ public class PostService {
             post.addHashtags(postRequest.hashtags());
         }
 
-        return postSimpleJPARepository.save(post);
-    }
-
-    @Transactional
-    public boolean toggleLikeStatus(User user, Long postId) {
-        Post post = findById(postId);
-        if(userPostLikesService.isAlreadyLikes(user, post)){
-            userPostLikesService.cancelLikes(user, post);
-            return false;
-        }
-        userPostLikesService.likesPut(user, post);
-        return true;
+        return PostResponse.of(postSimpleJPARepository.save(post));
     }
 
     @Transactional
@@ -72,16 +61,20 @@ public class PostService {
 
         post.update(postRequest.content(), postRequest.hashtags());
 
-        return getPostResponse(post, user);
+        return getPostResponse(post);
     }
 
     @Cacheable(value = "posts", key = "#pageable.pageNumber", unless = "#result == null", cacheManager = "postCacheManager")
-    public List<PostResponse> findAll(Pageable pageable, User user) {
-        List<Post> posts = postQueryRepository.finAll(pageable);
+    public List<PostResponse> findAll(Pageable pageable) {
+        List<Post> posts = getPosts(pageable);
 
         return posts.stream()
-                .map(post -> PostResponse.of(post, userPostLikesService.isAlreadyLikes(user, post)))
+                .map(PostResponse::of)
                 .collect(Collectors.toList());
+    }
+
+    public List<Post> getPosts(Pageable pageable) {
+        return postQueryRepository.finAll(pageable);
     }
 
     public Post findById(Long id) {
@@ -97,15 +90,15 @@ public class PostService {
         validWriter(id, user, post);
 
         imageService.delete(post.getImage());
-        likesRedisService.deleteLikesPost(post);
+        likesRedisService.deleteLikesPost(PostCacheData.from(post.getId()));
         postSimpleJPARepository.delete(post);
     }
 
-    public List<PostResponse> searchByKeyword(String keyword, User user) {
+    public List<PostResponse> searchByKeyword(String keyword) {
         List<Post> posts = postQueryRepository.searchByKeyword(keyword);
 
         return posts.stream()
-                .map(post -> PostResponse.of(post, userPostLikesService.isAlreadyLikes(user, post)))
+                .map(PostResponse::of)
                 .collect(Collectors.toList());
     }
 
@@ -130,8 +123,8 @@ public class PostService {
         }
     }
 
-    private PostResponse getPostResponse(Post post, User user) {
-        return PostResponse.of(post, userPostLikesService.isAlreadyLikes(user, post));
+    private PostResponse getPostResponse(Post post) {
+        return PostResponse.of(post);
     }
 
     private boolean isNotSameWriter(Post post, User user) {

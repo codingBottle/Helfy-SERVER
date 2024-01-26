@@ -13,6 +13,11 @@ spring:
       driver-class-name: ${spring.datasource.driver-class-name}
       data-source-properties:
         rewriteBatchedStatements: true
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: always
   jpa:
     generate-ddl: true
     hibernate:
@@ -73,6 +78,13 @@ springdoc:
 openweathermap:
   api-key: ${WEATHER_API_KEY}
   api-url: https://api.openweathermap.org/data/2.5/weather
+
+job-setting:
+  likes:
+    name: "LikesJob"
+    enabled: true
+    cron: "0 */2 * * * *"
+
 
 ---
 spring:

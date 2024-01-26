@@ -1,6 +1,6 @@
 package com.codingbottle.domain.post.service;
 
-import com.codingbottle.redis.service.LikesRedisService;
+import com.codingbottle.redis.domain.post.service.LikesRedisService;
 import com.codingbottle.domain.image.model.ImageResponse;
 import com.codingbottle.domain.image.service.ImageService;
 import com.codingbottle.domain.post.entity.Post;
@@ -71,9 +71,9 @@ class PostServiceTest {
         given(imageService.findById(anyLong())).willReturn(게시글1.getImage());
         given(postSimpleJPARepository.save(any(Post.class))).willReturn(게시글1);
         // when
-        Post post = postService.save(게시글_생성_요청1, 게시글1.getUser());
+        PostResponse post = postService.save(게시글_생성_요청1, 게시글1.getUser());
         // then
-        assertThat(post).isEqualTo(게시글1);
+        assertThat(post).isEqualTo(PostResponse.of(게시글1));
     }
 
     @Test
@@ -86,7 +86,7 @@ class PostServiceTest {
         // then
         assertAll(() -> {
             assertThat(post.content()).isEqualTo(게시글_수정_요청1.content());
-            assertThat(post.image()).isEqualTo(ImageResponse.from(게시글1.getImage()));
+            assertThat(post.image()).isEqualTo(ImageResponse.of(게시글1.getImage()));
             assertThat(post.hashtags()).isEqualTo(게시글_수정_요청1.hashtags());
         });
     }
@@ -132,9 +132,9 @@ class PostServiceTest {
 
         given(postQueryRepository.finAll(any(PageRequest.class))).willReturn(List.of(게시글1, 게시글2));
         // when
-        List<PostResponse> posts = postService.findAll(pageRequest,유저1);
+        List<PostResponse> posts = postService.findAll(pageRequest);
         // then
-        assertThat(posts).contains(PostResponse.from(게시글1), PostResponse.from(게시글2));
+        assertThat(posts).contains(PostResponse.of(게시글1), PostResponse.of(게시글2));
     }
 
     @Test
@@ -143,9 +143,9 @@ class PostServiceTest {
         // given
         given(postQueryRepository.searchByKeyword(any())).willReturn(List.of(게시글1));
         // when
-        List<PostResponse> posts = postService.searchByKeyword(any(String.class), 유저1);
+        List<PostResponse> posts = postService.searchByKeyword(any(String.class));
         // then
-        assertThat(posts).containsExactly(PostResponse.from(게시글1));
+        assertThat(posts).containsExactly(PostResponse.of(게시글1));
     }
 
     @Test
@@ -159,7 +159,7 @@ class PostServiceTest {
         // then
         assertAll(() -> {
             assertThat(post.content()).isEqualTo(게시글_수정_요청1.content());
-            assertThat(post.image()).isEqualTo(ImageResponse.from(게시글_수정_이미지2));
+            assertThat(post.image()).isEqualTo(ImageResponse.of(게시글_수정_이미지2));
             assertThat(post.hashtags()).isEqualTo(게시글_수정_요청1.hashtags());
         });
     }
@@ -171,12 +171,12 @@ class PostServiceTest {
         given(imageService.findById(anyLong())).willReturn(게시글3.getImage());
         given(postSimpleJPARepository.save(any(Post.class))).willReturn(게시글3);
         // when
-        Post post = postService.save(게시글_생성_요청2, 게시글1.getUser());
+        PostResponse post = postService.save(게시글_생성_요청2, 게시글1.getUser());
         // then
         assertAll(
-                () -> assertThat(post.getContent()).isEqualTo(게시글_생성_요청2.content()),
-                () -> assertThat(post.getImage()).isEqualTo(게시글3.getImage()),
-                () -> assertThat(post.getHashtags()).isEmpty()
+                () -> assertThat(post.content()).isEqualTo(게시글_생성_요청2.content()),
+                () -> assertThat(post.image()).isEqualTo(ImageResponse.of(게시글3.getImage())),
+                () -> assertThat(post.hashtags()).isEmpty()
         );
     }
 }

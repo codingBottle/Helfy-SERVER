@@ -62,5 +62,5 @@ jobs:
         port: ${{ secrets.REMOTE_SSH_PORT }}
         script: |
           cd docker
-          docker compose pull helfy-api
-          docker compose up -d helfy-api
+          docker-compose pull helfy-api helfy-batch
+          docker-compose up -d helfy-api helfy-batch

@@ -14,15 +14,10 @@ public record PostResponse(
         UserPostResponse user,
         ImageResponse image,
         int likeCount,
-        boolean likeStatus,
         LocalDateTime createdTime,
         LocalDateTime modifiedTime
 ) {
-    public static PostResponse of(Post post, Boolean likeStatus) {
-        return new PostResponse(post.getId(), post.getContent(), new ArrayList<>(post.getHashtags()), UserPostResponse.from(post.getUser()), ImageResponse.from(post.getImage()), post.getLikesCount(), likeStatus, post.getCreatedTime(), post.getModifiedTime());
-    }
-
-    public static PostResponse from(Post post) {
-        return new PostResponse(post.getId(), post.getContent(), new ArrayList<>(post.getHashtags()), UserPostResponse.from(post.getUser()), ImageResponse.from(post.getImage()), post.getLikes().size(), false, post.getCreatedTime(), post.getModifiedTime());
+    public static PostResponse of(Post post) {
+        return new PostResponse(post.getId(), post.getContent(), new ArrayList<>(post.getHashtags()), UserPostResponse.from(post.getUser()), ImageResponse.of(post.getImage()), post.getLikesCount(), post.getCreatedTime(), post.getModifiedTime());
     }
 }

@@ -5,7 +5,7 @@ import com.codingbottle.domain.quiz.model.UserQuizInfo;
 import com.codingbottle.domain.quiz.repo.UserQuizQueryRepository;
 import com.codingbottle.domain.quiz.repo.UserQuizSimpleJPARepository;
 import com.codingbottle.exception.ApplicationErrorException;
-import com.codingbottle.redis.service.QuizRankRedisService;
+import com.codingbottle.redis.domain.quiz.service.QuizRankRedisService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

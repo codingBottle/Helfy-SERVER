@@ -1,11 +1,13 @@
 package com.codingbottle.domain.rank.model;
 
+import com.codingbottle.redis.domain.quiz.model.QuizRankUserData;
+
 public record UserRankResponse(
         Long rank,
-        String nickname,
+        QuizRankUserData user,
         int score
 ) {
-    public static UserRankResponse of(Long rank, String nickname, int score) {
-        return new UserRankResponse(rank, nickname, score);
+    public static UserRankResponse of(Long rank, QuizRankUserData user, int score) {
+        return new UserRankResponse(rank, user, score);
     }
 }
