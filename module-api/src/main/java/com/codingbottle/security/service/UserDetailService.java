@@ -5,6 +5,8 @@ import com.codingbottle.domain.user.entity.User;
 import com.codingbottle.domain.user.event.UpdateUserInfoCacheEvent;
 import com.codingbottle.domain.user.repository.UserRepository;
 import com.codingbottle.domain.region.entity.Region;
+import com.codingbottle.exception.ApplicationErrorException;
+import com.codingbottle.exception.ApplicationErrorType;
 import com.google.firebase.auth.FirebaseToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CachePut;
@@ -56,7 +58,7 @@ public class UserDetailService implements UserDetailsService {
     @Cacheable(value = "user", key = "#firebaseToken.email", cacheManager = "authRedisCacheManager")
     public User updateByUsername(FirebaseToken firebaseToken) {
         User user = userRepository.findByFirebaseUid(firebaseToken.getUid())
-                .orElseThrow(() -> new UsernameNotFoundException("해당 유저를 찾을 수 없습니다."));
+                .orElseThrow(() -> new ApplicationErrorException(ApplicationErrorType.USER_NOT_FOUND));
 
         return user.updateByFirebaseToken(firebaseToken.getUid(), firebaseToken.getEmail());
     }

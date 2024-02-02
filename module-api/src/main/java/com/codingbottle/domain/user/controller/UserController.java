@@ -1,9 +1,12 @@
 package com.codingbottle.domain.user.controller;
 
 import com.codingbottle.domain.user.entity.User;
-import com.codingbottle.domain.user.model.UserNicknameRequest;
+import com.codingbottle.domain.user.model.UserInfoResponse;
+import com.codingbottle.domain.user.model.UserInfoUpdateRequest;
 import com.codingbottle.domain.user.model.UserResponse;
 import com.codingbottle.domain.user.service.UserService;
+import com.codingbottle.redis.domain.quiz.model.QuizRankUserData;
+import com.codingbottle.redis.domain.quiz.service.QuizRankRedisService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,17 +19,23 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final QuizRankRedisService quizRankRedisService;
 
-    @PatchMapping("/user/nickname")
+    @PatchMapping("/user")
     public ResponseEntity<UserResponse> updateNickname(@AuthenticationPrincipal User user,
-                                                       @RequestBody UserNicknameRequest nickname) {
-        User updateUser = userService.updateNickname(nickname, user);
+                                                       @RequestBody UserInfoUpdateRequest userInfoUpdateRequest) {
+        User updateUser = userService.updateInfo(userInfoUpdateRequest, user);
 
         return ResponseEntity.ok(UserResponse.of(updateUser));
     }
 
     @GetMapping("/user")
-    public ResponseEntity<UserResponse> getUser(@AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(UserResponse.of(user));
+    public ResponseEntity<UserInfoResponse> getUser(@AuthenticationPrincipal User user) {
+        QuizRankUserData quizRankUserData = QuizRankUserData.of(user.getId(), user.getNickname());
+
+        Long rank = quizRankRedisService.getRank(quizRankUserData);
+        int score = quizRankRedisService.getScore(quizRankUserData);
+
+        return ResponseEntity.ok(UserInfoResponse.of(user, rank, score));
     }
 }

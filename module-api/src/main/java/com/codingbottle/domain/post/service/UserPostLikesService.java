@@ -21,6 +21,8 @@ public class UserPostLikesService {
         Boolean likesExists = likesRedisService.isLikesExists(PostCacheData.from(postId), UserLikesCacheData.of(user.getId(), true));
         if (likesExists) {
             return true;
+        } else if (likesRedisService.isLikesExists(PostCacheData.from(postId), UserLikesCacheData.of(user.getId(), false))) {
+            return false;
         }
 
         userPostLikesRepository.findByPostIdAndUserId(postId, user.getId()).ifPresent(userPostLikes -> {
