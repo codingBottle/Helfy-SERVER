@@ -13,6 +13,7 @@ import java.util.List;
 
 import static com.codingbottle.docs.util.ApiDocumentUtils.*;
 import static com.codingbottle.fixture.DomainFixture.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -35,13 +36,9 @@ class RankControllerTest extends RestDocsTest {
         //given
         given(quizRankRedisService.getUsersRank()).willReturn(List.of(퀴즈_랭킹_유저1, 퀴즈_랭킹_유저2, 퀴즈_랭킹_유저3));
 
-        given(quizRankRedisService.getRank(퀴즈_랭킹_유저1)).willReturn(0L);
-        given(quizRankRedisService.getRank(퀴즈_랭킹_유저2)).willReturn(1L);
-        given(quizRankRedisService.getRank(퀴즈_랭킹_유저3)).willReturn(2L);
-
-        given(quizRankRedisService.getScore(퀴즈_랭킹_유저1)).willReturn(100);
-        given(quizRankRedisService.getScore(퀴즈_랭킹_유저2)).willReturn(90);
-        given(quizRankRedisService.getScore(퀴즈_랭킹_유저3)).willReturn(80);
+        given(quizRankRedisService.getRankInfo(퀴즈_랭킹_유저1)).willReturn(유저_랭킹_정보1);
+        given(quizRankRedisService.getRankInfo(퀴즈_랭킹_유저2)).willReturn(유저_랭킹_정보2);
+        given(quizRankRedisService.getRankInfo(퀴즈_랭킹_유저3)).willReturn(유저_랭킹_정보3);
         //when & then
         mvc.perform(get(REQUEST_URL)
                 .header("Authorization", "Bearer FirebaseToken"))
@@ -51,11 +48,12 @@ class RankControllerTest extends RestDocsTest {
                         getDocumentResponse(),
                         getAuthorizationHeader(),
                         responseFields(
-                                fieldWithPath("userRankResponses[].rank").description("순위").type("Number"),
-                                fieldWithPath("userRankResponses[].user").description("사용자 정보"),
-                                fieldWithPath("userRankResponses[].user.id").description("사용자 ID").type("Number"),
-                                fieldWithPath("userRankResponses[].user.nickname").description("사용자 닉네임"),
-                                fieldWithPath("userRankResponses[].score").description("점수").type("Number")
+                                fieldWithPath("userInfoWithRankInfoList[].rankInfo").description("사용자 순위 정보"),
+                                fieldWithPath("userInfoWithRankInfoList[].rankInfo.rank").description("순위").type("Number"),
+                                fieldWithPath("userInfoWithRankInfoList[].rankInfo.score").description("점수").type("Number"),
+                                fieldWithPath("userInfoWithRankInfoList[].userInfo").description("사용자 정보"),
+                                fieldWithPath("userInfoWithRankInfoList[].userInfo.id").description("사용자 ID").type("Number"),
+                                fieldWithPath("userInfoWithRankInfoList[].userInfo.nickname").description("사용자 닉네임")
                         )
                 ));
     }
@@ -64,6 +62,7 @@ class RankControllerTest extends RestDocsTest {
     @DisplayName("유저의 랭킹을 조회한다")
     void get_user_rank() throws Exception {
         //given
+        given(quizRankRedisService.getRankInfo(any())).willReturn(유저_랭킹_정보1);
         //when & then
         mvc.perform(get(REQUEST_URL + "/user")
                 .header("Authorization", "Bearer FirebaseToken"))
@@ -73,11 +72,12 @@ class RankControllerTest extends RestDocsTest {
                         getDocumentResponse(),
                         getAuthorizationHeader(),
                         responseFields(
-                                fieldWithPath("rank").description("순위").type("Number"),
-                                fieldWithPath("user").description("사용자 정보"),
-                                fieldWithPath("user.id").description("사용자 ID").type("Number"),
-                                fieldWithPath("user.nickname").description("사용자 닉네임"),
-                                fieldWithPath("score").description("점수").type("Number")
+                                fieldWithPath("rankInfo").description("사용자 순위 정보"),
+                                fieldWithPath("rankInfo.rank").description("순위").type("Number"),
+                                fieldWithPath("rankInfo.score").description("점수").type("Number"),
+                                fieldWithPath("userInfo").description("사용자 정보"),
+                                fieldWithPath("userInfo.id").description("사용자 ID").type("Number"),
+                                fieldWithPath("userInfo.nickname").description("사용자 닉네임")
                         )
                 ));
     }

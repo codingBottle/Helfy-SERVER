@@ -8,7 +8,7 @@ import lombok.Builder;
 public record UserResponse(
         Region region,
         String nickname) {
-    public static UserResponse of(User user) {
+    public static UserResponse from(User user) {
         return UserResponse.builder()
                 .nickname(user.getNickname())
                 .region(user.getRegion())

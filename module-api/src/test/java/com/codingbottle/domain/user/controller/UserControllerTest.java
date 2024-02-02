@@ -64,8 +64,7 @@ class UserControllerTest extends RestDocsTest {
     @WithAuthUser
     void get_user() throws Exception {
         //given
-        given(quizRankRedisService.getRank(any())).willReturn(1L);
-        given(quizRankRedisService.getScore(any())).willReturn(100);
+        given(quizRankRedisService.getRankInfo(any())).willReturn(유저_랭킹_정보1);
         //when & then
         mvc.perform(get(REQUEST_URL)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -79,10 +78,12 @@ class UserControllerTest extends RestDocsTest {
 
     private static ResponseFieldsSnippet responseFieldsByUser() {
         return responseFields(
-                fieldWithPath("nickname").description("사용자 이름").type("String"),
-                fieldWithPath("region").description("사용자 지역").type("String"),
-                fieldWithPath("rank").description("사용자 퀴즈 랭킹").type("Number"),
-                fieldWithPath("score").description("사용자 퀴즈 점수").type("Number")
+                fieldWithPath("userInfo").description("사용자 정보"),
+                fieldWithPath("userInfo.nickname").description("사용자 이름").type("String"),
+                fieldWithPath("userInfo.region").description("사용자 지역").type("String"),
+                fieldWithPath("rankInfo").description("사용자 랭킹 정보"),
+                fieldWithPath("rankInfo.rank").description("사용자 퀴즈 랭킹").type("Number"),
+                fieldWithPath("rankInfo.score").description("사용자 퀴즈 점수").type("Number")
 
         );
     }

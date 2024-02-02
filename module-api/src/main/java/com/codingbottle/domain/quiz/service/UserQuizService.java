@@ -3,7 +3,7 @@ package com.codingbottle.domain.quiz.service;
 import com.codingbottle.domain.quiz.model.QuizResponse;
 import com.codingbottle.domain.user.entity.User;
 import com.codingbottle.domain.user.event.UpdateUserInfoRedisEvent;
-import com.codingbottle.redis.domain.quiz.model.QuizRankUserData;
+import com.codingbottle.redis.domain.quiz.model.UserInfo;
 import com.codingbottle.redis.domain.quiz.service.QuizRankRedisService;
 import com.codingbottle.domain.quiz.entity.Quiz;
 import com.codingbottle.domain.quiz.entity.QuizStatus;
@@ -33,8 +33,8 @@ public class UserQuizService {
 
     @EventListener
     public void handleUserUpdate(UpdateUserInfoRedisEvent event) {
-        int score = quizRankRedisService.removeUserWithScore(QuizRankUserData.of(event.getUser().getId(), event.getUser().getNickname()));
-        quizRankRedisService.addScore(QuizRankUserData.of(event.getUser().getId(), event.getUserUpdateInfo().nickname()), score);
+        int score = quizRankRedisService.removeUserWithScore(UserInfo.of(event.getUser().getId(), event.getUser().getNickname()));
+        quizRankRedisService.addScore(UserInfo.of(event.getUser().getId(), event.getUserUpdateInfo().nickname()), score);
     }
 
     public List<QuizResponse> findRandomWrongQuizzesByUser(User user) {
@@ -98,7 +98,7 @@ public class UserQuizService {
     }
 
     private void plusUserQuizScore(User user) {
-        quizRankRedisService.updateScore(QuizRankUserData.of(user.getId(), user.getNickname()), 10);
+        quizRankRedisService.updateScore(UserInfo.of(user.getId(), user.getNickname()), 10);
     }
 
     private void handleWrongAnswer(User user, Long quizId, QuizStatusRequest quizStatusRequest) {
@@ -108,7 +108,7 @@ public class UserQuizService {
     }
 
     public UserQuizInfo getUserQuizInfo(User user) {
-        int score = quizRankRedisService.getScore(QuizRankUserData.of(user.getId(), user.getNickname()));
+        int score = quizRankRedisService.getScore(UserInfo.of(user.getId(), user.getNickname()));
         return UserQuizInfo.from(user.getNickname(), score);
     }
 }
