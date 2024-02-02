@@ -1,10 +1,11 @@
 package com.codingbottle.domain.rank.controller;
 
+import com.codingbottle.domain.rank.model.UserInfoWithRankInfo;
 import com.codingbottle.domain.user.entity.User;
-import com.codingbottle.redis.domain.quiz.model.QuizRankUserData;
+import com.codingbottle.redis.domain.quiz.model.UserInfo;
+import com.codingbottle.redis.domain.quiz.model.RankInfo;
 import com.codingbottle.redis.domain.quiz.service.QuizRankRedisService;
 import com.codingbottle.domain.rank.model.UsersRankResponse;
-import com.codingbottle.domain.rank.model.UserRankResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,21 +26,21 @@ public class RankController {
 
     @GetMapping
     public ResponseEntity<UsersRankResponse> getRankResponse() {
-        List<QuizRankUserData> usersData = quizRankRedisService.getUsersRank();
+        List<UserInfo> usersData = quizRankRedisService.getUsersRank();
 
-        List<UserRankResponse> rank = usersData.stream()
-                .map(user -> UserRankResponse.of(quizRankRedisService.getRank(user) + 1, user, quizRankRedisService.getScore(user)))
+        List<UserInfoWithRankInfo> rank = usersData.stream()
+                .map(userInfo -> UserInfoWithRankInfo.of(userInfo, quizRankRedisService.getRankInfo(userInfo)))
+                .filter(userInfoWithRankInfo -> userInfoWithRankInfo.rankInfo().rank() != 0)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(UsersRankResponse.of(rank));
     }
 
     @GetMapping("/user")
-    public ResponseEntity<UserRankResponse> getUserRank(@AuthenticationPrincipal User user) {
-        QuizRankUserData quizRankUserData = QuizRankUserData.of(user.getId(), user.getNickname());
-        Long rank = quizRankRedisService.getRank(quizRankUserData);
-        int score = quizRankRedisService.getScore(quizRankUserData);
-        return ResponseEntity.ok(UserRankResponse.of(rank + 1, quizRankUserData, score));
-    }
+    public ResponseEntity<UserInfoWithRankInfo> getUserRank(@AuthenticationPrincipal User user) {
+        UserInfo userInfo = UserInfo.of(user.getId(), user.getNickname());
+        RankInfo rankInfo = quizRankRedisService.getRankInfo(userInfo);
 
+        return ResponseEntity.ok(UserInfoWithRankInfo.of(userInfo, rankInfo));
+    }
 }

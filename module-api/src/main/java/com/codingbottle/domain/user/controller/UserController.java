@@ -1,11 +1,12 @@
 package com.codingbottle.domain.user.controller;
 
 import com.codingbottle.domain.user.entity.User;
-import com.codingbottle.domain.user.model.UserInfoResponse;
 import com.codingbottle.domain.user.model.UserInfoUpdateRequest;
 import com.codingbottle.domain.user.model.UserResponse;
+import com.codingbottle.domain.user.model.UserResponseWithRankInfo;
 import com.codingbottle.domain.user.service.UserService;
-import com.codingbottle.redis.domain.quiz.model.QuizRankUserData;
+import com.codingbottle.redis.domain.quiz.model.UserInfo;
+import com.codingbottle.redis.domain.quiz.model.RankInfo;
 import com.codingbottle.redis.domain.quiz.service.QuizRankRedisService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -26,16 +27,14 @@ public class UserController {
                                                        @RequestBody UserInfoUpdateRequest userInfoUpdateRequest) {
         User updateUser = userService.updateInfo(userInfoUpdateRequest, user);
 
-        return ResponseEntity.ok(UserResponse.of(updateUser));
+        return ResponseEntity.ok(UserResponse.from(updateUser));
     }
 
     @GetMapping("/user")
-    public ResponseEntity<UserInfoResponse> getUser(@AuthenticationPrincipal User user) {
-        QuizRankUserData quizRankUserData = QuizRankUserData.of(user.getId(), user.getNickname());
+    public ResponseEntity<UserResponseWithRankInfo> getUser(@AuthenticationPrincipal User user) {
+        UserInfo userInfo = UserInfo.of(user.getId(), user.getNickname());
+        RankInfo rankInfo = quizRankRedisService.getRankInfo(userInfo);
 
-        Long rank = quizRankRedisService.getRank(quizRankUserData);
-        int score = quizRankRedisService.getScore(quizRankUserData);
-
-        return ResponseEntity.ok(UserInfoResponse.of(user, rank, score));
+        return ResponseEntity.ok(UserResponseWithRankInfo.of(UserResponse.from(user), rankInfo));
     }
 }

@@ -17,7 +17,8 @@ import com.codingbottle.domain.quiz.model.QuizStatusRequest;
 import com.codingbottle.domain.quiz.model.UserQuizInfo;
 import com.codingbottle.domain.region.entity.Region;
 import com.codingbottle.domain.user.model.UserInfoUpdateRequest;
-import com.codingbottle.redis.domain.quiz.model.QuizRankUserData;
+import com.codingbottle.redis.domain.quiz.model.UserInfo;
+import com.codingbottle.redis.domain.quiz.model.RankInfo;
 
 import java.util.HashMap;
 import java.util.List;
@@ -177,10 +178,16 @@ public class DomainFixture {
 
     public static final UserQuizInfo 퀴즈정보1 = new UserQuizInfo("닉네임", 10);
 
-    public static final QuizRankUserData 퀴즈_랭킹_유저1 = new QuizRankUserData(1L, "닉네임");
+    public static final UserInfo 퀴즈_랭킹_유저1 = new UserInfo(1L, "닉네임");
 
-    public static final QuizRankUserData 퀴즈_랭킹_유저2 = new QuizRankUserData(2L, "닉네임");
+    public static final UserInfo 퀴즈_랭킹_유저2 = new UserInfo(2L, "닉네임");
 
-    public static final QuizRankUserData 퀴즈_랭킹_유저3 = new QuizRankUserData(3L, "닉네임");
+    public static final UserInfo 퀴즈_랭킹_유저3 = new UserInfo(3L, "닉네임");
+
+    public static final RankInfo 유저_랭킹_정보1 = RankInfo.of(1, 30);
+
+    public static final RankInfo 유저_랭킹_정보2 = RankInfo.of(2, 20);
+
+    public static final RankInfo 유저_랭킹_정보3 = RankInfo.of(3, 10);
 }
 

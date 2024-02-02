@@ -3,9 +3,9 @@ package com.codingbottle.domain.rank.model;
 import java.util.List;
 
 public record UsersRankResponse(
-        List<UserRankResponse> userRankResponses
+        List<UserInfoWithRankInfo> userInfoWithRankInfoList
 ) {
-    public static UsersRankResponse of(List<UserRankResponse> userRankResponses) {
-        return new UsersRankResponse(userRankResponses);
+    public static UsersRankResponse of(List<UserInfoWithRankInfo> userInfoWithRankInfoList) {
+        return new UsersRankResponse(userInfoWithRankInfoList);
     }
 }
