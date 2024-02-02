@@ -42,7 +42,23 @@ public class QuizRankRedisService {
                 .collect(Collectors.toList());
     }
 
-    private void remove(QuizRankUserData user) {
+    public int removeUserWithScore(UserInfo user) {
+        int score = getScore(user);
+        remove(user);
+        return score;
+    }
+
+    public RankInfo getRankInfo(UserInfo user) {
+        Long rank = getRank(user);
+        int score = getScore(user);
+
+        if (rank == null || score == 0) {
+            return RankInfo.of(0, score);
+        }
+        return RankInfo.of(rank + 1, score);
+    }
+
+    private void remove(UserInfo user) {
         quizRankRedisTemplate.opsForZSet().remove(QUIZ_RANK_KEY, user);
     }
 
@@ -60,10 +76,8 @@ public class QuizRankRedisService {
         return(QuizRankUserData) rank.getValue();
     }
 
-
-    public long getRank(QuizRankUserData user) {
-        long rank = Optional.ofNullable(quizRankRedisTemplate.opsForZSet().rank(QUIZ_RANK_KEY, user)).orElse(-1L);
-        return rank + 1;
+    private Long getRank(UserInfo user) {
+        return quizRankRedisTemplate.opsForZSet().reverseRank(QUIZ_RANK_KEY, user);
     }
 }
 
