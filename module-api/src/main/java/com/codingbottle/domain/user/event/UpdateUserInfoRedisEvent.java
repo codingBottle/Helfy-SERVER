@@ -11,15 +11,9 @@ public class UpdateUserInfoRedisEvent extends ApplicationEvent {
     private final User user;
     private final UserUpdateInfo userUpdateInfo;
 
-    public UpdateUserInfoRedisEvent(Object source, User user, String nickname) {
+    public UpdateUserInfoRedisEvent(Object source, User user, String nickname, Region region) {
         super(source);
         this.user = user;
-        this.userUpdateInfo = UserUpdateInfo.of(nickname, user.getRegion());
-    }
-
-    public UpdateUserInfoRedisEvent(Object source, User user, Region region) {
-        super(source);
-        this.user = user;
-        this.userUpdateInfo = UserUpdateInfo.of(user.getNickname(), region);
+        this.userUpdateInfo = UserUpdateInfo.of(nickname, region);
     }
 }

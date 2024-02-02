@@ -15,9 +15,8 @@ import com.codingbottle.domain.quiz.entity.QuizStatus;
 import com.codingbottle.domain.quiz.entity.QuizType;
 import com.codingbottle.domain.quiz.model.QuizStatusRequest;
 import com.codingbottle.domain.quiz.model.UserQuizInfo;
-import com.codingbottle.domain.rank.model.UserRankResponse;
 import com.codingbottle.domain.region.entity.Region;
-import com.codingbottle.domain.user.model.UserNicknameRequest;
+import com.codingbottle.domain.user.model.UserInfoUpdateRequest;
 import com.codingbottle.redis.domain.quiz.model.QuizRankUserData;
 
 import java.util.HashMap;
@@ -155,7 +154,6 @@ public class DomainFixture {
             .user(유저1)
             .quizStatus(QuizStatus.WRONG)
             .build();
-    public static final UserNicknameRequest 유저_닉네임_변경_요청1 = new UserNicknameRequest("닉네임 변경");
 
     public static final  Image 정보_이미지1 = Image.builder()
             .directory(Directory.INFORMATION)
@@ -170,6 +168,8 @@ public class DomainFixture {
             .youtube("유튜브")
             .image(정보_이미지1)
             .build();
+
+    public static final UserInfoUpdateRequest 유저_정보_수정_요청1 = new UserInfoUpdateRequest("업데이트 닉네임", Region.DAEGU);
 
     public static final InformationResponse 정보_응답1 = InformationResponse.from(정보1);
 

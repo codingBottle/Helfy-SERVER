@@ -15,16 +15,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.codingbottle.docs.util.ApiDocumentUtils.*;
-import static com.codingbottle.fixture.DomainFixture.유저1;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("RegionController 테스트")
@@ -55,29 +48,4 @@ class RegionControllerTest extends RestDocsTest {
                         getDocumentResponse(),
                         getAuthorizationHeader()));
     }
-
-    @Test
-    @DisplayName("사용자 지역 수정")
-    void update_user_region() throws Exception {
-        //given
-        given(regionService.updateRegions(any(Region.class), any(User.class))).willReturn(유저1);
-        //when & then
-        mvc.perform(patch("/api/v1/user/regions")
-                        .queryParam("region", "BUSAN")
-                        .header("Authorization", "Bearer FirebaseToken"))
-                .andExpect(status().isOk())
-                .andDo(document("update-user-region",
-                        getDocumentRequest(),
-                        getDocumentResponse(),
-                        getAuthorizationHeader()
-                        , queryParameters(
-                                parameterWithName("region")
-                                        .description("변경 지역 (ex. SEOUL, GYEONGGI, INCHEON)")
-                        ),
-                        responseFields(
-                                fieldWithPath("nickname").description("사용자 이름"),
-                                fieldWithPath("region").description("사용자 지역")
-                        )));
-    }
-
 }

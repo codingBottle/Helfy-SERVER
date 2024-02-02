@@ -4,13 +4,11 @@ import com.codingbottle.domain.user.entity.User;
 import com.codingbottle.domain.user.event.UpdateUserInfoCacheEvent;
 import com.codingbottle.domain.user.event.UpdateUserInfoRedisEvent;
 import com.codingbottle.domain.user.repository.UserRepository;
-import com.codingbottle.domain.user.model.UserNicknameRequest;
+import com.codingbottle.domain.user.model.UserInfoUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -19,17 +17,13 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public User updateNickname(UserNicknameRequest userNicknameRequest, User user) {
-        updateNicknameEvent(userNicknameRequest, user);
+    public User updateInfo(UserInfoUpdateRequest userInfoUpdateRequest, User user) {
+        updateNicknameEvent(userInfoUpdateRequest, user);
         return userRepository.save(user);
     }
 
-    private void updateNicknameEvent(UserNicknameRequest userNicknameRequest, User user) {
-        applicationEventPublisher.publishEvent(new UpdateUserInfoRedisEvent(this, user, userNicknameRequest.nickname()));
-        applicationEventPublisher.publishEvent(new UpdateUserInfoCacheEvent(this, user.updateNickname(userNicknameRequest.nickname())));
-    }
-
-    public List<User> findAllById(Iterable<Long> iterable) {
-        return userRepository.findAllById(iterable);
+    private void updateNicknameEvent(UserInfoUpdateRequest userInfoUpdateRequest, User user) {
+        applicationEventPublisher.publishEvent(new UpdateUserInfoRedisEvent(this, user, userInfoUpdateRequest.nickname(), userInfoUpdateRequest.region()));
+        applicationEventPublisher.publishEvent(new UpdateUserInfoCacheEvent(this, user.updateInfo(userInfoUpdateRequest.nickname(), userInfoUpdateRequest.region())));
     }
 }

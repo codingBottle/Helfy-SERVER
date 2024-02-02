@@ -42,16 +42,6 @@ public class User implements Serializable {
         return this;
     }
 
-    public User updateRegion(Region region) {
-        this.region = region;
-        return this;
-    }
-
-    public User updateNickname(String nickname) {
-        this.nickname = nickname;
-        return this;
-    }
-
     public User updateInfo(String nickname, Region region) {
         this.nickname = nickname;
         this.region = region;

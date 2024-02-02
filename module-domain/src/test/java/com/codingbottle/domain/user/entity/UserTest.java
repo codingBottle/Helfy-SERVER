@@ -60,24 +60,6 @@ class UserTest {
     }
 
     @Test
-    @DisplayName("닉네임 업데이트 테스트")
-    void updateNickname() {
-        // when
-        user.updateNickname("newNickname");
-        // then
-        assertThat(user.getNickname()).isEqualTo("newNickname");
-    }
-
-    @Test
-    @DisplayName("지역 업데이트 테스트")
-    void updateRegion() {
-        // when
-        user.updateRegion(Region.SEOUL);
-        // then
-        assertThat(user.getRegion()).isEqualTo(Region.SEOUL);
-    }
-
-    @Test
     @DisplayName("User equals 테스트")
     void equals() {
         // when

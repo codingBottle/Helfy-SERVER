@@ -11,10 +11,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationEventPublisher;
 
 import static com.codingbottle.fixture.DomainFixture.유저1;
-import static com.codingbottle.fixture.DomainFixture.유저_닉네임_변경_요청1;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
+import static com.codingbottle.fixture.DomainFixture.유저_정보_수정_요청1;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
+
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -28,13 +29,16 @@ class UserServiceTest {
     private UserRepository userRepository;
 
     @Test
-    @DisplayName("사용자의 닉네임을 변경한다.")
-    void update_nickname() {
-        //given
-        given(userRepository.save(any())).willReturn(유저1.updateNickname(유저_닉네임_변경_요청1.nickname()));
-        //when
-        User user = userService.updateNickname(유저_닉네임_변경_요청1, 유저1);
-        //then
-        assertThat(user.getNickname()).isEqualTo(유저_닉네임_변경_요청1.nickname());
+    @DisplayName("사용자 정보를 변경한다.")
+    void updateInfo() {
+        // given
+        given(userRepository.save(유저1)).willReturn(유저1.updateInfo(유저_정보_수정_요청1.nickname(), 유저_정보_수정_요청1.region()));
+        // when
+        User user = userService.updateInfo(유저_정보_수정_요청1, 유저1);
+        // then
+        assertAll(
+                () -> assertThat(user.getNickname()).isEqualTo(유저_정보_수정_요청1.nickname()),
+                () -> assertThat(user.getRegion()).isEqualTo(유저_정보_수정_요청1.region())
+        );
     }
 }
