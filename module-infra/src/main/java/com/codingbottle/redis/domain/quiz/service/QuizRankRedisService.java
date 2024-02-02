@@ -61,9 +61,9 @@ public class QuizRankRedisService {
     }
 
 
-    public Long getRank(QuizRankUserData user) {
-        Long rank = quizRankRedisTemplate.opsForZSet().rank(QUIZ_RANK_KEY, user);
-        return Optional.ofNullable(rank).orElse(-1L);
+    public long getRank(QuizRankUserData user) {
+        long rank = Optional.ofNullable(quizRankRedisTemplate.opsForZSet().rank(QUIZ_RANK_KEY, user)).orElse(-1L);
+        return rank + 1;
     }
 }
 

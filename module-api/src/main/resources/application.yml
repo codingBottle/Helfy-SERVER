@@ -29,6 +29,7 @@ spring:
         jdbc.batch_size: 10
         order_inserts: true
         order_updates: true
+        format_sql: true
     show-sql: true
     open-in-view: false
   security:
@@ -85,6 +86,13 @@ job-setting:
     enabled: true
     cron: "0 */2 * * * *"
 
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
 
 ---
 spring:
