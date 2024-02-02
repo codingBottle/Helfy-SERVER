@@ -30,7 +30,12 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<UserResponse> getUser(@AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(UserResponse.of(user));
+    public ResponseEntity<UserInfoResponse> getUser(@AuthenticationPrincipal User user) {
+        QuizRankUserData quizRankUserData = QuizRankUserData.of(user.getId(), user.getNickname());
+
+        Long rank = quizRankRedisService.getRank(quizRankUserData);
+        int score = quizRankRedisService.getScore(quizRankUserData);
+
+        return ResponseEntity.ok(UserInfoResponse.of(user, rank, score));
     }
 }
