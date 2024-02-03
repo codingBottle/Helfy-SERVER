@@ -64,7 +64,7 @@ public class PostService {
         return getPostResponse(post);
     }
 
-    @Cacheable(value = "posts", key = "#pageable.pageNumber", unless = "#result == null", cacheManager = "postCacheManager")
+    @Cacheable(value = "posts", key = "#pageable.pageNumber", cacheManager = "postCacheManager", sync = true)
     public List<PostResponse> findAll(Pageable pageable) {
         List<Post> posts = getPosts(pageable);
 
