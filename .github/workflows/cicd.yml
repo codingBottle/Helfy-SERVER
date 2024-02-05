@@ -50,7 +50,7 @@ jobs:
 
     # gradle Jib를 이용해 이미지를 만들고 원격 저장소에 Push
     - name: Setup Jib with Gradle
-      run: ./gradlew :module-api:jib
+      run: ./gradlew jib
 
     # ssh로 접속해 재배포
     - name: Deploy
