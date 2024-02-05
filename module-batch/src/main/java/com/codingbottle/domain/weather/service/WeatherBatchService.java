@@ -5,7 +5,7 @@ import com.codingbottle.domain.weather.model.CurrentWeatherRequest;
 import com.codingbottle.exception.ApplicationErrorException;
 import com.codingbottle.exception.ApplicationErrorType;
 import com.codingbottle.redis.domain.weather.model.WeatherCode;
-import com.codingbottle.redis.domain.weather.model.WeatherResponse;
+import com.codingbottle.redis.domain.weather.model.WeatherInfo;
 import com.codingbottle.redis.domain.weather.service.WeatherRedisService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.annotation.PostConstruct;
@@ -43,14 +43,14 @@ public class WeatherBatchService {
         }
     }
 
-    private WeatherResponse getWeather(Region region) {
+    private WeatherInfo getWeather(Region region) {
         CurrentWeatherRequest currentWeatherRequest = getRequestCurrentWeather(region);
 
         if (currentWeatherRequest == null) {
             throw new ApplicationErrorException(ApplicationErrorType.WEATHER_NOT_FOUND, "날씨 정보를 가져오는데 실패했습니다.");
         }
 
-        return WeatherResponse.of(WeatherCode.of(currentWeatherRequest.weather().get(0).id()),
+        return WeatherInfo.of(WeatherCode.of(currentWeatherRequest.weather().get(0).id()),
                 currentWeatherRequest.main().temp(),
                 currentWeatherRequest.main().humidity());
     }

@@ -1,6 +1,6 @@
 package com.codingbottle.redis.domain.weather.service;
 
-import com.codingbottle.redis.domain.weather.model.WeatherResponse;
+import com.codingbottle.redis.domain.weather.model.WeatherInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -13,11 +13,11 @@ public class WeatherRedisService {
 
 
 
-    public void setWeatherData(String region, WeatherResponse weather) throws JsonProcessingException {
+    public void setWeatherData(String region, WeatherInfo weather) throws JsonProcessingException {
         weatherRedisTemplate.opsForValue().set(region, weather);
     }
 
-    public WeatherResponse getWeatherData(String region) throws JsonProcessingException {
-        return (WeatherResponse) weatherRedisTemplate.opsForValue().get(region);
+    public WeatherInfo getWeatherData(String region) throws JsonProcessingException {
+        return (WeatherInfo) weatherRedisTemplate.opsForValue().get(region);
     }
 }
