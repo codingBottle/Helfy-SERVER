@@ -43,7 +43,7 @@ class UserControllerTest extends RestDocsTest {
         //given
         given(userService.updateInfo(any(UserInfoUpdateRequest.class), any(User.class))).willReturn(유저1);
         //when & then
-        mvc.perform(patch(REQUEST_URL )
+        mvc.perform(patch(REQUEST_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(createJson(유저_정보_수정_요청1))
                         .header("Authorization", "Bearer FirebaseToken"))
@@ -76,11 +76,34 @@ class UserControllerTest extends RestDocsTest {
                         responseFieldsByUser()));
     }
 
+    @Test
+    @DisplayName("사용자의 프로필 이미지를 변경한다.")
+    @WithAuthUser
+    void update_profile_image() throws Exception {
+        //given
+        given(userService.updateProfileImage(any(User.class), any())).willReturn(유저1);
+        //when & then
+        mvc.perform(patch(REQUEST_URL + "/image")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(createJson(유저_프로필_이미지_수정_요청1))
+                        .header("Authorization", "Bearer FirebaseToken"))
+                .andExpect(status().isOk())
+                .andDo(document("user-profile-image-update",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        getAuthorizationHeader(),
+                        requestFields(
+                                fieldWithPath("id").description("변경할 이미지 ID")
+                        ),
+                        responseFieldsByUpdateUser()));
+    }
+
     private static ResponseFieldsSnippet responseFieldsByUser() {
         return responseFields(
                 fieldWithPath("userInfo").description("사용자 정보"),
                 fieldWithPath("userInfo.nickname").description("사용자 이름").type("String"),
                 fieldWithPath("userInfo.region").description("사용자 지역").type("String"),
+                fieldWithPath("userInfo.profileImageUrl").description("사용자 프로필 이미지").type("String"),
                 fieldWithPath("rankInfo").description("사용자 랭킹 정보"),
                 fieldWithPath("rankInfo.rank").description("사용자 퀴즈 랭킹").type("Number"),
                 fieldWithPath("rankInfo.score").description("사용자 퀴즈 점수").type("Number")
@@ -91,7 +114,8 @@ class UserControllerTest extends RestDocsTest {
     private static ResponseFieldsSnippet responseFieldsByUpdateUser() {
         return responseFields(
                 fieldWithPath("nickname").description("사용자 이름").type("String"),
-                fieldWithPath("region").description("사용자 지역").type("String")
-        );
+                fieldWithPath("region").description("사용자 지역").type("String"),
+                fieldWithPath("profileImageUrl").description("사용자 프로필 이미지").type("String")
+       );
     }
 }

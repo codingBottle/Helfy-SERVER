@@ -1,5 +1,7 @@
 package com.codingbottle.domain.user.entity;
 
+import com.codingbottle.domain.image.entity.Directory;
+import com.codingbottle.domain.image.entity.Image;
 import com.codingbottle.domain.region.entity.Region;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,12 +20,19 @@ class UserTest {
 
     @BeforeEach
     void setUp() {
+        Image profileImage = Image.builder()
+                .imageUrl("imageUrl")
+                .convertImageName("convertImageName")
+                .directory(Directory.USER)
+                .build();
+
         user = User.builder()
                 .firebaseUid(FIREBASE_UID)
                 .nickname(NICKNAME)
                 .email(EMAIL)
                 .role(Role.ROLE_USER)
                 .region(Region.NONE)
+                .profileImage("imageUrl")
                 .build();
 
         user2 = User.builder()
@@ -32,6 +41,7 @@ class UserTest {
                 .email(EMAIL)
                 .role(Role.ROLE_USER)
                 .region(Region.NONE)
+                .profileImage("imageUrl")
                 .build();
     }
     @Test
@@ -74,14 +84,7 @@ class UserTest {
         // when
         String result = user.toString();
         // then
-        assertThat(result).isEqualTo("User{" +
-                "id=" + "null" +
-                ", firebaseUid='" + "firebaseUid" + '\'' +
-                ", nickname='" + "nickname" + '\'' +
-                ", role=" + "ROLE_USER" +
-                ", email='" + "email" + '\'' +
-                ", region=" + "NONE" +
-                '}');
+        assertThat(result).isEqualTo("User{id=null, firebaseUid='firebaseUid', nickname='nickname', role=ROLE_USER, email='email', region=NONE, profileImage=imageUrl}");
     }
 
     @Test

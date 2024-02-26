@@ -19,7 +19,7 @@ public record InformationResponse(
                 information.getContent(),
                 information.getNews(),
                 information.getYoutube(),
-                ImageResponse.of(information.getImage())
+                ImageResponse.from(information.getImage())
         );
     }
 }

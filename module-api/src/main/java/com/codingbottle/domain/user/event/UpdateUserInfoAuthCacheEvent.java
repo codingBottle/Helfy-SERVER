@@ -5,10 +5,10 @@ import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 
 @Getter
-public class UpdateUserInfoCacheEvent extends ApplicationEvent {
+public class UpdateUserInfoAuthCacheEvent extends ApplicationEvent {
     private final User user;
 
-    public UpdateUserInfoCacheEvent(Object source, User user) {
+    public UpdateUserInfoAuthCacheEvent(Object source, User user) {
         super(source);
         this.user = user;
     }

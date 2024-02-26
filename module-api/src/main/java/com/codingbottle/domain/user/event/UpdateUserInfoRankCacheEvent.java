@@ -7,11 +7,11 @@ import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 
 @Getter
-public class UpdateUserInfoRedisEvent extends ApplicationEvent {
+public class UpdateUserInfoRankCacheEvent extends ApplicationEvent {
     private final User user;
     private final UserUpdateInfo userUpdateInfo;
 
-    public UpdateUserInfoRedisEvent(Object source, User user, String nickname, Region region) {
+    public UpdateUserInfoRankCacheEvent(Object source, User user, String nickname, Region region) {
         super(source);
         this.user = user;
         this.userUpdateInfo = UserUpdateInfo.of(nickname, region);

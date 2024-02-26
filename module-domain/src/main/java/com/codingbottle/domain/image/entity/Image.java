@@ -6,7 +6,6 @@ import lombok.*;
 
 @Getter
 @Entity
-@Table(name = "image")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -30,5 +29,15 @@ public class Image extends BaseEntity {
         this.imageUrl = imageUrl;
         this.directory = directory;
         this.convertImageName = convertImageName;
+    }
+
+    @Override
+    public String toString() {
+        return "Image{" +
+                "id=" + id +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", directory=" + directory +
+                ", convertImageName='" + convertImageName + '\'' +
+                '}';
     }
 }
