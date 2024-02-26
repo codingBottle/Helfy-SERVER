@@ -20,6 +20,7 @@ public class CoreDomainFixture {
             .email("helfy@gmail.com")
             .region(Region.SEOUL)
             .role(Role.ROLE_USER)
+            .profileImage("https://d1csu9i9ktup9e.cloudfront.net/default.png")
             .build();
 
     public static final Quiz 퀴즈1 = Quiz.builder()
