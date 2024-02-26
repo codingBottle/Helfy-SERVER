@@ -18,6 +18,6 @@ public record PostResponse(
         LocalDateTime modifiedTime
 ) {
     public static PostResponse of(Post post) {
-        return new PostResponse(post.getId(), post.getContent(), new ArrayList<>(post.getHashtags()), UserPostResponse.from(post.getUser()), ImageResponse.of(post.getImage()), post.getLikesCount(), post.getCreatedTime(), post.getModifiedTime());
+        return new PostResponse(post.getId(), post.getContent(), new ArrayList<>(post.getHashtags()), UserPostResponse.from(post.getUser()), ImageResponse.from(post.getImage()), post.getLikesCount(), post.getCreatedTime(), post.getModifiedTime());
     }
 }

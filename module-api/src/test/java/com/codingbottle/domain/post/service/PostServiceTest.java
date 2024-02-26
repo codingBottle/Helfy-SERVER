@@ -86,7 +86,7 @@ class PostServiceTest {
         // then
         assertAll(() -> {
             assertThat(post.content()).isEqualTo(게시글_수정_요청1.content());
-            assertThat(post.image()).isEqualTo(ImageResponse.of(게시글1.getImage()));
+            assertThat(post.image()).isEqualTo(ImageResponse.from(게시글1.getImage()));
             assertThat(post.hashtags()).isEqualTo(게시글_수정_요청1.hashtags());
         });
     }
@@ -159,7 +159,7 @@ class PostServiceTest {
         // then
         assertAll(() -> {
             assertThat(post.content()).isEqualTo(게시글_수정_요청1.content());
-            assertThat(post.image()).isEqualTo(ImageResponse.of(게시글_수정_이미지2));
+            assertThat(post.image()).isEqualTo(ImageResponse.from(게시글_수정_이미지2));
             assertThat(post.hashtags()).isEqualTo(게시글_수정_요청1.hashtags());
         });
     }
@@ -175,7 +175,7 @@ class PostServiceTest {
         // then
         assertAll(
                 () -> assertThat(post.content()).isEqualTo(게시글_생성_요청2.content()),
-                () -> assertThat(post.image()).isEqualTo(ImageResponse.of(게시글3.getImage())),
+                () -> assertThat(post.image()).isEqualTo(ImageResponse.from(게시글3.getImage())),
                 () -> assertThat(post.hashtags()).isEmpty()
         );
     }
