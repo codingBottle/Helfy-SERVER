@@ -4,7 +4,8 @@ import lombok.Getter;
 
 @Getter
 public enum Directory {
-    POST("posts"),INFORMATION("information"), QUIZ("quiz");
+    POST("posts"), INFORMATION("information"), QUIZ("quiz"), USER("user"),
+    ;
 
     private final String name;
 
