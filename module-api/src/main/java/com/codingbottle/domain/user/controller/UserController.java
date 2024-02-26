@@ -2,6 +2,7 @@ package com.codingbottle.domain.user.controller;
 
 import com.codingbottle.domain.user.entity.User;
 import com.codingbottle.domain.user.model.UserInfoUpdateRequest;
+import com.codingbottle.domain.user.model.UserProfileImageUpdateRequest;
 import com.codingbottle.domain.user.model.UserResponse;
 import com.codingbottle.domain.user.model.UserResponseWithRankInfo;
 import com.codingbottle.domain.user.service.UserService;
@@ -26,6 +27,14 @@ public class UserController {
     public ResponseEntity<UserResponse> updateNickname(@AuthenticationPrincipal User user,
                                                        @RequestBody UserInfoUpdateRequest userInfoUpdateRequest) {
         User updateUser = userService.updateInfo(userInfoUpdateRequest, user);
+
+        return ResponseEntity.ok(UserResponse.from(updateUser));
+    }
+
+    @PatchMapping("/user/image")
+    public ResponseEntity<UserResponse> updateProfileImage(@AuthenticationPrincipal User user,
+                                                           @RequestBody UserProfileImageUpdateRequest userProfileImageUpdateRequest ) {
+        User updateUser = userService.updateProfileImage(user, userProfileImageUpdateRequest);
 
         return ResponseEntity.ok(UserResponse.from(updateUser));
     }

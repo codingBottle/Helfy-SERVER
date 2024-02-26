@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.InputStream;
+import java.io.IOException;
 import java.util.UUID;
 
 @Service
@@ -29,9 +29,7 @@ public class ImageService {
 
         String fileName = createFileName(multipartFile.getOriginalFilename(), directory.getName());
 
-        MultipartFileUploadObject multipartFileUploadObject = MultipartFileUploadObject.of(multipartFile.getInputStream(), multipartFile.getSize(), multipartFile.getContentType());
-
-        String imageUrl = awss3Service.upload(multipartFileUploadObject, fileName);
+        String imageUrl = uploadMultipartFile(multipartFile, fileName);
 
         Image image = Image.builder()
                 .directory(directory)
@@ -51,6 +49,18 @@ public class ImageService {
     public void delete(Image image) {
         awss3Service.delete(image.getDirectory().getName(), image.getConvertImageName());
         imageRepository.deleteById(image.getId());
+    }
+
+    public void deleteByImageUrl(String imageUrl) {
+        Image image = imageRepository.findByImageUrl(imageUrl).orElseThrow(() -> new ApplicationErrorException(ApplicationErrorType.IMAGE_NOT_FOUND, "해당 이미지를 찾을 수 없습니다."));
+        awss3Service.delete(image.getDirectory().getName(), image.getConvertImageName());
+        imageRepository.delete(image);
+    }
+
+    private String uploadMultipartFile(MultipartFile multipartFile, String fileName) throws IOException {
+        MultipartFileUploadObject multipartFileUploadObject = MultipartFileUploadObject.of(multipartFile.getInputStream(), multipartFile.getSize(), multipartFile.getContentType());
+
+        return awss3Service.upload(multipartFileUploadObject, fileName);
     }
 
     private Image saveImage(Image image){

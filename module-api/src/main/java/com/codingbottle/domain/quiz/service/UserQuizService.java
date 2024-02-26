@@ -2,7 +2,7 @@ package com.codingbottle.domain.quiz.service;
 
 import com.codingbottle.domain.quiz.model.QuizResponse;
 import com.codingbottle.domain.user.entity.User;
-import com.codingbottle.domain.user.event.UpdateUserInfoRedisEvent;
+import com.codingbottle.domain.user.event.UpdateUserInfoRankCacheEvent;
 import com.codingbottle.redis.domain.quiz.model.UserInfo;
 import com.codingbottle.redis.domain.quiz.service.QuizRankRedisService;
 import com.codingbottle.domain.quiz.entity.Quiz;
@@ -32,7 +32,7 @@ public class UserQuizService {
     private final QuizRankRedisService quizRankRedisService;
 
     @EventListener
-    public void handleUserUpdate(UpdateUserInfoRedisEvent event) {
+    public void handleUserUpdate(UpdateUserInfoRankCacheEvent event) {
         int score = quizRankRedisService.removeUserWithScore(UserInfo.of(event.getUser().getId(), event.getUser().getNickname()));
         quizRankRedisService.addScore(UserInfo.of(event.getUser().getId(), event.getUserUpdateInfo().nickname()), score);
     }

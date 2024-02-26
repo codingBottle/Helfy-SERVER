@@ -7,11 +7,14 @@ import lombok.Builder;
 @Builder
 public record UserResponse(
         Region region,
-        String nickname) {
+        String nickname,
+        String profileImageUrl
+) {
     public static UserResponse from(User user) {
         return UserResponse.builder()
                 .nickname(user.getNickname())
                 .region(user.getRegion())
+                .profileImageUrl(user.getProfileImage())
                 .build();
     }
 }
