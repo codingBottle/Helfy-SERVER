@@ -1,6 +1,7 @@
 package com.codingbottle.common.security;
 
 
+import com.codingbottle.domain.user.entity.Role;
 import com.codingbottle.domain.user.entity.User;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,6 +21,8 @@ public class WithAuthUserSecurityContextFactory implements WithSecurityContextFa
                 .nickname(annotation.username())
                 .email(email)
                 .region(annotation.region())
+                .role(Role.ROLE_ADMIN)
+                .profileImage("https://d1csu9i9ktup9e.cloudfront.net/default.png")
                 .build();
 
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user, null, List.of(new SimpleGrantedAuthority(role)));

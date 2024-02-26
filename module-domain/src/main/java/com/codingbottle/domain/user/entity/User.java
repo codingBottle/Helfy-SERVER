@@ -32,6 +32,9 @@ public class User implements Serializable {
     @Column(name = "role", nullable = false)
     private Role role;
 
+    @Column(name = "profile_image", nullable = false)
+    private String profileImage;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "region", nullable = false)
     private Region region = Region.NONE;
@@ -48,13 +51,19 @@ public class User implements Serializable {
         return this;
     }
 
+    public User updateProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+        return this;
+    }
+
     @Builder
-    public User(String firebaseUid, String email, String nickname, Role role, Region region) {
+    public User(String firebaseUid, String email, String nickname, Role role, Region region, String profileImage) {
         this.firebaseUid = firebaseUid;
         this.email = email;
         this.nickname = nickname;
         this.role = role;
         this.region = region;
+        this.profileImage = profileImage;
     }
 
     @Override
@@ -67,12 +76,13 @@ public class User implements Serializable {
                 && role == user.role
                 && Objects.equal(nickname, user.nickname)
                 && Objects.equal(email, user.email)
-                && region == user.region;
+                && region == user.region
+                && Objects.equal(profileImage, user.profileImage);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id, firebaseUid, nickname, role, email, region);
+        return Objects.hashCode(id, firebaseUid, nickname, role, email, region, profileImage);
     }
 
     @Override
@@ -84,6 +94,7 @@ public class User implements Serializable {
                 ", role=" + role +
                 ", email='" + email + '\'' +
                 ", region=" + region +
+                ", profileImage=" + profileImage +
                 '}';
     }
 }
