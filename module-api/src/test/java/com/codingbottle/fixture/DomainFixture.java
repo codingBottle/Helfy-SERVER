@@ -201,5 +201,13 @@ public class DomainFixture {
     public static final RankInfo 유저_랭킹_정보2 = RankInfo.of(2, 20);
 
     public static final RankInfo 유저_랭킹_정보3 = RankInfo.of(3, 10);
+
+    public static final UserProfileImageUpdateRequest 유저_프로필_이미지_수정_요청2 = new UserProfileImageUpdateRequest(4L);
+
+    public static final Image 프로필_이미지1 = Image.builder()
+            .directory(Directory.USER)
+            .imageUrl("https://d1csu9i9ktup9e.cloudfront.net/default.png")
+            .convertImageName("default.png")
+            .build();
 }
 
