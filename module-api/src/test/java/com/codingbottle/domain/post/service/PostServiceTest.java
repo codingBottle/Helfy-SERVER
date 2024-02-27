@@ -73,7 +73,7 @@ class PostServiceTest {
         // when
         PostResponse post = postService.save(게시글_생성_요청1, 게시글1.getUser());
         // then
-        assertThat(post).isEqualTo(PostResponse.of(게시글1));
+        assertThat(post).isEqualTo(PostResponse.from(게시글1));
     }
 
     @Test
@@ -134,7 +134,7 @@ class PostServiceTest {
         // when
         List<PostResponse> posts = postService.findAll(pageRequest);
         // then
-        assertThat(posts).contains(PostResponse.of(게시글1), PostResponse.of(게시글2));
+        assertThat(posts).contains(PostResponse.from(게시글1), PostResponse.from(게시글2));
     }
 
     @Test
@@ -145,7 +145,7 @@ class PostServiceTest {
         // when
         List<PostResponse> posts = postService.searchByKeyword(any(String.class));
         // then
-        assertThat(posts).containsExactly(PostResponse.of(게시글1));
+        assertThat(posts).containsExactly(PostResponse.from(게시글1));
     }
 
     @Test

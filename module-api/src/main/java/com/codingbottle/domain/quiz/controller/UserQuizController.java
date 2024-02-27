@@ -1,44 +1,36 @@
 package com.codingbottle.domain.quiz.controller;
 
 import com.codingbottle.domain.quiz.model.QuizStatusRequest;
+import com.codingbottle.domain.quiz.restapi.UserQuizApi;
 import com.codingbottle.domain.user.entity.User;
 import com.codingbottle.domain.quiz.model.QuizResponse;
 import com.codingbottle.domain.quiz.model.UserQuizInfo;
 import com.codingbottle.domain.quiz.service.UserQuizService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Controller;
 
 import java.util.List;
 
-@Tag(name = "사용자 퀴즈 정보", description = "퀴즈 사용자 관련 API")
-@RestController
-@RequestMapping("/api/v1/quiz/users")
+@Controller
 @RequiredArgsConstructor
-public class UserQuizController {
+public class UserQuizController implements UserQuizApi {
     private final UserQuizService userQuizService;
 
-    @GetMapping("/wrong")
-    public ResponseEntity<List<QuizResponse>> getWrongQuizzes(@AuthenticationPrincipal User user) {
-        List<QuizResponse> wrongQuizzes = userQuizService.findRandomWrongQuizzesByUser(user);
-
-        return ResponseEntity.ok(wrongQuizzes);
+    @Override
+    public List<QuizResponse> getWrongQuizzes(@AuthenticationPrincipal User user) {
+        return userQuizService.findRandomWrongQuizzesByUser(user);
     }
 
-    @PutMapping("/{id}/result")
-    public ResponseEntity<String> quizStatusPut(@PathVariable(value = "id") Long id,
-                                                @RequestBody @Validated QuizStatusRequest quizStatusRequest,
-                                                @AuthenticationPrincipal User user) {
-        String userQuizStatus = userQuizService.updateQuizStatus(id, quizStatusRequest, user);
-        return ResponseEntity.ok(userQuizStatus);
+    @Override
+    public String quizStatusPut(Long id,
+                                QuizStatusRequest quizStatusRequest,
+                                @AuthenticationPrincipal User user) {
+        return userQuizService.updateQuizStatus(id, quizStatusRequest, user);
     }
 
-    @GetMapping
-    public ResponseEntity<UserQuizInfo> getUserQuizInfo(@AuthenticationPrincipal User user) {
-        UserQuizInfo userQuizInfo = userQuizService.getUserQuizInfo(user);
-        return ResponseEntity.ok(userQuizInfo);
+    @Override
+    public UserQuizInfo getUserQuizInfo(@AuthenticationPrincipal User user) {
+        return userQuizService.getUserQuizInfo(user);
     }
 }

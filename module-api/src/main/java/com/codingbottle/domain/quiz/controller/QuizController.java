@@ -1,29 +1,24 @@
 package com.codingbottle.domain.quiz.controller;
 
+import com.codingbottle.domain.quiz.restapi.QuizApi;
 import com.codingbottle.domain.user.entity.User;
 import com.codingbottle.domain.quiz.model.QuizResponse;
 import com.codingbottle.domain.quiz.model.Type;
 import com.codingbottle.domain.quiz.service.QuizService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Controller;
 
 import java.util.List;
 
-@Tag(name = "퀴즈", description = "퀴즈 API")
-@RestController
-@RequestMapping("/api/v1/quiz")
+@Controller
 @RequiredArgsConstructor
-public class QuizController {
+public class QuizController implements QuizApi {
     private final QuizService quizService;
 
-    @GetMapping
-    public ResponseEntity<List<QuizResponse>> getQuizzes(@AuthenticationPrincipal User user,
-                                                 @RequestParam(value = "type") Type type) {
-        List<QuizResponse> quiz = quizService.findByType(user, type);
-
-        return ResponseEntity.ok(quiz);
+    @Override
+    public List<QuizResponse> getQuizList(@AuthenticationPrincipal User user,
+                                          Type type) {
+        return quizService.findByType(user, type);
     }
 }
