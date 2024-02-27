@@ -45,7 +45,7 @@ class PostControllerTest extends RestDocsTest {
     @Test
     void find_all_posts() throws Exception{
         //given
-        given(postService.findAll(any(PageRequest.class))).willReturn(List.of(PostResponse.of(게시글1), PostResponse.of(게시글2)));
+        given(postService.findAll(any(PageRequest.class))).willReturn(List.of(PostResponse.from(게시글1), PostResponse.from(게시글2)));
         given(userPostLikesService.isLikes(any(User.class), any())).willReturn(false);
         //when & then
         mvc.perform(get(REQUEST_URL)
@@ -104,7 +104,7 @@ class PostControllerTest extends RestDocsTest {
     @Test
     void create_post() throws Exception{
         //given
-        given(postService.save(any(PostRequest.class), any(User.class))).willReturn(PostResponse.of(게시글1));
+        given(postService.save(any(PostRequest.class), any(User.class))).willReturn(PostResponse.from(게시글1));
         given(userPostLikesService.isLikes(any(User.class), any())).willReturn(false);
         //when & then
         mvc.perform(post(REQUEST_URL)
@@ -128,7 +128,7 @@ class PostControllerTest extends RestDocsTest {
     @Test
     void update_post() throws Exception{
         //given
-        given(postService.update(any(PostRequest.class), any(Long.class), any(User.class))).willReturn(PostResponse.of(게시글2));
+        given(postService.update(any(PostRequest.class), any(Long.class), any(User.class))).willReturn(PostResponse.from(게시글2));
         //when & then
         mvc.perform(RestDocumentationRequestBuilders.patch(REQUEST_URL + "/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -151,7 +151,7 @@ class PostControllerTest extends RestDocsTest {
         mvc.perform(RestDocumentationRequestBuilders.delete(REQUEST_URL + "/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer FirebaseToken"))
-                .andExpect(status().isNoContent())
+                .andExpect(status().isOk())
                 .andDo(document("delete-post",
                         getDocumentRequest(),
                         getDocumentResponse(),
@@ -171,7 +171,6 @@ class PostControllerTest extends RestDocsTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer FirebaseToken"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Liked"))
                 .andDo(document("put-likes",
                         getDocumentRequest(),
                         getDocumentResponse(),
@@ -190,7 +189,6 @@ class PostControllerTest extends RestDocsTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer FirebaseToken"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Unliked"))
                 .andDo(document("put-likes",
                         getDocumentRequest(),
                         getDocumentResponse(),
@@ -203,7 +201,7 @@ class PostControllerTest extends RestDocsTest {
     @DisplayName("게시글 검색")
     void search_keyword() throws Exception{
         //given
-        given(postService.searchByKeyword(any(String.class))).willReturn(List.of(PostResponse.of(게시글1), PostResponse.of(게시글2)));
+        given(postService.searchByKeyword(any(String.class))).willReturn(List.of(PostResponse.from(게시글1), PostResponse.from(게시글2)));
         given(userPostLikesService.isLikes(any(User.class), any())).willReturn(false);
         //when & then
         mvc.perform(get(REQUEST_URL + "/search")

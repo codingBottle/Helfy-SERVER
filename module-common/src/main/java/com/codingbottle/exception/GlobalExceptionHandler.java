@@ -1,6 +1,6 @@
 package com.codingbottle.exception;
 
-import com.codingbottle.model.ErrorResponseDto;
+import com.codingbottle.model.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.context.annotation.Primary;
@@ -18,44 +18,44 @@ import java.io.IOException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(value = ApplicationErrorException.class)
-    public ResponseEntity<ErrorResponseDto> handleApplicationException(WebRequest request, ApplicationErrorException e) {
+    public ResponseEntity<ErrorResponse> handleApplicationException(WebRequest request, ApplicationErrorException e) {
         log.error("ApplicationErrorException {}", e.getMessage());
-        ErrorResponseDto errorResponseDto = new ErrorResponseDto(e.getApplicationErrorType().name(), e.getMessage());
-        return new ResponseEntity<>(errorResponseDto, e.getApplicationErrorType().getHttpStatus());
+        ErrorResponse errorResponse = new ErrorResponse(e.getApplicationErrorType().name(), e.getMessage());
+        return new ResponseEntity<>(errorResponse, e.getApplicationErrorType().getHttpStatus());
     }
 
     @ExceptionHandler(value = InvalidDataAccessApiUsageException.class)
-    public ResponseEntity<ErrorResponseDto> handleInvalidDataAccessApiUsageException(WebRequest request, InvalidDataAccessApiUsageException e) {
+    public ResponseEntity<ErrorResponse> handleInvalidDataAccessApiUsageException(WebRequest request, InvalidDataAccessApiUsageException e) {
         log.error("InvalidDataAccessApiUsageException {}", e.getMessage());
-        ErrorResponseDto errorResponseDto = new ErrorResponseDto(ApplicationErrorType.INVALID_DATA_ACCESS.name(), e.getMessage());
-        return new ResponseEntity<>(errorResponseDto, ApplicationErrorType.INTERNAL_ERROR.getHttpStatus());
+        ErrorResponse errorResponse = new ErrorResponse(ApplicationErrorType.INVALID_DATA_ACCESS.name(), e.getMessage());
+        return new ResponseEntity<>(errorResponse, ApplicationErrorType.INTERNAL_ERROR.getHttpStatus());
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponseDto> handleValidationException(WebRequest request, MethodArgumentNotValidException e) {
+    public ResponseEntity<ErrorResponse> handleValidationException(WebRequest request, MethodArgumentNotValidException e) {
         log.error("ValidationException {}", e.getMessage());
-        ErrorResponseDto errorResponseDto = new ErrorResponseDto(ApplicationErrorType.VALIDATION_ERROR.name(), e.getMessage());
-        return new ResponseEntity<>(errorResponseDto, ApplicationErrorType.VALIDATION_ERROR.getHttpStatus());
+        ErrorResponse errorResponse = new ErrorResponse(ApplicationErrorType.VALIDATION_ERROR.name(), e.getMessage());
+        return new ResponseEntity<>(errorResponse, ApplicationErrorType.VALIDATION_ERROR.getHttpStatus());
     }
 
     @ExceptionHandler(value = IOException.class)
-    public ResponseEntity<ErrorResponseDto> handleIOException(WebRequest request, IOException e) {
+    public ResponseEntity<ErrorResponse> handleIOException(WebRequest request, IOException e) {
         log.error("IOException {}", e.getMessage());
-        ErrorResponseDto errorResponseDto = new ErrorResponseDto(ApplicationErrorType.INTERNAL_ERROR.name(), e.getMessage());
-        return new ResponseEntity<>(errorResponseDto, ApplicationErrorType.INTERNAL_ERROR.getHttpStatus());
+        ErrorResponse errorResponse = new ErrorResponse(ApplicationErrorType.INTERNAL_ERROR.name(), e.getMessage());
+        return new ResponseEntity<>(errorResponse, ApplicationErrorType.INTERNAL_ERROR.getHttpStatus());
     }
 
     @ExceptionHandler(value = ConstraintViolationException.class)
-    public ResponseEntity<ErrorResponseDto> handleConstraintViolationException(WebRequest request, ConstraintViolationException e) {
+    public ResponseEntity<ErrorResponse> handleConstraintViolationException(WebRequest request, ConstraintViolationException e) {
         log.error("ConstraintViolationException {}", e.getMessage());
-        ErrorResponseDto errorResponseDto = new ErrorResponseDto(ApplicationErrorType.VALIDATION_ERROR.name(), e.getMessage());
-        return new ResponseEntity<>(errorResponseDto, ApplicationErrorType.VALIDATION_ERROR.getHttpStatus());
+        ErrorResponse errorResponse = new ErrorResponse(ApplicationErrorType.VALIDATION_ERROR.name(), e.getMessage());
+        return new ResponseEntity<>(errorResponse, ApplicationErrorType.VALIDATION_ERROR.getHttpStatus());
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponseDto> handleException(WebRequest request, Exception e) {
+    public ResponseEntity<ErrorResponse> handleException(WebRequest request, Exception e) {
         log.error("Exception {}", e.getMessage());
-        ErrorResponseDto response = new ErrorResponseDto(ApplicationErrorType.INTERNAL_ERROR.name(), e.getMessage());
+        ErrorResponse response = new ErrorResponse(ApplicationErrorType.INTERNAL_ERROR.name(), e.getMessage());
         return new ResponseEntity<>(response, ApplicationErrorType.INTERNAL_ERROR.getHttpStatus());
     }
 }

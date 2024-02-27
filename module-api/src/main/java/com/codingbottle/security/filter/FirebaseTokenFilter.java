@@ -4,7 +4,7 @@ import com.codingbottle.domain.user.entity.User;
 import com.codingbottle.security.service.UserDetailService;
 import com.codingbottle.exception.ApplicationErrorException;
 import com.codingbottle.exception.ApplicationErrorType;
-import com.codingbottle.model.ErrorResponseDto;
+import com.codingbottle.model.ErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.auth.AuthErrorCode;
 import com.google.firebase.auth.FirebaseAuth;
@@ -96,7 +96,7 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
 
     private void setErrorResponseBody(HttpServletResponse response, ApplicationErrorType applicationErrorType) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        ErrorResponseDto errorResponseDto = new ErrorResponseDto(applicationErrorType.name(), applicationErrorType.getMessage());
-        objectMapper.writeValue(response.getWriter(), errorResponseDto);
+        ErrorResponse errorResponse = new ErrorResponse(applicationErrorType.name(), applicationErrorType.getMessage());
+        objectMapper.writeValue(response.getWriter(), errorResponse);
     }
 }

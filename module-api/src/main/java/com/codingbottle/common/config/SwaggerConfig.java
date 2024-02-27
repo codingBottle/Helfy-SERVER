@@ -1,6 +1,6 @@
 package com.codingbottle.common.config;
 
-import com.codingbottle.model.ErrorResponseDto;
+import com.codingbottle.model.ErrorResponse;
 import io.swagger.v3.core.converter.AnnotatedType;
 import io.swagger.v3.core.converter.ModelConverters;
 import io.swagger.v3.oas.models.Components;
@@ -71,7 +71,7 @@ public class SwaggerConfig {
     private Map<String, ApiResponse> getResponses() {
         ApiResponse noContent, badRequest, unauthorized, forbidden, notFound, conflict, internalServerError;
         var schema = ModelConverters.getInstance()
-                .resolveAsResolvedSchema(new AnnotatedType(ErrorResponseDto.class)).schema;
+                .resolveAsResolvedSchema(new AnnotatedType(ErrorResponse.class)).schema;
 
         noContent = new ApiResponse()
                 .description("데이터 없음")

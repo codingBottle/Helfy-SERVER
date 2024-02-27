@@ -47,7 +47,7 @@ public class PostService {
             post.addHashtags(postRequest.hashtags());
         }
 
-        return PostResponse.of(postSimpleJPARepository.save(post));
+        return PostResponse.from(postSimpleJPARepository.save(post));
     }
 
     @Transactional
@@ -69,7 +69,7 @@ public class PostService {
         List<Post> posts = getPosts(pageable);
 
         return posts.stream()
-                .map(PostResponse::of)
+                .map(PostResponse::from)
                 .collect(Collectors.toList());
     }
 
@@ -98,7 +98,7 @@ public class PostService {
         List<Post> posts = postQueryRepository.searchByKeyword(keyword);
 
         return posts.stream()
-                .map(PostResponse::of)
+                .map(PostResponse::from)
                 .collect(Collectors.toList());
     }
 
@@ -124,7 +124,7 @@ public class PostService {
     }
 
     private PostResponse getPostResponse(Post post) {
-        return PostResponse.of(post);
+        return PostResponse.from(post);
     }
 
     private boolean isNotSameWriter(Post post, User user) {
