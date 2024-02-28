@@ -1,6 +1,6 @@
-package com.codingbottle.domain.weather.job;
+package com.codingbottle.domain.quiz.job;
 
-import com.codingbottle.domain.weather.service.WeatherBatchService;
+import com.codingbottle.domain.quiz.service.TodayQuizBatchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -8,38 +8,37 @@ import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.core.step.tasklet.Tasklet;
-import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 @RequiredArgsConstructor
-public class WeatherJobLauncher {
+public class TodayQuizJobLauncher {
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
-    private final WeatherBatchService weatherBatchService;
+    private final TodayQuizBatchService todayQuizBatchService;
 
     @Bean
-    public Job weatherJob(){
-        return new JobBuilder("weatherJob", jobRepository)
-                .start(weatherStep())
+    public Job todayQuizJob() {
+        return new JobBuilder("todayQuizJob", jobRepository)
+                .start(todayQuizStep())
                 .preventRestart()
                 .build();
     }
 
     @Bean
-    public Step weatherStep() {
-        return new StepBuilder("weatherStep", jobRepository)
-                .tasklet(weatherTasklet(), transactionManager)
+    public Step todayQuizStep() {
+        return new StepBuilder("todayQuizStep", jobRepository)
+                .tasklet(todayQuizTasklet(), transactionManager)
                 .build();
     }
 
     @Bean
-    public Tasklet weatherTasklet() {
+    public Tasklet todayQuizTasklet() {
         return (contribution, chunkContext) -> {
-            weatherBatchService.setWeather();
-            return RepeatStatus.FINISHED;
+            todayQuizBatchService.initializeData();
+            return null;
         };
     }
 }

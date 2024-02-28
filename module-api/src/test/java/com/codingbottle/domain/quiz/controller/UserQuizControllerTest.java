@@ -99,7 +99,8 @@ class UserQuizControllerTest extends RestDocsTest {
                                 parameterWithName("id").description("퀴즈 ID")
                         ),
                         requestFields(
-                                fieldWithPath("quizStatus").description("퀴즈 상태 (CORRECT / WRONG)")
+                                fieldWithPath("quizStatus").description("퀴즈 상태 (CORRECT / WRONG)"),
+                                fieldWithPath("type").description("오늘의 퀴즈인지, 그냥 퀴즈 풀이인지 전달 (TODAY / NORMAL)")
                         )));
     }
 }
