@@ -33,6 +33,7 @@ public class WeatherBatchService {
     public void setWeather() {
         Arrays.stream(Region.values())
                 .forEach(this::setRegionWeather);
+        log.info("날씨 정보를 업데이트 했습니다.");
     }
 
     private void setRegionWeather(Region region) {
