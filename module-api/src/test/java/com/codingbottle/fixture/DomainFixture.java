@@ -1,6 +1,7 @@
 package com.codingbottle.fixture;
 
 import com.codingbottle.domain.quiz.entity.UserQuiz;
+import com.codingbottle.domain.quiz.model.Type;
 import com.codingbottle.domain.user.entity.Role;
 import com.codingbottle.domain.user.entity.User;
 import com.codingbottle.domain.category.entity.Category;
@@ -148,9 +149,9 @@ public class DomainFixture {
             .image(퀴즈_이미지1)
             .build();
 
-    public static final QuizStatusRequest 퀴즈_정답_요청 = new QuizStatusRequest(QuizStatus.CORRECT);
+    public static final QuizStatusRequest 퀴즈_정답_요청 = new QuizStatusRequest(QuizStatus.CORRECT, Type.TODAY);
 
-    public static final QuizStatusRequest 퀴즈_오답_요청 = new QuizStatusRequest(QuizStatus.WRONG);
+    public static final QuizStatusRequest 퀴즈_오답_요청 = new QuizStatusRequest(QuizStatus.WRONG, Type.NORMAL);
 
     public static final UserQuiz 퀴즈_유저_정답1 = UserQuiz.builder()
             .id(1L)
@@ -186,7 +187,7 @@ public class DomainFixture {
 
     public static final InformationResponse 정보_응답1 = InformationResponse.from(정보1);
 
-    public static final QuizStatusRequest 퀴즈_결과_요청 = new QuizStatusRequest(QuizStatus.CORRECT);
+    public static final QuizStatusRequest 퀴즈_결과_요청 = new QuizStatusRequest(QuizStatus.CORRECT, Type.TODAY);
 
     public static final UserQuizInfo 퀴즈정보1 = new UserQuizInfo("닉네임", 10);
 

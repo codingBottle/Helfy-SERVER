@@ -1,6 +1,7 @@
 package com.codingbottle.domain.quiz.service;
 
 import com.codingbottle.domain.quiz.model.QuizResponse;
+import com.codingbottle.domain.quiz.model.Type;
 import com.codingbottle.domain.user.entity.User;
 import com.codingbottle.domain.user.event.UpdateUserInfoRankCacheEvent;
 import com.codingbottle.redis.domain.quiz.model.UserInfo;
@@ -14,6 +15,7 @@ import com.codingbottle.domain.quiz.repo.UserQuizQueryRepository;
 import com.codingbottle.domain.quiz.repo.UserQuizSimpleJPARepository;
 import com.codingbottle.exception.ApplicationErrorException;
 import com.codingbottle.exception.ApplicationErrorType;
+import com.codingbottle.redis.domain.quiz.service.TodayQuizRedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,7 @@ public class UserQuizService {
     private final QuizService quizService;
     private final UserQuizSimpleJPARepository userQuizSimpleJPARepository;
     private final QuizRankRedisService quizRankRedisService;
+    private final TodayQuizRedisService todayQuizRedisService;
 
     @EventListener
     public void handleUserUpdate(UpdateUserInfoRankCacheEvent event) {
@@ -50,6 +53,8 @@ public class UserQuizService {
 
     @Transactional
     public String updateQuizStatus(Long quizId, QuizStatusRequest quizStatusRequest, User user) {
+        setTodayQuizSolvedIfNotAlreadySolved(quizStatusRequest, user.getId());
+
         if (quizStatusRequest.quizStatus() == QuizStatus.CORRECT) {
             handleCorrectAnswer(user, quizId, quizStatusRequest);
             return "CORRECT";
@@ -59,6 +64,11 @@ public class UserQuizService {
         }
     }
 
+    private void setTodayQuizSolvedIfNotAlreadySolved(QuizStatusRequest quizStatusRequest, Long userId) {
+        if (!todayQuizRedisService.isAlreadySolved(userId) && quizStatusRequest.type().equals(Type.TODAY)) {
+            todayQuizRedisService.setSolved(userId);
+        }
+    }
 
     private UserQuiz saveUserQuiz(User user, Long quizId, QuizStatusRequest quizStatusRequest){
         Quiz quiz = quizService.findById(quizId);
@@ -88,7 +98,7 @@ public class UserQuizService {
             userQuiz = saveUserQuiz(user, quizId, quizStatusRequest);
         }
         userQuiz.updateQuizStatus(quizStatusRequest.quizStatus());
-        plusUserQuizScore(user);
+        plusUserQuizScore(user, quizStatusRequest.type());
     }
 
     private void validateQuizStatus(UserQuiz userQuiz) {
@@ -97,8 +107,8 @@ public class UserQuizService {
         }
     }
 
-    private void plusUserQuizScore(User user) {
-        quizRankRedisService.updateScore(UserInfo.of(user.getId(), user.getNickname()), 10);
+    private void plusUserQuizScore(User user, Type type) {
+        quizRankRedisService.updateScore(UserInfo.of(user.getId(), user.getNickname()), type.getScore());
     }
 
     private void handleWrongAnswer(User user, Long quizId, QuizStatusRequest quizStatusRequest) {
