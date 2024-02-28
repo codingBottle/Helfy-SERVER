@@ -4,6 +4,8 @@ import com.codingbottle.domain.quiz.model.QuizResponse;
 import com.codingbottle.domain.user.entity.User;
 import com.codingbottle.domain.quiz.model.Type;
 import com.codingbottle.domain.quiz.repo.QuizQueryRepository;
+import com.codingbottle.exception.ApplicationErrorException;
+import com.codingbottle.redis.domain.quiz.service.TodayQuizRedisService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 
 import static com.codingbottle.fixture.DomainFixture.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -26,6 +29,9 @@ class QuizServiceTest {
 
     @Mock
     private QuizQueryRepository quizRepository;
+
+    @Mock
+    private TodayQuizRedisService todayQuizRedisService;
 
     @Test
     @DisplayName("일반 퀴즈를 조회한다")
@@ -47,5 +53,15 @@ class QuizServiceTest {
         List<QuizResponse> quizzes = quizService.findByType(유저1, Type.TODAY);
         //then
         assertThat(quizzes.size()).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("오늘의 퀴즈를 이미 푼 사용자는 오늘의 퀴즈를 조회할 수 없다")
+    void findByTodayQuizAndAlreadySolved(){
+        //given
+        given(todayQuizRedisService.isAlreadySolved(any())).willReturn(true);
+        //when & then
+        assertThatThrownBy(() -> quizService.findByType(유저1, Type.TODAY))
+                .isInstanceOf(ApplicationErrorException.class);
     }
 }

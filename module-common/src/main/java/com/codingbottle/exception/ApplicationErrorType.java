@@ -19,6 +19,7 @@ public enum ApplicationErrorType {
     //403
     EXPIRED_FIREBASE_TOKEN(HttpStatus.FORBIDDEN, "Firebase 토큰이 만료되었습니다."),
     ALREADY_SOLVED_QUIZ(HttpStatus.FORBIDDEN, "이미 푼 문제입니다."),
+    ALREADY_SOLVED_TODAY_QUIZ(HttpStatus.BAD_REQUEST, "이미 오늘의 퀴즈를 푸셨습니다."),
     //404
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다."),

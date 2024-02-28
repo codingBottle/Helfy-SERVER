@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/quiz")
 public interface QuizApi {
-    @Operation(summary = "퀴즈 목록 조회", description = "Type에 맞는 퀴즈 목록을 조회합니다.")
+    @Operation(summary = "퀴즈 목록 조회", description = "Type에 맞는 퀴즈 목록을 조회합니다. (오늘의 퀴즈를 이미 푼 사용자는 에러 메시지가 반환됩니다.")
     @GetMapping
     List<QuizResponse> getQuizList(
             User user,
