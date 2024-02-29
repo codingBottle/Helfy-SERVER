@@ -19,23 +19,32 @@ public class QuizQueryRepository {
     private final QQuiz qQuiz = QQuiz.quiz;
     private final QUserQuiz qUserQuiz = QUserQuiz.userQuiz;
 
-    public List<Quiz> findRandomWrongQuizzes(User user, int limit) {
+    public List<Quiz> findRandomQuizzes(User user, int limit) {
         return jpaQueryFactory.selectFrom(qQuiz)
                 .leftJoin(qUserQuiz)
                 .on(qQuiz.eq(qUserQuiz.quiz), qUserQuiz.user.eq(user))
-                .where(qUserQuiz.quizStatus.eq(QuizStatus.WRONG)
+                .where(qUserQuiz.quizStatus.isNull())
+                .orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc())
+                .limit(limit)
+                .fetch();
+    }
+
+    public List<Quiz> findRandomTodayQuizzes(User user, int limit) {
+        return jpaQueryFactory.selectFrom(qQuiz)
+                .leftJoin(qUserQuiz)
+                .on(qQuiz.eq(qUserQuiz.quiz), qUserQuiz.user.eq(user))
+                .where(qUserQuiz.quizStatus.ne(QuizStatus.CORRECT)
                         .or(qUserQuiz.quizStatus.isNull()))
                 .orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc())
                 .limit(limit)
                 .fetch();
     }
 
-    public List<Quiz> findRandomQuizzes(User user, int limit) {
-        return jpaQueryFactory.selectFrom(qQuiz)
-                .leftJoin(qUserQuiz)
-                .on(qQuiz.eq(qUserQuiz.quiz), qUserQuiz.user.eq(user))
-                .where(qUserQuiz.quizStatus.ne(QuizStatus.CORRECT)
-                        .or(qUserQuiz.quizStatus.isNull()))
+    public List<Quiz> findRandomWrongQuizzes(User user, int limit) {
+        return jpaQueryFactory.select(qUserQuiz.quiz)
+                .from(qUserQuiz)
+                .where(qUserQuiz.user.eq(user)
+                        .and(qUserQuiz.quizStatus.eq(QuizStatus.WRONG)))
                 .orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc())
                 .limit(limit)
                 .fetch();

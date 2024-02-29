@@ -7,21 +7,28 @@ import lombok.Getter;
 
 import java.util.List;
 
+@Getter
 public enum Type {
-    TODAY(10){
+    TODAY(20){
         @Override
         public List<Quiz> getQuizzes(User user, QuizQueryRepository quizRepository) {
-            return quizRepository.findRandomQuizzes(user, 3);
+            return quizRepository.findRandomTodayQuizzes(user, 3);
         }
     },
-    NORMAL(5){
+    NORMAL(10){
+        @Override
+        public List<Quiz> getQuizzes(User user, QuizQueryRepository quizRepository) {
+            return quizRepository.findRandomQuizzes(user, 10);
+        }
+    },
+    WRONG(5){
         @Override
         public List<Quiz> getQuizzes(User user, QuizQueryRepository quizRepository) {
             return quizRepository.findRandomWrongQuizzes(user, 10);
         }
-    };
+    }
+    ;
 
-    @Getter
     final int score;
 
     Type(int score) {
