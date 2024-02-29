@@ -7,7 +7,6 @@ import com.codingbottle.domain.quiz.model.Type;
 import com.codingbottle.domain.quiz.service.QuizService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
@@ -26,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @DisplayName("QuizController 테스트")
 @ContextConfiguration(classes = QuizController.class)
-@WebMvcTest(value = QuizController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class)
+@WebMvcTest(value = QuizController.class)
 class QuizControllerTest extends RestDocsTest {
     @MockBean
     private QuizService quizService;
@@ -60,5 +59,29 @@ class QuizControllerTest extends RestDocsTest {
                                 fieldWithPath("[].image.id").description("퀴즈 이미지 id").type("Number"),
                                 fieldWithPath("[].image.imageUrl").description("퀴즈 이미지 url")
                 )));
+    }
+
+    @Test
+    @DisplayName("일반 퀴즈를 조회한다")
+    void get_normal_quiz() throws Exception {
+        //given
+        given(quizService.findByType(any(User.class), any(Type.class))).willReturn(List.of(QuizResponse.from(퀴즈1), QuizResponse.from(퀴즈2)));
+        //when & then
+        mvc.perform(get(REQUEST_URL)
+                        .queryParam("type", "NORMAL")
+                        .header("Authorization", "Bearer FirebaseToken"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("오답 퀴즈를 조회한다")
+    void get_wrong_quiz() throws Exception {
+        //given
+        given(quizService.findByType(any(User.class), any(Type.class))).willReturn(List.of(QuizResponse.from(퀴즈1), QuizResponse.from(퀴즈2)));
+        //when & then
+        mvc.perform(get(REQUEST_URL)
+                        .queryParam("type", "WRONG")
+                        .header("Authorization", "Bearer FirebaseToken"))
+                .andExpect(status().isOk());
     }
 }

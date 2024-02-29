@@ -19,10 +19,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/quiz")
 public interface QuizApi {
-    @Operation(summary = "퀴즈 목록 조회", description = "Type에 맞는 퀴즈 목록을 조회합니다. (오늘의 퀴즈를 이미 푼 사용자는 에러 메시지가 반환됩니다.")
+    @Operation(summary = "퀴즈 목록 조회", description = "Type에 맞는 퀴즈 목록을 조회합니다. 오늘의 퀴즈를 이미 푼 사용자는 에러 메시지가 반환됩니다. 만약 문제가 존재하지 않는다면 빈 배열이 반환됩니다.")
     @GetMapping
     List<QuizResponse> getQuizList(
             User user,
-            @RequestParam(value = "type") @Parameter(description = "퀴즈 타입을 URL 파라미터로 지정해서 요청하세요. (TODAY, NORMAL)") Type type
+            @RequestParam(value = "type") @Parameter(description = "퀴즈 타입을 URL 파라미터로 지정해서 요청하세요. (TODAY, NORMAL, WRONG)") Type type
     );
 }

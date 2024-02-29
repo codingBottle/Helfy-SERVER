@@ -37,7 +37,7 @@ class QuizServiceTest {
     @DisplayName("일반 퀴즈를 조회한다")
     void findByNormalQuiz() {
         //given
-        given(quizRepository.findRandomWrongQuizzes(any(User.class), anyInt())).willReturn(List.of(퀴즈1, 퀴즈2));
+        given(quizRepository.findRandomQuizzes(any(User.class), anyInt())).willReturn(List.of(퀴즈1, 퀴즈2));
         //when
         List<QuizResponse> quizzes = quizService.findByType(유저1, Type.NORMAL);
         //then
@@ -48,7 +48,7 @@ class QuizServiceTest {
     @DisplayName("오늘의 퀴즈를 조회한다")
     void findByTodayQuiz(){
         //given
-        given(quizRepository.findRandomQuizzes(any(User.class), anyInt())).willReturn(List.of(퀴즈1, 퀴즈2));
+        given(quizRepository.findRandomTodayQuizzes(any(User.class), anyInt())).willReturn(List.of(퀴즈1, 퀴즈2));
         //when
         List<QuizResponse> quizzes = quizService.findByType(유저1, Type.TODAY);
         //then
@@ -63,5 +63,27 @@ class QuizServiceTest {
         //when & then
         assertThatThrownBy(() -> quizService.findByType(유저1, Type.TODAY))
                 .isInstanceOf(ApplicationErrorException.class);
+    }
+
+    @Test
+    @DisplayName("퀴즈 조회시 퀴즈가 없으면 빈 리스트를 반환한다")
+    void findByTypeAndEmptyQuiz(){
+        //given
+        given(quizRepository.findRandomQuizzes(any(User.class), anyInt())).willReturn(List.of());
+        //when
+        List<QuizResponse> quizzes = quizService.findByType(유저1, Type.NORMAL);
+        //then
+        assertThat(quizzes.size()).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("오답 퀴즈를 조회한다")
+    void findByWrongQuiz(){
+        //given
+        given(quizRepository.findRandomWrongQuizzes(any(User.class), anyInt())).willReturn(List.of(퀴즈1, 퀴즈2));
+        //when
+        List<QuizResponse> quizzes = quizService.findByType(유저1, Type.WRONG);
+        //then
+        assertThat(quizzes.size()).isEqualTo(2);
     }
 }

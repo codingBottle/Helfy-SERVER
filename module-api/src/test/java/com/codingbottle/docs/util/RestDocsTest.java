@@ -1,5 +1,6 @@
 package com.codingbottle.docs.util;
 
+import com.codingbottle.common.security.WithAuthUser;
 import com.codingbottle.docs.config.RestDocsConfig;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,6 +19,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @Disabled
+@WithAuthUser
 @ExtendWith(RestDocumentationExtension.class)
 @AutoConfigureRestDocs
 @Import(RestDocsConfig.class)
