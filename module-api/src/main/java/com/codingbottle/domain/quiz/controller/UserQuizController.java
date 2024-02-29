@@ -18,11 +18,6 @@ public class UserQuizController implements UserQuizApi {
     private final UserQuizService userQuizService;
 
     @Override
-    public List<QuizResponse> getWrongQuizzes(@AuthenticationPrincipal User user) {
-        return userQuizService.findRandomWrongQuizzesByUser(user);
-    }
-
-    @Override
     public String quizStatusPut(Long id,
                                 QuizStatusRequest quizStatusRequest,
                                 @AuthenticationPrincipal User user) {

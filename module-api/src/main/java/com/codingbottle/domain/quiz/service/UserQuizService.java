@@ -1,6 +1,5 @@
 package com.codingbottle.domain.quiz.service;
 
-import com.codingbottle.domain.quiz.model.QuizResponse;
 import com.codingbottle.domain.quiz.model.Type;
 import com.codingbottle.domain.user.entity.User;
 import com.codingbottle.domain.user.event.UpdateUserInfoRankCacheEvent;
@@ -21,9 +20,6 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -38,17 +34,6 @@ public class UserQuizService {
     public void handleUserUpdate(UpdateUserInfoRankCacheEvent event) {
         int score = quizRankRedisService.removeUserWithScore(UserInfo.of(event.getUser().getId(), event.getUser().getNickname()));
         quizRankRedisService.addScore(UserInfo.of(event.getUser().getId(), event.getUserUpdateInfo().nickname()), score);
-    }
-
-    public List<QuizResponse> findRandomWrongQuizzesByUser(User user) {
-        List<Quiz> randomWrongQuizzes = userQuizQueryRepository.findRandomWrongQuizzesByUser(user);
-
-        if (randomWrongQuizzes.isEmpty()) {
-            throw new ApplicationErrorException(ApplicationErrorType.NOT_EXIT_WRONG_ANSWER);
-        }
-        return randomWrongQuizzes.stream()
-                .map(QuizResponse::from)
-                .collect(Collectors.toList());
     }
 
     @Transactional

@@ -1,6 +1,5 @@
 package com.codingbottle.domain.quiz.service;
 
-import com.codingbottle.domain.quiz.model.QuizResponse;
 import com.codingbottle.domain.quiz.model.UserQuizInfo;
 import com.codingbottle.domain.quiz.repo.UserQuizQueryRepository;
 import com.codingbottle.domain.quiz.repo.UserQuizSimpleJPARepository;
@@ -14,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
 import java.util.Optional;
 
 import static com.codingbottle.fixture.DomainFixture.*;
@@ -122,27 +120,6 @@ class UserQuizServiceTest {
         String status = userQuizService.updateQuizStatus(퀴즈1.getId(), 퀴즈_정답_요청, 유저1);
         //then
         assertThat(status).isEqualTo("CORRECT");
-    }
-
-    @Test
-    @DisplayName("틀린 퀴즈가 없으면 예외를 던진다")
-    void if_there_is_no_wrong_answer_then_throw_exception() {
-        //given
-        given(userQuizQueryRepository.findRandomWrongQuizzesByUser(any())).willReturn(List.of());
-        //when & then
-        assertThatThrownBy(() -> userQuizService.findRandomWrongQuizzesByUser(유저1))
-                .isInstanceOf(ApplicationErrorException.class);
-    }
-
-    @Test
-    @DisplayName("틀린 퀴즈 중 랜덤으로 퀴즈를 조회한다")
-    void find_random_wrong_quizzes() {
-        //given
-        given(userQuizQueryRepository.findRandomWrongQuizzesByUser(any())).willReturn(List.of(퀴즈1, 퀴즈2));
-        //when
-        List<QuizResponse> quizzes = userQuizService.findRandomWrongQuizzesByUser(유저1);
-        //then
-        assertThat(quizzes).isEqualTo(List.of(QuizResponse.from(퀴즈1), QuizResponse.from(퀴즈2)));
     }
 
     @Test

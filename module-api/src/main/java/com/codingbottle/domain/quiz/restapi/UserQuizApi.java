@@ -18,11 +18,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/quiz/users")
 public interface UserQuizApi {
-    @Operation(summary = "오답 퀴즈 조회", description = "사용자의 오답 퀴즈를 조회합니다.")
-    @GetMapping("/wrong")
-    List<QuizResponse> getWrongQuizzes(
-            User user
-    );
 
     @Operation(summary = "퀴즈 결과 저장 요청", description = "사용자의 퀴즈 결과를 저장합니다.")
     @PutMapping("/{id}/result")

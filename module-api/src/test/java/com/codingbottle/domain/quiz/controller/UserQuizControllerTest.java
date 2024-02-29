@@ -37,31 +37,6 @@ class UserQuizControllerTest extends RestDocsTest {
     private static final String REQUEST_URL = "/api/v1/quiz/users";
 
     @Test
-    @DisplayName("사용자 오답 퀴즈를 조회한다")
-    void get_wrong_quizzes() throws Exception {
-        //given
-        given(userQuizService.findRandomWrongQuizzesByUser(any(User.class))).willReturn(List.of(QuizResponse.from(퀴즈1), QuizResponse.from(퀴즈2)));
-        //when & then
-        mvc.perform(get(REQUEST_URL + "/wrong")
-                .header("Authorization", "Bearer FirebaseToken"))
-                .andExpect(status().isOk())
-                .andDo(document("wrong-answer-list",
-                        getDocumentRequest(),
-                        getDocumentResponse(),
-                        getAuthorizationHeader(),
-                        responseFields(
-                                fieldWithPath("[].id").description("퀴즈 ID").type("Number"),
-                                fieldWithPath("[].question").description("퀴즈 질문"),
-                                fieldWithPath("[].answer").description("퀴즈 정답"),
-                                fieldWithPath("[].quizType").description("퀴즈 타입 (MultipleChoice / OX)"),
-                                fieldWithPath("[].choices.*").description("퀴즈 보기 (객관식은 4개, OX는 2개)").type("Map"),
-                                fieldWithPath("[].image").description("퀴즈 이미지 (null일 수 있음)").optional(),
-                                fieldWithPath("[].image.id").description("퀴즈 이미지 id").type("Number"),
-                                fieldWithPath("[].image.imageUrl").description("퀴즈 이미지 url")
-                        )));
-    }
-
-    @Test
     @DisplayName("사용자 퀴즈 정보를 조회한다")
     void get_user_quiz_info() throws Exception {
         //given
