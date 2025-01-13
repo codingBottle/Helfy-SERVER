@@ -32,7 +32,7 @@ public class Post extends BaseEntity implements Serializable {
     private List<String> hashtags = new ArrayList<>(5);
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @OneToOne(fetch = FetchType.LAZY)

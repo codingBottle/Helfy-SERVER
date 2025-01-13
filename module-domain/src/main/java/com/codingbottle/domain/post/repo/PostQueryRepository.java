@@ -1,5 +1,6 @@
 package com.codingbottle.domain.post.repo;
 
+import com.codingbottle.domain.image.entity.QImage;
 import com.codingbottle.domain.post.entity.Post;
 import com.codingbottle.domain.post.entity.QPost;
 import com.querydsl.core.types.Order;
@@ -16,6 +17,7 @@ import java.util.List;
 public class PostQueryRepository {
     private final JPAQueryFactory jpaQueryFactory;
     private final QPost post = QPost.post;
+    private final QImage image = QImage.image;
 
     public List<Post> searchByKeyword(String keyword) {
         return jpaQueryFactory.selectFrom(post)
@@ -25,6 +27,7 @@ public class PostQueryRepository {
 
     public List<Post> finAll(Pageable pageable) {
         return jpaQueryFactory.selectFrom(post)
+                .leftJoin(post.image, image).fetchJoin()
                 .limit(pageable.getPageSize())
                 .offset(pageable.getOffset())
                 .orderBy(new OrderSpecifier[]{new OrderSpecifier<>(Order.DESC, post.createdTime)})
