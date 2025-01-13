@@ -26,11 +26,10 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
         default_batch_fetch_size: ${chunkSize:100}
-        jdbc.batch_size: 10
+        jdbc.batch_size: 100
         order_inserts: true
         order_updates: true
         format_sql: true
-    show-sql: true
     open-in-view: false
   security:
     user:
@@ -88,11 +87,9 @@ job-setting:
 
 logging:
   level:
-    org:
-      hibernate:
-        type:
-          descriptor:
-            sql: trace
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql: trace
+
 
 ---
 spring:
